@@ -1,83 +1,54 @@
 package com.imobly.imobly.ui.screens.show.showproperty
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.imobly.imobly.domain.model.Property
+import com.imobly.imobly.ui.components.button.ButtonComp
+import com.imobly.imobly.ui.components.carousel.CarouselComp
 import com.imobly.imobly.ui.components.input.InputComp
-
+import com.imobly.imobly.ui.components.title.TitleComp
+import com.imobly.imobly.ui.components.topbar.TopBarComp
+import com.imobly.imobly.ui.theme.colors.IconColor
+import com.imobly.imobly.ui.theme.colors.PrimaryColor
+import com.imobly.imobly.ui.theme.icons.EditSquareIcon
+import imobly.composeapp.generated.resources.Res
+import imobly.composeapp.generated.resources.image_house_1
+import imobly.composeapp.generated.resources.image_house_2
+import imobly.composeapp.generated.resources.image_house_3
+import imobly.composeapp.generated.resources.image_house_4
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.math.sin
 
 @Composable
 fun ShowPropertyScreen(navController: NavHostController) {
+    val property = remember { mutableStateOf(Property()) }
+    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .padding(5.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                ) {
-                    repeat(3) {
-                        Box(modifier = Modifier.padding(vertical = 2.dp, horizontal = 10.dp)) {
-                            Box(
-                                Modifier
-                                    .width(35.dp)
-                                    .height(5.dp)
-                                    .background(Color.Red)
-                            )
-                        }
-                    }
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .background(
-                                Color.Black,
-                                shape = CircleShape
-                            )
-                            .padding(8.dp)
-                    ) {
-                        Text("LOGO", color = Color.White, fontWeight = FontWeight.ExtraBold)
-                    }
-                }
-            }
-        }
+            TopBarComp()
+        },
+        contentWindowInsets = WindowInsets.systemBars
     ) { paddingValues ->
         Column(
             Modifier
@@ -85,49 +56,232 @@ fun ShowPropertyScreen(navController: NavHostController) {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Box(
+            TitleComp("Dados do imóvel", {
+                navController.navigate("home")
+            })
+
+            Column(
                 Modifier
-                    .padding(vertical = 10.dp)
-                    .fillMaxWidth()
+                    .verticalScroll(scrollState)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Button(
-                    modifier = Modifier
-                        .width(60.dp)
-                        .height(50.dp)
-                        .background(
-                            Color.Red,
-                            shape = RoundedCornerShape(bottomEnd = 20.dp, topEnd = 20.dp)
-                        ),
-                    onClick = { navController.navigate("home") },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                    elevation = ButtonDefaults.buttonElevation(0.dp),
-                    contentPadding = PaddingValues(0.dp)
+                CarouselComp(
+                    listOf(
+                        Res.drawable.image_house_1,
+                        Res.drawable.image_house_2,
+                        Res.drawable.image_house_3,
+                        Res.drawable.image_house_4,
+                    )
+                )
+
+                InputComp(
+                    label = "Título",
+                    placeholder = "Ex: Predio em copacabana",
+                    value = property.value.title,
+                    onValueChange = { property.value = property.value.copy(title = it) }
+                )
+
+                InputComp(
+                    label = "Aluguel mensal",
+                    placeholder = "Ex: 1.800,00",
+                    value = property.value.rentValue,
+                    onValueChange = { property.value = property.value.copy(
+                        rentValue = if (it.toDoubleOrNull() != null || it == "") {
+                            it
+                        } else {
+                            property.value.rentValue
+                        }
+                    )},
+                    isNumeric = true
+                )
+
+                Row(
+                    Modifier.fillMaxWidth().align(Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Text("<-", color = Color.White, fontSize = 20.sp)
+                    InputComp(
+                        label = "Nº Domitórios",
+                        placeholder = "Ex: 4",
+                        value = property.value.bedrooms,
+                        onValueChange = { property.value = property.value.copy(
+                            bedrooms = if (it.toIntOrNull() != null || it == "") {
+                                it
+                            } else {
+                                property.value.bedrooms
+                            }
+                        )},
+                        isNumeric = true,
+                        fractionWidth = 0.4f,
+                        maxWidth = 780.dp
+                    )
+                    Spacer(Modifier.size(10.dp))
+                    InputComp(
+                        label = "Área (m²)",
+                        placeholder = "Ex: 333.25",
+                        value = property.value.area,
+                        onValueChange = { property.value = property.value.copy(
+                            area = if (it.toDoubleOrNull() != null || it == "") {
+                                it
+                            } else {
+                                property.value.area
+                            }
+                        )},
+                        isNumeric = true,
+                        fractionWidth = 0.6f,
+                        maxWidth = 780.dp
+                    )
                 }
 
-                Box(Modifier.align(Alignment.Center)) {
-                    Text("Dados do imóvel", fontSize = 25.sp, color = Color.Gray);
+                Row(
+                    Modifier.fillMaxWidth().align(Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    InputComp(
+                        label = "Nº Banheiros",
+                        placeholder = "Ex: 2",
+                        value = property.value.bathrooms,
+                        onValueChange = { property.value = property.value.copy(
+                            bathrooms = if (it.toIntOrNull() != null || it == "") {
+                                it
+                            } else {
+                                property.value.bathrooms
+                            }
+                        )},
+                        isNumeric = true,
+                        fractionWidth = 0.4f,
+                        maxWidth = 780.dp
+
+                    )
+                    Spacer(Modifier.size(10.dp))
+                    InputComp(
+                        label = "Vagas gara.",
+                        placeholder = "Ex: 3",
+                        value = property.value.garageSpaces,
+                        onValueChange = { property.value = property.value.copy(
+                            garageSpaces = if (it.toIntOrNull() != null || it == "") {
+                                it
+                            } else {
+                                property.value.garageSpaces
+                            }
+                        )},
+                        isNumeric = true,
+                        fractionWidth = 0.6f,
+                        maxWidth = 780.dp
+                    )
+                }
+
+
+                InputComp(
+                    label = "Descrição",
+                    placeholder = "Ex: Este é um maravilhoso apartamento",
+                    value = property.value.description,
+                    onValueChange = { property.value = property.value.copy(description = it) },
+                    singleLine = false
+                )
+
+                InputComp(
+                    label = "CEP",
+                    placeholder = "Ex: 01001-000",
+                    value = property.value.address.cep,
+                    onValueChange = {
+                        property.value = property.value.copy(
+                            address = property.value.address.copy(cep = it)
+                        )
+                    },
+                    isNumeric = true
+                )
+
+                InputComp(
+                    label = "Estado",
+                    placeholder = "Ex: SP",
+                    value = property.value.address.state,
+                    onValueChange = {
+                        property.value = property.value.copy(
+                            address = property.value.address.copy(state = it)
+                        )
+                    }
+                )
+
+                InputComp(
+                    label = "Cidade",
+                    placeholder = "Ex: Guarulhos",
+                    value = property.value.address.city,
+                    onValueChange = {
+                        property.value = property.value.copy(
+                            address = property.value.address.copy(city = it)
+                        )
+                    }
+                )
+
+                InputComp(
+                    label = "Bairro",
+                    placeholder = "Ex: Campo verde",
+                    value = property.value.address.neighborhood,
+                    onValueChange = {
+                        property.value = property.value.copy(
+                            address = property.value.address.copy(neighborhood = it)
+                        )
+                    }
+                )
+
+                InputComp(
+                    label = "Rua",
+                    placeholder = "Ex: Olinda Alves",
+                    value = property.value.address.street,
+                    onValueChange = {
+                        property.value = property.value.copy(
+                            address = property.value.address.copy(street = it)
+                        )
+                    }
+                )
+
+                InputComp(
+                    label = "Número",
+                    placeholder = "Ex: 68",
+                    value = property.value.address.number,
+                    onValueChange = {
+                        property.value = property.value.copy(
+                            address = property.value.address.copy(
+                                number = if (it.toIntOrNull() != null || it == "") {
+                                    it
+                                } else {
+                                    property.value.address.number
+                                }
+                            )
+                        )
+                    },
+                    isNumeric = true
+                )
+
+                InputComp(
+                    label = "Complemento",
+                    placeholder = "Ex: Bloco 18",
+                    value = property.value.address.complement,
+                    onValueChange = {
+                        property.value = property.value.copy(
+                            address = property.value.address.copy(complement = it)
+                        )
+                    }
+                )
+
+                Box(Modifier.align(Alignment.CenterHorizontally)) {
+                    ButtonComp(
+                        "Editar dados",
+                        { EditSquareIcon(32.dp, "Edit square", IconColor) },
+                        PrimaryColor,
+                        {}
+                    )
                 }
             }
-
-            InputComp(
-                label = "Títutlo",
-                placeholder = "Ex: Predio em copacabana"
-            )
-
-            InputComp(
-                label = "Estado",
-                placeholder = "Ex: SP"
-            )
         }
     }
 }
 
 @Composable
 @Preview
-fun ShowPropertyPreview() {
+fun ShowPropertyScreenPreview() {
     val navController = rememberNavController()
     ShowPropertyScreen(navController)
 }
