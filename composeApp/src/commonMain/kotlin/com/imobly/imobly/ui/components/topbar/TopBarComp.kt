@@ -1,5 +1,6 @@
 package com.imobly.imobly.ui.components.topbar
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,17 +10,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
+import imobly.composeapp.generated.resources.Res
+import imobly.composeapp.generated.resources.image_logo
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -31,6 +34,7 @@ fun TopBarComp() {
             .padding(5.dp),
         contentAlignment = Alignment.Center
     ) {
+
         Column(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center,
@@ -48,29 +52,25 @@ fun TopBarComp() {
                                 PrimaryColor,
                                 shape = RoundedCornerShape(1.dp)
                             )
-
                     )
                 }
             }
         }
+
         Box(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center,
         ) {
-            Box(
-                modifier = Modifier
-                    .background(
-                        Color.Black,
-                        shape = CircleShape
-                    )
-                    .padding(8.dp)
-            ) {
-                Text("LOGO", color = Color.White, fontWeight = FontWeight.ExtraBold)
+
+                Image(
+                    painter = painterResource(Res.drawable.image_logo),
+                    contentDescription = "Logo",
+                    modifier = Modifier.size(100.dp)
+                )
             }
         }
     }
-}
+
 
 @Preview
 @Composable

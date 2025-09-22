@@ -46,7 +46,7 @@ fun HomeScreen(navController: NavHostController) {
             "Go to showproperty",
             {},
             PrimaryColor,
-            { navController.navigate("showproperty") }
+            { navController.navigate("createproperty") }
         )
     }
 }
