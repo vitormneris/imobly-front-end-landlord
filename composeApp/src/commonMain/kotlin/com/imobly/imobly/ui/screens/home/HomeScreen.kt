@@ -38,7 +38,21 @@ fun HomeScreen(navController: NavHostController) {
         Button(
             onClick = { navController.navigate("showproperty") }
         ) {
-            Text("Go to showproperty", fontSize = 20.sp, color = Color.White)
+            Text("Tela home provisória", fontSize = 30.sp, color = Color.Red)
+            Spacer(Modifier.height(20.dp))
+            Button(
+                onClick = { navController.navigate("showproperty") }
+            ) {
+                Text("Go to showproperty", fontSize = 20.sp, color = Color.White)
+            }
+
+            Spacer(Modifier.height(20.dp))
+
+            Button(
+                onClick = { navController.navigate("properties") }
+            ) {
+                Text("Ir para PropertiesScreen", fontSize = 20.sp, color = Color.White)
+            }
         }
 
         Spacer(Modifier.height(20.dp))

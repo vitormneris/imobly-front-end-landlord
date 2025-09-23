@@ -16,13 +16,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
+import com.imobly.imobly.ui.screens.tenant.Montserrat
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import imobly.composeapp.generated.resources.Res
-import imobly.composeapp.generated.resources.imobly
 import imobly.composeapp.generated.resources.lugar
 import org.jetbrains.compose.resources.painterResource
 
@@ -127,6 +128,28 @@ fun PropertiesScreen() {
                     ) {
                     }
 
+                    // Título da tela centralizado
+                    Text(
+                        text = "Meus Imóveis",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp,
+                        color = Color.Black, // ✅ título em preto
+                        fontFamily = Montserrat,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+
+                    // Linha abaixo do título (mais curta e centralizada)
+                    Divider(
+                        color = Color(0xFFF2603F),
+                        thickness = 4.dp,
+                        modifier = Modifier
+                            .fillMaxWidth(0.5f)
+                            .align(Alignment.CenterHorizontally)
+                            .padding(bottom = 30.dp) // mais espaçamento antes do botão
+                    )
+
                     // Botão Cadastrar Imóvel - CENTRALIZADO e TAMANHO PERSONALIZADO
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -151,7 +174,7 @@ fun PropertiesScreen() {
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(30.dp))
 
                     // Campo de busca com emoji de lupa
                     OutlinedTextField(
