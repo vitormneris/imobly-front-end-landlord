@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.imobly.imobly.ui.components.button.ButtonComp
 import com.imobly.imobly.ui.components.carousel.CarouselComp
@@ -26,22 +28,12 @@ import com.imobly.imobly.ui.components.imagepicker.ImagePickerComp
 import com.imobly.imobly.ui.components.input.InputComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
-import com.imobly.imobly.ui.theme.colors.IconColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
-import com.imobly.imobly.ui.theme.icons.EditSquareIcon
-import com.imobly.imobly.viewmodel.EditPropertyViewModel
-import imobly.composeapp.generated.resources.Res
-import imobly.composeapp.generated.resources.image_house_1
-import imobly.composeapp.generated.resources.image_house_2
-import imobly.composeapp.generated.resources.image_house_3
-import imobly.composeapp.generated.resources.image_house_4
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.ResourceItem
+import com.imobly.imobly.viewmodel.PropertyViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun EditPropertyScreen(navController: NavHostController) {
-    val modelView = EditPropertyViewModel()
+fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
     val scrollState = rememberScrollState()
 
     Scaffold(
@@ -56,7 +48,9 @@ fun EditPropertyScreen(navController: NavHostController) {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            TitleComp("Dados do imóvel", { modelView.topBarAction(navController) })
+            TitleComp("Dados do imóvel", {
+                propertyViewModel.goToShowProperties()
+            })
 
             Column(
                 Modifier
@@ -66,23 +60,23 @@ fun EditPropertyScreen(navController: NavHostController) {
             ) {
 
                 CarouselComp(
-                    modelView.selectedImages
+                    propertyViewModel.selectedImages
                 )
 
-                ImagePickerComp("Escolha a imagem", modelView.selectedImages)
+                ImagePickerComp("Escolha as imagens", propertyViewModel.selectedImages)
 
                 InputComp(
                     label = "Título",
                     placeholder = "Ex: Predio em copacabana",
-                    value = modelView.property.value.title,
-                    onValueChange = { modelView.changeTitle(it) }
+                    value = propertyViewModel.property.value.title,
+                    onValueChange = { propertyViewModel.changeTitle(it) }
                 )
 
                 InputComp(
                     label = "Aluguel mensal",
                     placeholder = "Ex: 1.800,00",
-                    value = modelView.property.value.rentValue,
-                    onValueChange = { modelView.changeRental(it) },
+                    value = propertyViewModel.property.value.rentalValue,
+                    onValueChange = { propertyViewModel.changeRental(it) },
                     isNumeric = true
                 )
 
@@ -93,8 +87,8 @@ fun EditPropertyScreen(navController: NavHostController) {
                     InputComp(
                         label = "Nº Domitórios",
                         placeholder = "Ex: 4",
-                        value = modelView.property.value.bedrooms,
-                        onValueChange = { modelView.changeBedrooms(it) },
+                        value = propertyViewModel.property.value.bedrooms,
+                        onValueChange = { propertyViewModel.changeBedrooms(it) },
                         isNumeric = true,
                         fractionWidth = 0.4f,
                         maxWidth = 780.dp
@@ -103,8 +97,8 @@ fun EditPropertyScreen(navController: NavHostController) {
                     InputComp(
                         label = "Área (m²)",
                         placeholder = "Ex: 333.25",
-                        value = modelView.property.value.area,
-                        onValueChange = { modelView.changeArea(it) },
+                        value = propertyViewModel.property.value.area,
+                        onValueChange = { propertyViewModel.changeArea(it) },
                         isNumeric = true,
                         fractionWidth = 0.6f,
                         maxWidth = 780.dp
@@ -118,8 +112,8 @@ fun EditPropertyScreen(navController: NavHostController) {
                     InputComp(
                         label = "Nº Banheiros",
                         placeholder = "Ex: 2",
-                        value = modelView.property.value.bathrooms,
-                        onValueChange = { modelView.changeBathrooms(it) },
+                        value = propertyViewModel.property.value.bathrooms,
+                        onValueChange = { propertyViewModel.changeBathrooms(it) },
                         isNumeric = true,
                         fractionWidth = 0.4f,
                         maxWidth = 780.dp
@@ -129,8 +123,8 @@ fun EditPropertyScreen(navController: NavHostController) {
                     InputComp(
                         label = "Vagas gara.",
                         placeholder = "Ex: 3",
-                        value = modelView.property.value.garageSpaces,
-                        onValueChange = { modelView.changeGarageSpaces(it) },
+                        value = propertyViewModel.property.value.garageSpaces,
+                        onValueChange = { propertyViewModel.changeGarageSpaces(it) },
                         isNumeric = true,
                         fractionWidth = 0.6f,
                         maxWidth = 780.dp
@@ -141,68 +135,68 @@ fun EditPropertyScreen(navController: NavHostController) {
                 InputComp(
                     label = "Descrição",
                     placeholder = "Ex: Este é um maravilhoso apartamento",
-                    value = modelView.property.value.description,
-                    onValueChange = { modelView.changeDescription(it) },
+                    value = propertyViewModel.property.value.description,
+                    onValueChange = { propertyViewModel.changeDescription(it) },
                     singleLine = false
                 )
 
                 InputComp(
                     label = "CEP",
                     placeholder = "Ex: 01001-000",
-                    value = modelView.property.value.address.cep,
-                    onValueChange = { modelView.changeCep(it) },
+                    value = propertyViewModel.property.value.address.cep,
+                    onValueChange = { propertyViewModel.changeCep(it) },
                     isNumeric = true
                 )
 
                 InputComp(
                     label = "Estado",
                     placeholder = "Ex: SP",
-                    value = modelView.property.value.address.state,
-                    onValueChange = { modelView.changeState(it) }
+                    value = propertyViewModel.property.value.address.state,
+                    onValueChange = { propertyViewModel.changeState(it) }
                 )
 
                 InputComp(
                     label = "Cidade",
                     placeholder = "Ex: Guarulhos",
-                    value = modelView.property.value.address.city,
-                    onValueChange = { modelView.changeCity(it) }
+                    value = propertyViewModel.property.value.address.city,
+                    onValueChange = { propertyViewModel.changeCity(it) }
                 )
 
                 InputComp(
                     label = "Bairro",
                     placeholder = "Ex: Campo verde",
-                    value = modelView.property.value.address.neighborhood,
-                    onValueChange = { modelView.changeNeighborhood(it) }
+                    value = propertyViewModel.property.value.address.neighborhood,
+                    onValueChange = { propertyViewModel.changeNeighborhood(it) }
                 )
 
                 InputComp(
                     label = "Rua",
                     placeholder = "Ex: Olinda Alves",
-                    value = modelView.property.value.address.street,
-                    onValueChange = { modelView.changeStreet(it) }
+                    value = propertyViewModel.property.value.address.street,
+                    onValueChange = { propertyViewModel.changeStreet(it) }
                 )
 
                 InputComp(
                     label = "Número",
                     placeholder = "Ex: 68",
-                    value = modelView.property.value.address.number,
-                    onValueChange = { modelView.changeNumber(it) },
+                    value = propertyViewModel.property.value.address.number,
+                    onValueChange = { propertyViewModel.changeNumber(it) },
                     isNumeric = true
                 )
 
                 InputComp(
                     label = "Complemento",
                     placeholder = "Ex: Bloco 18",
-                    value = modelView.property.value.address.complement,
-                    onValueChange = { modelView.changeComplement(it) }
+                    value = propertyViewModel.property.value.address.complement,
+                    onValueChange = { propertyViewModel.changeComplement(it) }
                 )
 
                 Box(Modifier.align(Alignment.CenterHorizontally)) {
                     ButtonComp(
                         "Editar dados",
-                        { EditSquareIcon(32.dp, "Edit square", IconColor) },
+                        { Icon(Icons.Default.Edit, "editar") },
                         PrimaryColor,
-                        { modelView.editAction() }
+                        { propertyViewModel.editAction() }
                     )
                 }
             }
@@ -213,6 +207,6 @@ fun EditPropertyScreen(navController: NavHostController) {
 @Composable
 @Preview
 fun EditPropertyScreenPreview() {
-    val navController = rememberNavController()
-    EditPropertyScreen(navController)
+    val navControllerFake = rememberNavController()
+    EditPropertyScreen(PropertyViewModel(navControllerFake))
 }

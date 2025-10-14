@@ -36,28 +36,20 @@ fun HomeScreen(navController: NavHostController) {
             fontFamily = montserratFont()
         )
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(30.dp))
         ButtonComp(
-            "Go to PropertiesScreen",
+            "Go to showproperties",
             {},
             PrimaryColor,
-            { navController.navigate("properties") }
+            { navController.navigate("showproperties") }
         )
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(10.dp))
         ButtonComp(
-            "Go to createproperty",
+            "Go to showtenant",
             {},
             PrimaryColor,
-            { navController.navigate("createproperty") }
-        )
-
-        Spacer(Modifier.height(20.dp))
-        ButtonComp(
-            "Go to editproperty",
-            {},
-            PrimaryColor,
-            { navController.navigate("editproperty") }
+            { navController.navigate("showtenant") }
         )
     }
 }

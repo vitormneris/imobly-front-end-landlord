@@ -4,8 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,7 +24,6 @@ import com.imobly.imobly.ui.theme.colors.BackGroundColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.ui.theme.colors.TitleColor
 import com.imobly.imobly.ui.theme.fonts.montserratFont
-import com.imobly.imobly.ui.theme.icons.ArrowBackIcon
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -43,18 +48,31 @@ fun TitleComp(text: String, buttonBackAction: () -> Unit) {
             elevation = ButtonDefaults.buttonElevation(0.dp),
             contentPadding = PaddingValues(0.dp)
         ) {
-            ArrowBackIcon(35.dp, "back button", BackGroundColor)
+            Icon(Icons.Default.ArrowBackIosNew, "check")
         }
 
-        Box(Modifier.align(Alignment.Center)) {
-            Text(
-                text,
-                fontSize = 20.sp,
-                color = TitleColor,
-                fontWeight = FontWeight.ExtraBold,
-                fontFamily = montserratFont()
-            )
+        Box(modifier = Modifier.align(Alignment.Center)) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text,
+                    fontSize = 20.sp,
+                    color = TitleColor,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontFamily = montserratFont()
+                )
+                HorizontalDivider(
+                    modifier = Modifier
+                        .fillMaxWidth(0.4f),
+                    thickness = 4.dp,
+                    color = PrimaryColor
+                )
+
+            }
         }
+
     }
 }
 

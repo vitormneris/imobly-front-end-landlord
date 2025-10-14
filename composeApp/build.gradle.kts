@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -34,6 +35,8 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.android)
+            implementation("org.slf4j:slf4j-android:1.7.36")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -44,7 +47,9 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0")
+            implementation(libs.navigation)
+            implementation(libs.bundles.ktor)
+            implementation(libs.material.icons.extended)
             implementation("io.github.ismoy:imagepickerkmp:1.0.25")
             implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
         }
@@ -54,6 +59,8 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.ktor.client.cio)
+            implementation("org.slf4j:slf4j-simple:2.0.16")
         }
     }
 }

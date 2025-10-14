@@ -2,14 +2,17 @@ package com.imobly.imobly.ui.components.imagepicker
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.imobly.imobly.ui.components.button.ButtonComp
+import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
 import io.github.ismoy.imagepickerkmp.domain.models.MimeType
 import io.github.ismoy.imagepickerkmp.presentation.ui.components.GalleryPickerLauncher
@@ -40,9 +43,12 @@ fun ImagePickerComp(label: String, stateImages: MutableState<List<GalleryPhotoRe
         )
     }
 
-    Button(onClick = { showGallery.value = true }) {
-        Text(label)
-    }
+    ButtonComp(
+        label,
+        { Icon(Icons.Default.Image, "Imagem") },
+        PrimaryColor,
+        { }
+    )
 }
 
 @Preview

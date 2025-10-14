@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,13 +24,12 @@ import androidx.compose.ui.unit.sp
 import com.imobly.imobly.ui.theme.colors.IconColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.ui.theme.fonts.montserratFont
-import com.imobly.imobly.ui.theme.icons.EditSquareIcon
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ButtonComp(text: String, icon: @Composable () -> Unit, color: Color, action: () -> Unit) {
     Box(
-        Modifier.padding(vertical = 30.dp)
+        Modifier.padding(vertical = 5.dp),
     ) {
         Button(
             onClick = action,
@@ -42,7 +44,7 @@ fun ButtonComp(text: String, icon: @Composable () -> Unit, color: Color, action:
             Spacer(Modifier.size(10.dp))
             Text(
                 text,
-                fontSize = 23.sp,
+                fontSize = 20.sp,
                 fontFamily = montserratFont(),
                 fontWeight = FontWeight.Bold
             )
@@ -59,7 +61,7 @@ fun ButtonCompPreview() {
     ) {
         ButtonComp(
             "Exemplo",
-            { EditSquareIcon(32.dp, "Edit square", IconColor) },
+            { Icon(Icons.Default.Check, "check") },
             PrimaryColor,
             {}
         )

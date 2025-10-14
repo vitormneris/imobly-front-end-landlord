@@ -1,5 +1,8 @@
-package com.imobly.imobly.domain.model
+package com.imobly.imobly.domain
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Address(
     val state: String = "",
     val city: String = "",
