@@ -5,8 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.imobly.imobly.ui.screens.show.showproperty.ShowPropertyScreen
 import com.imobly.imobly.ui.screens.create.createproperty.CreatePropertyScreen
+import com.imobly.imobly.ui.screens.edit.editproperty.EditPropertyScreen
 import com.imobly.imobly.ui.screens.home.HomeScreen
 
 @Composable
@@ -18,14 +18,13 @@ fun App() {
             navController = navController,
             startDestination = "home"
         ) {
-            composable(route = "showproperty") {
-                ShowPropertyScreen(navController)
+            composable(route = "editproperty") {
+                EditPropertyScreen(navController)
             }
 
             composable(route = "home") {
                 HomeScreen(navController)
             }
-
 
             composable(route = "createproperty") {
                 CreatePropertyScreen(navController)

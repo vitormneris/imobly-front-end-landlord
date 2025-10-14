@@ -14,11 +14,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -29,18 +32,13 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
-import imobly.composeapp.generated.resources.Res
-import imobly.composeapp.generated.resources.image_house_1
-import imobly.composeapp.generated.resources.image_house_2
-import imobly.composeapp.generated.resources.image_house_3
-import imobly.composeapp.generated.resources.image_house_4
+import io.github.ismoy.imagepickerkmp.domain.extensions.loadPainter
+import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun CarouselComp(items: List<DrawableResource>) {
+fun CarouselComp(items: MutableState<List<GalleryPhotoResult>>) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
@@ -67,6 +65,9 @@ fun CarouselComp(items: List<DrawableResource>) {
         }
     }
 
+
+if (items.value.isNotEmpty()) {
+
     Column(
         Modifier
             .fillMaxSize(),
@@ -84,7 +85,7 @@ fun CarouselComp(items: List<DrawableResource>) {
                 },
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(items.size) { index ->
+            items(items.value) { photo ->
                 Box(
                     modifier = Modifier
                         .size(250.dp, 280.dp)
@@ -92,16 +93,19 @@ fun CarouselComp(items: List<DrawableResource>) {
                         .background(Color.White),
                     contentAlignment = Alignment.Center
                 ) {
-                    Image(
-                        painter = painterResource(items[index]),
-                        contentDescription = null,
-                        contentScale = ContentScale.FillHeight
-                    )
+                    photo.loadPainter()?.let {
+                        Image(
+                            painter = it,
+                            contentDescription = "Selected image",
+                            contentScale = ContentScale.FillHeight
+                        )
+                    }
                 }
             }
         }
+    }
 
-        IndicatorBall(items.size, currentItem.value)
+    IndicatorBall(items.value.size, currentItem.value)
     }
 }
 
@@ -114,7 +118,7 @@ fun IndicatorBall(size: Int, actual: Int) {
         ) {
         repeat(size) { index ->
             Box(
-                Modifier
+                modifier = Modifier
                     .background(
                         color = if (actual == index) PrimaryColor else Color.White,
                         shape = CircleShape
@@ -135,12 +139,7 @@ fun InputCompPreview() {
         contentAlignment = Alignment.Center
     ) {
         CarouselComp(
-            listOf(
-                Res.drawable.image_house_1,
-                Res.drawable.image_house_2,
-                Res.drawable.image_house_3,
-                Res.drawable.image_house_4,
-            )
+            mutableStateOf(emptyList())
         )
     }
 }

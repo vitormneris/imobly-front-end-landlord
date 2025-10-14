@@ -14,6 +14,9 @@
 			pkgs.mkShell {
 				packages = with pkgs; [
 					jdk
+					nodejs
+					yarn
+					gradle_9
 				];
 
 				shellHook = ''

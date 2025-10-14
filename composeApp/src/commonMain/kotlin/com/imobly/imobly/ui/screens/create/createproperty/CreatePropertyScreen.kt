@@ -1,7 +1,5 @@
 package com.imobly.imobly.ui.screens.create.createproperty
 
-
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,14 +31,7 @@ import com.imobly.imobly.ui.components.topbar.TopBarComp
 import com.imobly.imobly.ui.theme.colors.IconColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.ui.theme.icons.CheckIcon
-import com.imobly.imobly.ui.theme.icons.EditSquareIcon
-import imobly.composeapp.generated.resources.Res
-import imobly.composeapp.generated.resources.image_house_1
-import imobly.composeapp.generated.resources.image_house_2
-import imobly.composeapp.generated.resources.image_house_3
-import imobly.composeapp.generated.resources.image_house_4
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import kotlin.math.sin
 
 @Composable
 fun CreatePropertyScreen(navController: NavHostController) {
@@ -71,12 +62,7 @@ fun CreatePropertyScreen(navController: NavHostController) {
             ) {
 
                 CarouselComp(
-                    listOf(
-                        Res.drawable.image_house_1,
-                        Res.drawable.image_house_2,
-                        Res.drawable.image_house_3,
-                        Res.drawable.image_house_4,
-                    )
+                    mutableStateOf(emptyList())
                 )
 
                 InputComp(

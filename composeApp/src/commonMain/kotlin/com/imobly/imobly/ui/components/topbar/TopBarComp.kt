@@ -61,7 +61,6 @@ fun TopBarComp() {
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center,
         ) {
-
                 Image(
                     painter = painterResource(Res.drawable.image_logo),
                     contentDescription = "Logo",
