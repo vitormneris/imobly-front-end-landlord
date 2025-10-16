@@ -34,7 +34,8 @@ fun InputComp(
     isNumeric: Boolean = false,
     fractionWidth: Float = 0.8f,
     maxWidth: Dp = 1000.dp,
-    singleLine: Boolean = true
+    singleLine: Boolean = true,
+    readOnly: Boolean = false
 ) {
     var numLines = 1
     if (!singleLine) {
@@ -70,7 +71,8 @@ fun InputComp(
             focusedLabelColor = PrimaryColor,
             focusedIndicatorColor = PrimaryColor,
             cursorColor = PrimaryColor
-        )
+        ),
+        readOnly = readOnly
     )
 }
 

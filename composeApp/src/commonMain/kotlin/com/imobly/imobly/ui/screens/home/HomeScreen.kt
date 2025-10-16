@@ -46,10 +46,22 @@ fun HomeScreen(navController: NavHostController) {
 
         Spacer(Modifier.height(10.dp))
         ButtonComp(
-            "Go to showtenant",
+            "Go to showtenants",
             {},
             PrimaryColor,
-            { navController.navigate("showtenant") }
+            { navController.navigate("showtenants") }
+        )
+        ButtonComp(
+            "Go to edittenant",
+            {},
+            PrimaryColor,
+            { navController.navigate("edittenant") }
+        )
+        ButtonComp(
+            "Go to showreports",
+            {},
+            PrimaryColor,
+            { navController.navigate("showreports") }
         )
     }
 }

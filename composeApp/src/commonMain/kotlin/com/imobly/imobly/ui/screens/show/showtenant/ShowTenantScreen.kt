@@ -43,7 +43,7 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
                 id = "1",
                 name = "Fernanda Moraes",
                 property = "Studio Peace",
-                phone = "+351 99676-001",
+                telephones = arrayOf("+351 99676-001"),
                 email = "fernandamoraes@gmail.com",
                 imageResource = Res.drawable.image_logo
             ),
@@ -51,7 +51,7 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
                 id = "2",
                 name = "Carlos Silva",
                 property = "Studio Harmony",
-                phone = "+351 98765-432",
+                telephones = arrayOf("+351 98765-432"),
                 email = "carlos.silva@gmail.com",
                 imageResource = Res.drawable.image_logo
             ),
@@ -59,7 +59,7 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
                 id = "3",
                 name = "Ana Santos",
                 property = "Studio Premium",
-                phone = "+351 91234-567",
+                telephones = arrayOf("+351 91234-567"),
                 email = "ana.santos@gmail.com",
                 imageResource = Res.drawable.image_logo
             ),
@@ -67,7 +67,7 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
                 id = "4",
                 name = "João Pereira",
                 property = "Studio Comfort",
-                phone = "+351 92345-678",
+                telephones = arrayOf("+351 92345-678"),
                 email = "joao.pereira@gmail.com",
                 imageResource = Res.drawable.image_logo
             ),
@@ -193,7 +193,7 @@ fun TenantCard(tenant: Tenant) {
                         Text("\uD83D\uDCDE", fontSize = 14.sp, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = tenant.phone,
+                            text = tenant.telephones[0],
                             fontWeight = FontWeight.Normal,
                             fontSize = 14.sp,
                             color = Color(0xFF333333),
