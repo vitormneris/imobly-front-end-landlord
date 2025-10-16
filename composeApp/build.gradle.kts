@@ -17,14 +17,14 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     jvm()
-    
+
     js {
         browser()
         binaries.executable()
     }
-    
+
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         browser()
@@ -51,7 +51,10 @@ kotlin {
             implementation(libs.bundles.ktor)
             implementation(libs.material.icons.extended)
             implementation("io.github.ismoy:imagepickerkmp:1.0.25")
+            implementation("media.kamel:kamel-image-default:1.0.8")
             implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
+            implementation("io.coil-kt.coil3:coil-network-ktor:3.0.0-alpha06")
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

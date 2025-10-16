@@ -14,20 +14,29 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
+import com.imobly.imobly.ui.components.confirmdialog.ConfirmDialogComp
 import com.imobly.imobly.ui.components.button.ButtonComp
 import com.imobly.imobly.ui.components.carousel.CarouselComp
+import com.imobly.imobly.ui.components.carousel.CarouselKamelComp
 import com.imobly.imobly.ui.components.imagepicker.ImagePickerComp
 import com.imobly.imobly.ui.components.input.InputComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
+import com.imobly.imobly.ui.theme.colors.CancelColor
+import com.imobly.imobly.ui.theme.colors.ConfirmColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.viewmodel.PropertyViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -37,9 +46,8 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
     val scrollState = rememberScrollState()
 
     Scaffold(
-        topBar = {
-            TopBarComp()
-        },
+        topBar = { TopBarComp() },
+        snackbarHost = { SnackbarHost( propertyViewModel.snackMessage.value ) },
         contentWindowInsets = WindowInsets.systemBars
     ) { paddingValues ->
         Column(
@@ -48,9 +56,10 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            TitleComp("Dados do imóvel", {
-                propertyViewModel.goToShowProperties()
-            })
+            TitleComp(
+                "Dados do imóvel",
+                { propertyViewModel.goToShowProperties() }
+            )
 
             Column(
                 Modifier
@@ -59,17 +68,25 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                CarouselComp(
-                    propertyViewModel.selectedImages
-                )
+                if (propertyViewModel.selectedImages.value.isEmpty()) {
+                    CarouselKamelComp( propertyViewModel.property )
+                } else {
+                    CarouselComp( propertyViewModel.selectedImages )
+                }
 
-                ImagePickerComp("Escolha as imagens", propertyViewModel.selectedImages)
+                if (!propertyViewModel.inputLockState.value) {
+
+                    ImagePickerComp("Escolha as imagens", propertyViewModel.selectedImages)
+                }
 
                 InputComp(
                     label = "Título",
                     placeholder = "Ex: Predio em copacabana",
                     value = propertyViewModel.property.value.title,
-                    onValueChange = { propertyViewModel.changeTitle(it) }
+                    onValueChange = { propertyViewModel.changeTitle(it) },
+                    readOnly = propertyViewModel.inputLockState.value,
+                    isError = propertyViewModel.inputContainsError("title"),
+                    erroMessage = propertyViewModel.getInputErrorMessage("title")
                 )
 
                 InputComp(
@@ -77,7 +94,10 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                     placeholder = "Ex: 1.800,00",
                     value = propertyViewModel.property.value.rentalValue,
                     onValueChange = { propertyViewModel.changeRental(it) },
-                    isNumeric = true
+                    isNumeric = true,
+                    readOnly = propertyViewModel.inputLockState.value,
+                    isError = propertyViewModel.inputContainsError("rentalValue"),
+                    erroMessage = propertyViewModel.getInputErrorMessage("rentalValue")
                 )
 
                 Row(
@@ -91,7 +111,10 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                         onValueChange = { propertyViewModel.changeBedrooms(it) },
                         isNumeric = true,
                         fractionWidth = 0.4f,
-                        maxWidth = 780.dp
+                        maxWidth = 780.dp,
+                        readOnly = propertyViewModel.inputLockState.value,
+                        isError = propertyViewModel.inputContainsError("bedrooms"),
+                        erroMessage = propertyViewModel.getInputErrorMessage("bedRooms")
                     )
                     Spacer(Modifier.size(10.dp))
                     InputComp(
@@ -101,7 +124,10 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                         onValueChange = { propertyViewModel.changeArea(it) },
                         isNumeric = true,
                         fractionWidth = 0.6f,
-                        maxWidth = 780.dp
+                        maxWidth = 780.dp,
+                        readOnly = propertyViewModel.inputLockState.value,
+                        isError = propertyViewModel.inputContainsError("area"),
+                        erroMessage = propertyViewModel.getInputErrorMessage("area")
                     )
                 }
 
@@ -116,7 +142,10 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                         onValueChange = { propertyViewModel.changeBathrooms(it) },
                         isNumeric = true,
                         fractionWidth = 0.4f,
-                        maxWidth = 780.dp
+                        maxWidth = 780.dp,
+                        readOnly = propertyViewModel.inputLockState.value,
+                        isError = propertyViewModel.inputContainsError("bathrooms"),
+                        erroMessage = propertyViewModel.getInputErrorMessage("bathRooms")
 
                     )
                     Spacer(Modifier.size(10.dp))
@@ -127,7 +156,10 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                         onValueChange = { propertyViewModel.changeGarageSpaces(it) },
                         isNumeric = true,
                         fractionWidth = 0.6f,
-                        maxWidth = 780.dp
+                        maxWidth = 780.dp,
+                        readOnly = propertyViewModel.inputLockState.value,
+                        isError = propertyViewModel.inputContainsError("garageSpaces"),
+                        erroMessage = propertyViewModel.getInputErrorMessage("garageSpaces")
                     )
                 }
 
@@ -137,7 +169,10 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                     placeholder = "Ex: Este é um maravilhoso apartamento",
                     value = propertyViewModel.property.value.description,
                     onValueChange = { propertyViewModel.changeDescription(it) },
-                    singleLine = false
+                    singleLine = false,
+                    readOnly = propertyViewModel.inputLockState.value,
+                    isError = propertyViewModel.inputContainsError("description"),
+                    erroMessage = propertyViewModel.getInputErrorMessage("description")
                 )
 
                 InputComp(
@@ -145,35 +180,50 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                     placeholder = "Ex: 01001-000",
                     value = propertyViewModel.property.value.address.cep,
                     onValueChange = { propertyViewModel.changeCep(it) },
-                    isNumeric = true
+                    isNumeric = true,
+                    readOnly = propertyViewModel.inputLockState.value,
+                    isError = propertyViewModel.inputContainsError("address.cep"),
+                    erroMessage = propertyViewModel.getInputErrorMessage("address.cep")
                 )
 
                 InputComp(
                     label = "Estado",
                     placeholder = "Ex: SP",
                     value = propertyViewModel.property.value.address.state,
-                    onValueChange = { propertyViewModel.changeState(it) }
+                    onValueChange = { propertyViewModel.changeState(it) },
+                    readOnly = propertyViewModel.inputLockState.value,
+                    isError = propertyViewModel.inputContainsError("address.state"),
+                    erroMessage = propertyViewModel.getInputErrorMessage("address.state")
                 )
 
                 InputComp(
                     label = "Cidade",
                     placeholder = "Ex: Guarulhos",
                     value = propertyViewModel.property.value.address.city,
-                    onValueChange = { propertyViewModel.changeCity(it) }
+                    onValueChange = { propertyViewModel.changeCity(it) },
+                    readOnly = propertyViewModel.inputLockState.value,
+                    isError = propertyViewModel.inputContainsError("address.city"),
+                    erroMessage = propertyViewModel.getInputErrorMessage("address.city")
                 )
 
                 InputComp(
                     label = "Bairro",
                     placeholder = "Ex: Campo verde",
                     value = propertyViewModel.property.value.address.neighborhood,
-                    onValueChange = { propertyViewModel.changeNeighborhood(it) }
+                    onValueChange = { propertyViewModel.changeNeighborhood(it) },
+                    readOnly = propertyViewModel.inputLockState.value,
+                    isError = propertyViewModel.inputContainsError("address.neighborhood"),
+                    erroMessage = propertyViewModel.getInputErrorMessage("address.neighborhood")
                 )
 
                 InputComp(
                     label = "Rua",
                     placeholder = "Ex: Olinda Alves",
                     value = propertyViewModel.property.value.address.street,
-                    onValueChange = { propertyViewModel.changeStreet(it) }
+                    onValueChange = { propertyViewModel.changeStreet(it) },
+                    readOnly = propertyViewModel.inputLockState.value,
+                    isError = propertyViewModel.inputContainsError("address.street"),
+                    erroMessage = propertyViewModel.getInputErrorMessage("address.street")
                 )
 
                 InputComp(
@@ -181,23 +231,70 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                     placeholder = "Ex: 68",
                     value = propertyViewModel.property.value.address.number,
                     onValueChange = { propertyViewModel.changeNumber(it) },
-                    isNumeric = true
+                    isNumeric = true,
+                    readOnly = propertyViewModel.inputLockState.value,
+                    isError = propertyViewModel.inputContainsError("address.number"),
+                    erroMessage = propertyViewModel.getInputErrorMessage("address.number")
                 )
 
                 InputComp(
                     label = "Complemento",
                     placeholder = "Ex: Bloco 18",
                     value = propertyViewModel.property.value.address.complement,
-                    onValueChange = { propertyViewModel.changeComplement(it) }
+                    onValueChange = { propertyViewModel.changeComplement(it) },
+                    readOnly = propertyViewModel.inputLockState.value,
+                    isError = propertyViewModel.inputContainsError("address.complement"),
+                    erroMessage = propertyViewModel.getInputErrorMessage("address.complement")
+                )
+
+                ConfirmDialogComp(
+                    propertyViewModel.showDialogState.value,
+                    "Está ação deletará esta propriedade",
+                    "Tem certeza que deseja continuar? Está ação é irreversível.",
+                    { propertyViewModel.deleteAction() },
+                    { propertyViewModel.changeShowDialog() }
                 )
 
                 Box(Modifier.align(Alignment.CenterHorizontally)) {
-                    ButtonComp(
-                        "Editar dados",
-                        { Icon(Icons.Default.Edit, "editar") },
-                        PrimaryColor,
-                        { propertyViewModel.editAction() }
-                    )
+                    if (propertyViewModel.inputLockState.value) {
+                        Row {
+                            ButtonComp(
+                                "Editar dados",
+                                { Icon(Icons.Default.Edit, "editar") },
+                                PrimaryColor,
+                                { propertyViewModel.hiddenEditButton() }
+                            )
+                            ButtonComp(
+                                "Excluir",
+                                { Icon(Icons.Default.Delete, "deletar") },
+                                CancelColor,
+                                { propertyViewModel.changeShowDialog() }
+                            )
+                        }
+                    } else {
+                        if (propertyViewModel.onLoadingState.value) {
+                            Box(Modifier.padding(20.dp)) {
+                                CircularProgressIndicator()
+                            }
+                        } else {
+                            Row {
+                                ButtonComp(
+                                    "Salvar",
+                                    { Icon(Icons.Default.Check, "confirmar") },
+                                    ConfirmColor,
+                                    { propertyViewModel.editAction() }
+                                )
+
+                                ButtonComp(
+                                    "Cancelar",
+                                    { Icon(Icons.Default.Cancel, "cancelar") },
+                                    CancelColor,
+                                    { propertyViewModel.hiddenEditButton() }
+                                )
+                            }
+                        }
+                    }
+
                 }
             }
         }

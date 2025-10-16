@@ -47,7 +47,7 @@ fun ImagePickerComp(label: String, stateImages: MutableState<List<GalleryPhotoRe
         label,
         { Icon(Icons.Default.Image, "Imagem") },
         PrimaryColor,
-        { }
+        { showGallery.value = true }
     )
 }
 

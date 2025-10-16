@@ -16,6 +16,4 @@ data class Property(
     val area: String = "",
     val garageSpaces: String = ""
 
-) {
-
-}
+)

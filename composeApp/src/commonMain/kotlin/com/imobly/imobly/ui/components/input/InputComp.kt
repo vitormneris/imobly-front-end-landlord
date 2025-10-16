@@ -1,6 +1,7 @@
 package com.imobly.imobly.ui.components.input
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -35,45 +36,61 @@ fun InputComp(
     fractionWidth: Float = 0.8f,
     maxWidth: Dp = 1000.dp,
     singleLine: Boolean = true,
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
+    isError: Boolean = false,
+    erroMessage: String = ""
 ) {
     var numLines = 1
     if (!singleLine) {
         numLines = 4
     }
 
-    OutlinedTextField(
-        label = {
-            Text(label, fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
-        },
-        value = value,
-        onValueChange = onValueChange,
-        shape = RoundedCornerShape(10.dp),
-        singleLine = singleLine,
-        minLines = numLines,
-        maxLines = numLines,
-        keyboardOptions = KeyboardOptions(keyboardType = if (isNumeric) KeyboardType.Number else KeyboardType.Text),
-        placeholder = {
-            Text(placeholder, fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
-        },
-        textStyle = TextStyle(fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.Bold),
+    Column(
         modifier = Modifier
-            .padding(vertical= 10.dp)
-            .widthIn(max = maxWidth)
-            .fillMaxWidth(fractionWidth),
-        colors = TextFieldDefaults.colors(
-            unfocusedTextColor = Color.Black,
-            unfocusedLabelColor = PrimaryColor,
-            unfocusedIndicatorColor = PrimaryColor,
-            unfocusedContainerColor = BackGroundColor,
-            focusedContainerColor = BackGroundColor,
-            focusedTextColor = Color.Black,
-            focusedLabelColor = PrimaryColor,
-            focusedIndicatorColor = PrimaryColor,
-            cursorColor = PrimaryColor
-        ),
-        readOnly = readOnly
-    )
+        .padding(vertical = 10.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        OutlinedTextField(
+            label = {
+                Text(label, fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
+            },
+            value = value,
+            onValueChange = onValueChange,
+            shape = RoundedCornerShape(10.dp),
+            singleLine = singleLine,
+            minLines = numLines,
+            maxLines = numLines,
+            readOnly = readOnly,
+            isError = isError,
+            keyboardOptions = KeyboardOptions(keyboardType = if (isNumeric) KeyboardType.Number else KeyboardType.Text),
+            placeholder = {
+                Text(placeholder, fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
+            },
+            textStyle = TextStyle(fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.Bold),
+            modifier = Modifier
+                .widthIn(max = maxWidth)
+                .fillMaxWidth(fractionWidth),
+            colors = TextFieldDefaults.colors(
+                unfocusedTextColor = Color.Black,
+                unfocusedLabelColor = PrimaryColor,
+                unfocusedIndicatorColor = PrimaryColor,
+                unfocusedContainerColor = BackGroundColor,
+                focusedContainerColor = BackGroundColor,
+                focusedTextColor = Color.Black,
+                focusedLabelColor = PrimaryColor,
+                focusedIndicatorColor = PrimaryColor,
+                cursorColor = PrimaryColor
+            )
+        )
+        if (isError) {
+            Text(
+                text = erroMessage,
+                color = Color.Red,
+                fontFamily = montserratFont(),
+                fontSize = 12.sp
+            )
+        }
+    }
 }
 
 @Preview

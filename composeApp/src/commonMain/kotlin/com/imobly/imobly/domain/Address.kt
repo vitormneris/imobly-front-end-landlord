@@ -11,6 +11,4 @@ data class Address(
     val number: String  = "",
     val complement: String = "",
     val cep: String = ""
-) {
-
-}
+)

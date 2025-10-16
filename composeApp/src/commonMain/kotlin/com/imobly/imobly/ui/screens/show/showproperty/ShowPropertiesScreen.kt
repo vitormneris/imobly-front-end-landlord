@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -39,6 +40,8 @@ import com.imobly.imobly.ui.components.topbar.TopBarComp
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.ui.theme.fonts.montserratFont
 import com.imobly.imobly.viewmodel.PropertyViewModel
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -49,6 +52,9 @@ fun ShowPropertiesScreen(propertyViewModel: PropertyViewModel) {
 
     Scaffold(
         topBar = { TopBarComp() },
+        snackbarHost = {
+            SnackbarHost( propertyViewModel.snackMessage.value )
+        },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -135,14 +141,18 @@ fun PropertyCardComp(property: Property, propertyViewModel: PropertyViewModel) {
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
                 contentAlignment = Alignment.Center
             ) {
-//                Image(
-//                    painter = painterResource(property.pathImages as DrawableResource),
-//                    contentDescription = "Imagem do imóvel ${property.title}",
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-//                    contentScale = ContentScale.Crop
-//                )
+
+                KamelImage(
+                    resource = { asyncPainterResource(property.pathImages.first()) },
+                    contentDescription = "Imagem do imóvel ${property.title}",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                    contentScale = ContentScale.Crop,
+                    onLoading = { progress -> CircularProgressIndicator({ progress }) },
+                    onFailure = { CircularProgressIndicator() }
+                )
+
 
                 Box(
                     modifier = Modifier

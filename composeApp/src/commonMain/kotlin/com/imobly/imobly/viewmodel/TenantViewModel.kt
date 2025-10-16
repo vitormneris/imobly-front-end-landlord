@@ -15,12 +15,7 @@ class TenantViewModel(val navController: NavHostController): ViewModel() {
     val searchText: MutableState<String> = mutableStateOf("")
 
     fun changeSearchText(it: String) {
-        searchText.value =
-            if (it.toIntOrNull() != null || it == "") {
-                it
-            } else {
-                searchText.value
-            }
+        searchText.value = it
     }
 
     fun goToEditTenant(newTenant: Tenant) {

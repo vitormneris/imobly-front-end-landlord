@@ -133,7 +133,7 @@ fun IndicatorBall(size: Int, actual: Int) {
 
 @Preview
 @Composable
-fun InputCompPreview() {
+fun CarouselCompPreview() {
     Box(
         Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

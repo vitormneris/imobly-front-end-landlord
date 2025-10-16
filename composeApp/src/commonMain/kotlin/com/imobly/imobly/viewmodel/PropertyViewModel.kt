@@ -1,5 +1,6 @@
 package com.imobly.imobly.viewmodel
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -8,23 +9,52 @@ import androidx.navigation.NavHostController
 import com.imobly.imobly.api.createHttpClient
 import com.imobly.imobly.api.property.PropertyHttpClient
 import com.imobly.imobly.domain.Property
+import com.imobly.imobly.domain.ResponseMessage
 import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
 import kotlinx.coroutines.launch
+import kotlin.collections.emptyList
 
 class PropertyViewModel(val navController: NavHostController): ViewModel() {
     val property = mutableStateOf(Property())
     val selectedImages = mutableStateOf(emptyList<GalleryPhotoResult>())
 
+    val inputLockState = mutableStateOf(true)
+
+    val onLoadingState = mutableStateOf(false)
+
+    val inputErrors = mutableStateOf(emptyMap<String, String>())
+
+    val showDialogState = mutableStateOf(false)
+
     val searchText: MutableState<String> = mutableStateOf("")
     val properties: MutableState<List<Property>> = mutableStateOf(emptyList())
 
+    val snackMessage : MutableState<SnackbarHostState> = mutableStateOf( SnackbarHostState() )
+
+    fun inputContainsError(inputLabel: String): Boolean {
+        return inputErrors.value.keys.contains(inputLabel)
+    }
+
+    fun getInputErrorMessage(inputLabel: String): String {
+        return inputErrors.value[inputLabel] ?: ""
+    }
+
+    fun changeShowDialog() {
+        showDialogState.value = !showDialogState.value
+    }
+
+    fun hiddenEditButton() {
+        inputLockState.value = !inputLockState.value
+    }
+
+    fun resetPage() {
+        property.value = Property()
+        selectedImages.value = emptyList()
+        inputErrors.value = emptyMap()
+    }
+
     fun changeSearchText(it: String) {
-        searchText.value =
-            if (it.toIntOrNull() != null || it == "") {
-                it
-            } else {
-                searchText.value
-            }
+        searchText.value = it
     }
 
     fun findAllAction() {
@@ -52,19 +82,57 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
 
     fun editAction() {
         viewModelScope.launch {
+            onLoadingState.value = true
             val httpClient = PropertyHttpClient(createHttpClient())
+            var response = ResponseMessage(status = 500)
             if (property.value.id != null) {
-                httpClient.update(property.value.id!!, property.value)
+                response = httpClient.update(property.value.id!!, property.value, selectedImages.value)
             }
-            goToShowProperties()
+            onLoadingState.value = false
+            if (response.status == 200) {
+                hiddenEditButton()
+                snackMessage.value.showSnackbar("Propriedade editada com sucesso!")
+            } else {
+                val errors = mutableMapOf<String, String>()
+                response.errorFields?.forEach { errors[it.name] = it.description }
+                inputErrors.value = errors
+            }
         }
     }
 
     fun createAction() {
         viewModelScope.launch {
+            onLoadingState.value = true
             val httpClient = PropertyHttpClient(createHttpClient())
-            httpClient.create(property = property.value)
-            property.value = Property()
+            val response = httpClient.create(property = property.value, selectedImages.value)
+            onLoadingState.value = false
+            if (response.status == 200) {
+                property.value = Property()
+                selectedImages.value = emptyList()
+                inputErrors.value = emptyMap()
+                snackMessage.value.showSnackbar("Propriedade salva com sucesso!")
+            } else {
+                val errors = mutableMapOf<String, String>()
+                response.errorFields?.forEach { errors[it.name] = it.description }
+                inputErrors.value = errors
+            }
+        }
+    }
+
+    fun deleteAction() {
+        viewModelScope.launch {
+            val httpClient = PropertyHttpClient(createHttpClient())
+            var success = false
+            if (property.value.id != null) {
+                success = httpClient.delete(property.value.id!!)
+            }
+            showDialogState.value = false
+            goToShowProperties()
+            if (success) {
+                snackMessage.value.showSnackbar("Propriedade deletada com sucesso!")
+            } else {
+                snackMessage.value.showSnackbar("Houve um problema ao deletar a propriedade!")
+            }
         }
     }
 
