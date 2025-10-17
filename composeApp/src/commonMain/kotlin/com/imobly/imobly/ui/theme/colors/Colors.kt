@@ -12,6 +12,6 @@ val CancelColor = Color(0xFFE64256)
 val IconColor = Color(0xFFFFFFFF)
 val BackGroundColor = Color(0xFFFFFFFF)
 
-val ConfirmColor = Color(0xFF33A200)
-
-val CancelColor = Color(0xFFF23F3F)
+//val ConfirmColor = Color(0xFF33A200)
+//
+//val CancelColor = Color(0xFFF23F3F)

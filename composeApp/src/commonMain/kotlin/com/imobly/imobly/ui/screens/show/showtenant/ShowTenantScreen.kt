@@ -37,42 +37,8 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
 
-    val tenants = remember {
-        listOf(
-            Tenant(
-                id = "1",
-                name = "Fernanda Moraes",
-                property = "Studio Peace",
-                telephones = arrayOf("+351 99676-001"),
-                email = "fernandamoraes@gmail.com",
-                imageResource = Res.drawable.image_logo
-            ),
-            Tenant(
-                id = "2",
-                name = "Carlos Silva",
-                property = "Studio Harmony",
-                telephones = arrayOf("+351 98765-432"),
-                email = "carlos.silva@gmail.com",
-                imageResource = Res.drawable.image_logo
-            ),
-            Tenant(
-                id = "3",
-                name = "Ana Santos",
-                property = "Studio Premium",
-                telephones = arrayOf("+351 91234-567"),
-                email = "ana.santos@gmail.com",
-                imageResource = Res.drawable.image_logo
-            ),
-            Tenant(
-                id = "4",
-                name = "João Pereira",
-                property = "Studio Comfort",
-                telephones = arrayOf("+351 92345-678"),
-                email = "joao.pereira@gmail.com",
-                imageResource = Res.drawable.image_logo
-            ),
-        )
-    }
+    val tenants: MutableState<List<Tenant>> = remember { tenantViewModel.tenants}
+    tenantViewModel.findAllAction()
 
     Scaffold(
         topBar = {
@@ -123,8 +89,8 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
                         verticalArrangement = Arrangement.spacedBy(20.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        items(tenants) { tenant ->
-                            TenantCard(tenant = tenant)
+                        items(tenants.value) { tenant ->
+                            TenantCard(tenant = tenant, tenantViewModel)
                         }
                     }
                 }
@@ -134,7 +100,7 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
 }
 
 @Composable
-fun TenantCard(tenant: Tenant) {
+fun TenantCard(tenant: Tenant, tenantViewModel: TenantViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
