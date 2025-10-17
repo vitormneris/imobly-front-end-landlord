@@ -1,23 +1,29 @@
 package com.imobly.imobly.ui.components.input
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,49 +34,56 @@ import com.imobly.imobly.ui.theme.fonts.montserratFont
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun InputComp(
+fun InputPasswordComp(
     label: String,
     placeholder: String,
     value: String,
     onValueChange: (String) -> Unit,
-    isNumeric: Boolean = false,
+    passwordVisible: Boolean = false,
+    changePasswordVisible: () -> Unit,
     fractionWidth: Float = 0.8f,
     maxWidth: Dp = 1000.dp,
-    singleLine: Boolean = true,
     readOnly: Boolean = false,
     isError: Boolean = false,
     errorMessage: String = ""
 ) {
-    var numLines = 1
-    if (!singleLine) {
-        numLines = 4
-    }
 
     Column(
         modifier = Modifier
-        .padding(vertical = 10.dp),
+            .padding(vertical = 10.dp),
         horizontalAlignment = Alignment.Start
     ) {
         OutlinedTextField(
             label = {
                 Text(label, fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
             },
+            onValueChange = { onValueChange(it) },
             value = value,
-            onValueChange = onValueChange,
             shape = RoundedCornerShape(10.dp),
-            singleLine = singleLine,
-            minLines = numLines,
-            maxLines = numLines,
-            readOnly = readOnly,
-            isError = isError,
-            keyboardOptions = KeyboardOptions(keyboardType = if (isNumeric) KeyboardType.Number else KeyboardType.Text),
+            singleLine = true,
             placeholder = {
                 Text(placeholder, fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
             },
+            readOnly = readOnly,
+            isError = isError,
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             textStyle = TextStyle(fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.Bold),
             modifier = Modifier
                 .widthIn(max = maxWidth)
                 .fillMaxWidth(fractionWidth),
+            trailingIcon = {
+                Icon(
+                    imageVector = if (passwordVisible) {
+                        Icons.Filled.Visibility
+                    } else {
+                        Icons.Filled.VisibilityOff
+                    },
+                    contentDescription = "Trocar visibildade da senha",
+                    modifier = Modifier
+                        .size(20.dp)
+                        .clickable { changePasswordVisible() },
+                )
+            },
             colors = TextFieldDefaults.colors(
                 unfocusedTextColor = Color.Black,
                 unfocusedLabelColor = PrimaryColor,
@@ -91,15 +104,17 @@ fun InputComp(
 
 @Preview
 @Composable
-fun InputCompPreview() {
+fun InputPasswordCompPreview() {
     Box(
         Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        InputComp(
+        InputPasswordComp(
             "Example",
             "Text for example",
             "",
+            {},
+            false,
             {}
         )
     }

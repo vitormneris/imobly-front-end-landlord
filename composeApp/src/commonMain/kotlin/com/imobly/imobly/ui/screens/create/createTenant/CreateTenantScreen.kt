@@ -1,4 +1,4 @@
-package com.imobly.imobly.ui.screens.edit.edittenant
+package com.imobly.imobly.ui.screens.create.createTenant
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -10,25 +10,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,25 +39,21 @@ import com.imobly.imobly.ui.components.dropdown.DropdownComp
 import com.imobly.imobly.ui.components.imagepicker.ImagePickerComp
 import com.imobly.imobly.ui.components.input.InputComp
 import com.imobly.imobly.ui.components.input.InputDateComp
+import com.imobly.imobly.ui.components.input.InputPasswordComp
 import com.imobly.imobly.ui.components.messageerror.MessageErrorComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
-import com.imobly.imobly.ui.theme.colors.CancelColor
-import com.imobly.imobly.ui.theme.colors.ConfirmColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
-import com.imobly.imobly.ui.theme.fonts.montserratFont
 import com.imobly.imobly.viewmodel.TenantViewModel
-import imobly.composeapp.generated.resources.Res
-import imobly.composeapp.generated.resources.image_logo
 import io.github.ismoy.imagepickerkmp.domain.extensions.loadPainter
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditTenantScreen(tenantViewModel: TenantViewModel) {
+fun CreateTenantScreen(tenantViewModel: TenantViewModel) {
     val scrollState = rememberScrollState()
+
+    tenantViewModel.resetPage()
 
     Scaffold(
         topBar = {
@@ -89,72 +79,70 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                if (tenantViewModel.selectedImages.value.isEmpty()) {
-                    KamelImage(
-                        resource = { asyncPainterResource(tenantViewModel.tenant.value.pathImage) },
-                        contentDescription = "Imagem do locatário ${tenantViewModel.tenant.value.firstName}",
-                        contentScale = ContentScale.Crop,
+                if (tenantViewModel.selectedImages.value.isNotEmpty()) {
+                    Box(
                         modifier = Modifier
                             .size(200.dp)
                             .clip(CircleShape)
                             .border(4.dp, Color(0xFFE35336), CircleShape),
-                        onLoading = { progress -> CircularProgressIndicator({ progress }) },
-                        onFailure = { CircularProgressIndicator() }
-                    )
-                } else {
-                    tenantViewModel.selectedImages.value.first().loadPainter()?.let {
-                        Image(
-                            painter = it,
-                            contentDescription = "Imagem do locatário selecionada",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(200.dp)
-                                .clip(CircleShape)
-                                .border(4.dp, Color(0xFFE35336), CircleShape),
-                        )
+                        contentAlignment = Alignment.Center
+                    ) {
+                        tenantViewModel.selectedImages.value.first().loadPainter()?.let {
+                            Image(
+                                painter = it,
+                                contentDescription = "imagem do ${tenantViewModel.tenant.value.firstName}",
+                                contentScale = ContentScale.Crop,
+                            )
+                        }
                     }
                 }
 
-                if (!tenantViewModel.inputLockState.value) {
-                    ImagePickerComp("Escolha as imagens", tenantViewModel.selectedImages)
-                }
+
+                ImagePickerComp("Escolha as imagens", tenantViewModel.selectedImages, false)
 
                 InputComp(
                     label = "Nome",
-                    placeholder = "João",
+                    placeholder = "Ex: João",
                     value = tenantViewModel.tenant.value.firstName,
                     onValueChange = { tenantViewModel.changeFirstName(it) },
-                    readOnly = tenantViewModel.inputLockState.value,
                     isError = tenantViewModel.inputContainsError("firstName"),
                     errorMessage = tenantViewModel.getInputErrorMessage("firstName")
                 )
 
                 InputComp(
                     label = "Sobrenome",
-                    placeholder = "Silva",
+                    placeholder = "Ex: Silva",
                     value = tenantViewModel.tenant.value.lastName,
                     onValueChange = { tenantViewModel.changeLastName(it) },
-                    readOnly = tenantViewModel.inputLockState.value,
                     isError = tenantViewModel.inputContainsError("lastName"),
                     errorMessage = tenantViewModel.getInputErrorMessage("lastName")
                 )
 
                 InputComp(
                     label = "Email",
-                    placeholder = "joao@dominio.com",
+                    placeholder = "Ex: joao@dominio.com",
                     value = tenantViewModel.tenant.value.email,
                     onValueChange = { tenantViewModel.changeEmail(it) },
-                    readOnly = tenantViewModel.inputLockState.value,
                     isError = tenantViewModel.inputContainsError("email"),
                     errorMessage = tenantViewModel.getInputErrorMessage("email")
                 )
 
+                InputPasswordComp(
+                    label = "Senha",
+                    placeholder = "Ex: ********",
+                    value = tenantViewModel.tenant.value.password,
+                    onValueChange = { tenantViewModel.changePassword(it) },
+                    isError = tenantViewModel.inputContainsError("password"),
+                    errorMessage = tenantViewModel.getInputErrorMessage("password"),
+                    passwordVisible = tenantViewModel.passwordVisibilityState.value,
+                    changePasswordVisible = { tenantViewModel.changePasswordVisibility() }
+                )
+
                 InputComp(
                     label = "Telefone 1",
-                    placeholder = "(00) 00000-0000",
+                    placeholder = "Ex: (00) 00000-0000",
                     value = tenantViewModel.telephoneOne.value,
                     onValueChange = { tenantViewModel.changeTelephoneOne(it) },
-                    readOnly = tenantViewModel.inputLockState.value,
                     isError = (tenantViewModel.inputContainsError("telephones") ||
                             tenantViewModel.inputContainsError("telephones[0].telephone")),
                     errorMessage = if (tenantViewModel.inputContainsError("telephones")) {
@@ -166,20 +154,18 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
 
                 InputComp(
                     label = "Telefone 2",
-                    placeholder = "(00) 00000-0000",
+                    placeholder = "Ex: (00) 00000-0000",
                     value = tenantViewModel.telephoneTwo.value,
                     onValueChange = { tenantViewModel.changeTelephoneTwo(it) },
-                    readOnly = tenantViewModel.inputLockState.value,
                     isError = tenantViewModel.inputContainsError("telephones[1].telephone"),
                     errorMessage = tenantViewModel.getInputErrorMessage("telephones[1].telephone")
                 )
 
                 InputComp(
                     label = "Telefone 3",
-                    placeholder = "(00) 00000-0000",
+                    placeholder = "Ex: (00) 00000-0000",
                     value = tenantViewModel.telephoneThree.value,
                     onValueChange = { tenantViewModel.changeTelephoneThree(it) },
-                    readOnly = tenantViewModel.inputLockState.value,
                     isError = tenantViewModel.inputContainsError("telephones[2].telephone"),
                     errorMessage = tenantViewModel.getInputErrorMessage("telephones[2].telephone")
                 )
@@ -192,11 +178,10 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
                         label = "RG",
                         placeholder = "Ex: 00.000.000-0",
                         value = tenantViewModel.tenant.value.rg,
-                        onValueChange = { tenantViewModel.changeCpf(it) },
+                        onValueChange = { tenantViewModel.changeRg(it) },
                         isNumeric = true,
                         fractionWidth = 0.4f,
                         maxWidth = 780.dp,
-                        readOnly = tenantViewModel.inputLockState.value,
                         isError = tenantViewModel.inputContainsError("rg"),
                         errorMessage = tenantViewModel.getInputErrorMessage("rg")
                     )
@@ -209,7 +194,6 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
                         isNumeric = true,
                         fractionWidth = 0.6f,
                         maxWidth = 780.dp,
-                        readOnly = tenantViewModel.inputLockState.value,
                         isError = tenantViewModel.inputContainsError("cpf"),
                         errorMessage = tenantViewModel.getInputErrorMessage("cpf")
                     )
@@ -217,24 +201,24 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
 
                 InputComp(
                     label = "Nacionalidade",
-                    placeholder = "Digite a nacionalidade...",
+                    placeholder = "Ex: Digite a nacionalidade...",
                     value = tenantViewModel.tenant.value.nationality,
                     onValueChange = { tenantViewModel.changeNationality(it) },
-                    readOnly = tenantViewModel.inputLockState.value,
                     isError = tenantViewModel.inputContainsError("nationality"),
                     errorMessage = tenantViewModel.getInputErrorMessage("nationality")
                 )
 
                 DropdownComp(
                     label = "Estado Civil",
-                    placeholder = "Escolha",
+                    placeholder = "Ex: Escolha",
                     options = MaritalStatus.entries.map { it.label },
                     selectedOption = tenantViewModel.tenant.value.maritalStatus.label,
-                    onOptionSelected = { selectedLabel->
+                    onOptionSelected = { selectedLabel ->
                         tenantViewModel.tenant.value =
                             tenantViewModel.tenant.value.copy(
-                                maritalStatus = MaritalStatus.entries.first{ it.label== selectedLabel}) },
-                    isEnabled = !tenantViewModel.inputLockState.value
+                                maritalStatus = MaritalStatus.entries.first { it.label == selectedLabel })
+                    },
+                    isEnabled = tenantViewModel.inputLockState.value
                 )
 
                 InputDateComp(
@@ -246,14 +230,12 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
                     readOnly = tenantViewModel.inputLockState.value
                 )
 
-
                 InputComp(
                     label = "CEP",
                     placeholder = "Ex: 01001-000",
                     value = tenantViewModel.tenant.value.address.cep,
                     onValueChange = { tenantViewModel.changeCep(it) },
                     isNumeric = true,
-                    readOnly = tenantViewModel.inputLockState.value,
                     isError = tenantViewModel.inputContainsError("address.cep"),
                     errorMessage = tenantViewModel.getInputErrorMessage("address.cep")
                 )
@@ -263,7 +245,6 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
                     placeholder = "Ex: SP",
                     value = tenantViewModel.tenant.value.address.state,
                     onValueChange = { tenantViewModel.changeState(it) },
-                    readOnly = tenantViewModel.inputLockState.value,
                     isError = tenantViewModel.inputContainsError("address.state"),
                     errorMessage = tenantViewModel.getInputErrorMessage("address.state")
                 )
@@ -273,7 +254,6 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
                     placeholder = "Ex: Guarulhos",
                     value = tenantViewModel.tenant.value.address.city,
                     onValueChange = { tenantViewModel.changeCity(it) },
-                    readOnly = tenantViewModel.inputLockState.value,
                     isError = tenantViewModel.inputContainsError("address.city"),
                     errorMessage = tenantViewModel.getInputErrorMessage("address.city")
                 )
@@ -283,7 +263,6 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
                     placeholder = "Ex: Campo verde",
                     value = tenantViewModel.tenant.value.address.neighborhood,
                     onValueChange = { tenantViewModel.changeNeighborhood(it) },
-                    readOnly = tenantViewModel.inputLockState.value,
                     isError = tenantViewModel.inputContainsError("address.neighborhood"),
                     errorMessage = tenantViewModel.getInputErrorMessage("address.neighborhood")
                 )
@@ -293,7 +272,6 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
                     placeholder = "Ex: Olinda Alves",
                     value = tenantViewModel.tenant.value.address.street,
                     onValueChange = { tenantViewModel.changeStreet(it) },
-                    readOnly = tenantViewModel.inputLockState.value,
                     isError = tenantViewModel.inputContainsError("address.street"),
                     errorMessage = tenantViewModel.getInputErrorMessage("address.street")
                 )
@@ -304,7 +282,6 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
                     value = tenantViewModel.tenant.value.address.number,
                     onValueChange = { tenantViewModel.changeNumber(it) },
                     isNumeric = true,
-                    readOnly = tenantViewModel.inputLockState.value,
                     isError = tenantViewModel.inputContainsError("address.number"),
                     errorMessage = tenantViewModel.getInputErrorMessage("address.number")
                 )
@@ -314,62 +291,34 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
                     placeholder = "Ex: Bloco 18",
                     value = tenantViewModel.tenant.value.address.complement,
                     onValueChange = { tenantViewModel.changeComplement(it) },
-                    readOnly = tenantViewModel.inputLockState.value,
                     isError = tenantViewModel.inputContainsError("address.complement"),
                     errorMessage = tenantViewModel.getInputErrorMessage("address.complement")
                 )
 
                 ConfirmDialogComp(
                     tenantViewModel.showDialogState.value,
-                    "Está ação deletará esta locatário",
+                    "Está ação deletará este locatário",
                     "Tem certeza que deseja continuar? Está ação é irreversível.",
                     { tenantViewModel.deleteAction() },
                     { tenantViewModel.changeShowDialog() }
                 )
 
-
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(Modifier.align(Alignment.CenterHorizontally)) {
-                        if (tenantViewModel.messageError.value != "") {
-                            MessageErrorComp(tenantViewModel.messageError.value, 16.sp)
+                    if (tenantViewModel.onLoadingState.value) {
+                        Box(Modifier.padding(20.dp)) {
+                            CircularProgressIndicator()
                         }
-                        if (tenantViewModel.inputLockState.value) {
-                            Row {
-                                ButtonComp(
-                                    "Editar dados",
-                                    { Icon(Icons.Default.Edit, "editar") },
-                                    PrimaryColor,
-                                    { tenantViewModel.hiddenEditButton() }
-                                )
-                                ButtonComp(
-                                    "Excluir",
-                                    { Icon(Icons.Default.Delete, "deletar") },
-                                    CancelColor,
-                                    { tenantViewModel.changeShowDialog() }
-                                )
-                            }
-                        } else {
-                            if (tenantViewModel.onLoadingState.value) {
-                                Box(Modifier.padding(20.dp)) {
-                                    CircularProgressIndicator()
-                                }
-                            } else {
-                                Row {
-                                    ButtonComp(
-                                        "Salvar",
-                                        { Icon(Icons.Default.Check, "confirmar") },
-                                        ConfirmColor,
-                                        { tenantViewModel.editAction() }
-                                    )
-
-                                    ButtonComp(
-                                        "Cancelar",
-                                        { Icon(Icons.Default.Cancel, "cancelar") },
-                                        CancelColor,
-                                        { tenantViewModel.hiddenEditButton() }
-                                    )
-                                }
-                            }
+                    } else {
+                        if (tenantViewModel.messageError.value != "") {
+                            MessageErrorComp(tenantViewModel.messageError.value, 14.sp)
+                        }
+                        Box(Modifier.align(Alignment.CenterHorizontally)) {
+                            ButtonComp(
+                                "Cadastrar Locatário",
+                                { Icon(Icons.Default.Create, "check") },
+                                PrimaryColor,
+                                { tenantViewModel.createAction() }
+                            )
                         }
                     }
                 }
@@ -380,7 +329,7 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
 
 @Composable
 @Preview
-fun EditTenantScreenPreview() {
+fun CreateTenantScreenPreview() {
     val navControllerFake = rememberNavController()
-    EditTenantScreen(TenantViewModel(navControllerFake))
+    CreateTenantScreen(TenantViewModel(navControllerFake))
 }

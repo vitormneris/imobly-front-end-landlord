@@ -96,7 +96,7 @@ if (items.value.isNotEmpty()) {
                     photo.loadPainter()?.let {
                         Image(
                             painter = it,
-                            contentDescription = "Selected image",
+                            contentDescription = "Imagem selecionada",
                             contentScale = ContentScale.FillHeight
                         )
                     }

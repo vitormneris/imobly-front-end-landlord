@@ -1,20 +1,20 @@
 package com.imobly.imobly.domain
 
-import imobly.composeapp.generated.resources.Res
-import imobly.composeapp.generated.resources.image_logo
-import org.jetbrains.compose.resources.DrawableResource
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Tenant(
     val id: String? = null,
     val pathImage: String = "",
-    val name: String = "",
-    val property: String = "",
+    val firstName: String = "",
+    val lastName: String = "",
     val email: String = "",
     val password: String ="",
-    val telephones: Array<String> = Array(2) {""},
+    var telephones: MutableList<Telephone> = mutableListOf(),
     val rg: String = "",
-    var cpf: String = "",
+    val cpf: String = "",
     val nationality: String = "",
     val maritalStatus: MaritalStatus = MaritalStatus.SINGLE,
-    val birthDate: String ="",
+    val birthDate: String = "",
+    val address: Address = Address()
 )

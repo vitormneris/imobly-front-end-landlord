@@ -19,18 +19,23 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.imobly.imobly.ui.components.button.ButtonComp
 import com.imobly.imobly.ui.components.carousel.CarouselComp
 import com.imobly.imobly.ui.components.imagepicker.ImagePickerComp
 import com.imobly.imobly.ui.components.input.InputComp
+import com.imobly.imobly.ui.components.messageerror.MessageErrorComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
+import com.imobly.imobly.ui.theme.fonts.montserratFont
 import com.imobly.imobly.viewmodel.PropertyViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -78,7 +83,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                     value = propertyViewModel.property.value.title,
                     onValueChange = { propertyViewModel.changeTitle(it) },
                     isError = propertyViewModel.inputContainsError("title"),
-                    erroMessage = propertyViewModel.getInputErrorMessage("title")
+                    errorMessage = propertyViewModel.getInputErrorMessage("title")
                 )
 
                 InputComp(
@@ -88,7 +93,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                     onValueChange = { propertyViewModel.changeRental(it) },
                     isNumeric = true,
                     isError = propertyViewModel.inputContainsError("rentalValue"),
-                    erroMessage = propertyViewModel.getInputErrorMessage("rentalValue")
+                    errorMessage = propertyViewModel.getInputErrorMessage("rentalValue")
                 )
 
                 Row(
@@ -104,7 +109,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                         fractionWidth = 0.4f,
                         maxWidth = 780.dp,
                         isError = propertyViewModel.inputContainsError("bedrooms"),
-                        erroMessage = propertyViewModel.getInputErrorMessage("bedRooms")
+                        errorMessage = propertyViewModel.getInputErrorMessage("bedRooms")
                     )
                     Spacer(Modifier.size(10.dp))
                     InputComp(
@@ -116,7 +121,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                         fractionWidth = 0.6f,
                         maxWidth = 780.dp,
                         isError = propertyViewModel.inputContainsError("area"),
-                        erroMessage = propertyViewModel.getInputErrorMessage("area")
+                        errorMessage = propertyViewModel.getInputErrorMessage("area")
                     )
                 }
 
@@ -133,7 +138,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                         fractionWidth = 0.4f,
                         maxWidth = 780.dp,
                         isError = propertyViewModel.inputContainsError("bathrooms"),
-                        erroMessage = propertyViewModel.getInputErrorMessage("bathRooms")
+                        errorMessage = propertyViewModel.getInputErrorMessage("bathRooms")
 
                     )
                     Spacer(Modifier.size(10.dp))
@@ -146,7 +151,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                         fractionWidth = 0.6f,
                         maxWidth = 780.dp,
                         isError = propertyViewModel.inputContainsError("garageSpaces"),
-                        erroMessage = propertyViewModel.getInputErrorMessage("garageSpaces")
+                        errorMessage = propertyViewModel.getInputErrorMessage("garageSpaces")
                     )
                 }
 
@@ -158,7 +163,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                     onValueChange = { propertyViewModel.changeDescription(it) },
                     singleLine = false,
                     isError = propertyViewModel.inputContainsError("description"),
-                    erroMessage = propertyViewModel.getInputErrorMessage("description")
+                    errorMessage = propertyViewModel.getInputErrorMessage("description")
                 )
 
                 InputComp(
@@ -168,7 +173,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                     onValueChange = { propertyViewModel.changeCep(it) },
                     isNumeric = true,
                     isError = propertyViewModel.inputContainsError("address.cep"),
-                    erroMessage = propertyViewModel.getInputErrorMessage("address.cep")
+                    errorMessage = propertyViewModel.getInputErrorMessage("address.cep")
                 )
 
                 InputComp(
@@ -177,7 +182,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                     value = propertyViewModel.property.value.address.state,
                     onValueChange = { propertyViewModel.changeState(it) },
                     isError = propertyViewModel.inputContainsError("address.state"),
-                    erroMessage = propertyViewModel.getInputErrorMessage("address.state")
+                    errorMessage = propertyViewModel.getInputErrorMessage("address.state")
                 )
 
                 InputComp(
@@ -186,7 +191,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                     value = propertyViewModel.property.value.address.city,
                     onValueChange = { propertyViewModel.changeCity(it) },
                     isError = propertyViewModel.inputContainsError("address.city"),
-                    erroMessage = propertyViewModel.getInputErrorMessage("address.city")
+                    errorMessage = propertyViewModel.getInputErrorMessage("address.city")
                 )
 
                 InputComp(
@@ -195,7 +200,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                     value = propertyViewModel.property.value.address.neighborhood,
                     onValueChange = { propertyViewModel.changeNeighborhood(it) },
                     isError = propertyViewModel.inputContainsError("address.neighborhood"),
-                    erroMessage = propertyViewModel.getInputErrorMessage("address.neighborhood")
+                    errorMessage = propertyViewModel.getInputErrorMessage("address.neighborhood")
                 )
 
                 InputComp(
@@ -204,7 +209,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                     value = propertyViewModel.property.value.address.street,
                     onValueChange = { propertyViewModel.changeStreet(it) },
                     isError = propertyViewModel.inputContainsError("address.street"),
-                    erroMessage = propertyViewModel.getInputErrorMessage("address.street")
+                    errorMessage = propertyViewModel.getInputErrorMessage("address.street")
                 )
 
                 InputComp(
@@ -214,7 +219,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                     onValueChange = { propertyViewModel.changeNumber(it) },
                     isNumeric = true,
                     isError = propertyViewModel.inputContainsError("address.number"),
-                    erroMessage = propertyViewModel.getInputErrorMessage("address.number")
+                    errorMessage = propertyViewModel.getInputErrorMessage("address.number")
                 )
 
                 InputComp(
@@ -223,22 +228,27 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                     value = propertyViewModel.property.value.address.complement,
                     onValueChange = { propertyViewModel.changeComplement(it) },
                     isError = propertyViewModel.inputContainsError("address.complement"),
-                    erroMessage = propertyViewModel.getInputErrorMessage("address.complement")
+                    errorMessage = propertyViewModel.getInputErrorMessage("address.complement")
                 )
 
 
-                if (propertyViewModel.onLoadingState.value) {
-                    Box(Modifier.padding(20.dp)) {
-                        CircularProgressIndicator()
-                    }
-                } else {
-                    Box(Modifier.align(Alignment.CenterHorizontally)) {
-                        ButtonComp(
-                            "Confirmar Imóvel",
-                            { Icon(Icons.Default.Create, "check") },
-                            PrimaryColor,
-                            { propertyViewModel.createAction() }
-                        )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    if (propertyViewModel.onLoadingState.value) {
+                        Box(Modifier.padding(20.dp)) {
+                            CircularProgressIndicator()
+                        }
+                    } else {
+                        if (propertyViewModel.messageError.value != "") {
+                            MessageErrorComp(propertyViewModel.messageError.value, 14.sp)
+                        }
+                        Box(Modifier.align(Alignment.CenterHorizontally)) {
+                            ButtonComp(
+                                "Cadastrar Imóvel",
+                                { Icon(Icons.Default.Create, "check") },
+                                PrimaryColor,
+                                { propertyViewModel.createAction() }
+                            )
+                        }
                     }
                 }
             }

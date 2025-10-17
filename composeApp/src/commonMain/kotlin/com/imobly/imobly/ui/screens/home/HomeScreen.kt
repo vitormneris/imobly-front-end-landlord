@@ -51,18 +51,6 @@ fun HomeScreen(navController: NavHostController) {
             PrimaryColor,
             { navController.navigate("showtenants") }
         )
-        ButtonComp(
-            "Go to edittenant",
-            {},
-            PrimaryColor,
-            { navController.navigate("edittenant") }
-        )
-        ButtonComp(
-            "Go to showreports",
-            {},
-            PrimaryColor,
-            { navController.navigate("showreports") }
-        )
     }
 }
 

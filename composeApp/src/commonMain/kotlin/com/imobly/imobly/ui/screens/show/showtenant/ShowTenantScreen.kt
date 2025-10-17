@@ -1,11 +1,9 @@
 package com.imobly.imobly.ui.screens.show.showtenant
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -30,9 +28,8 @@ import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.ui.theme.fonts.montserratFont
 import com.imobly.imobly.viewmodel.TenantViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import imobly.composeapp.generated.resources.Res
-import imobly.composeapp.generated.resources.image_logo
-import org.jetbrains.compose.resources.painterResource
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 
 @Composable
 fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
@@ -44,6 +41,7 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
         topBar = {
             TopBarComp()
         },
+        snackbarHost = { SnackbarHost( tenantViewModel.snackMessage.value ) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -68,7 +66,7 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
                             "Cadastrar Locatário",
                             {  Icon(Icons.Default.Add, "Sinal de soma") },
                             PrimaryColor,
-                            { }
+                            { tenantViewModel.goToCreateTenant() }
                         )
                     }
 
@@ -90,7 +88,7 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         items(tenants.value) { tenant ->
-                            TenantCard(tenant = tenant, tenantViewModel)
+                            TenantCard(tenant, tenantViewModel)
                         }
                     }
                 }
@@ -103,52 +101,41 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
 fun TenantCard(tenant: Tenant, tenantViewModel: TenantViewModel) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(140.dp),
+            .widthIn(max = 700.dp)
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(16.dp)
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Image(
-                painter = painterResource(tenant.imageResource),
-                contentDescription = "Foto de ${tenant.name}",
+            KamelImage(
+                resource = { asyncPainterResource(tenant.pathImage) },
+                contentDescription = "Imagem do locatário ${tenant.firstName}",
                 modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
+                    .fillMaxSize()
+                    .heightIn(max = 200.dp)
+                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                contentScale = ContentScale.Crop,
+                onLoading = { progress -> CircularProgressIndicator({ progress }) },
+                onFailure = { CircularProgressIndicator() }
             )
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
                 Column {
                     Text(
-                        text = tenant.name,
+                        text = "${tenant.firstName}  ${tenant.lastName}",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
-                        color = Color.Black, // ✅ nome do locatário em preto
+                        color = Color.Black,
                         fontFamily = montserratFont()
                     )
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    Text(
-                        text = "Imóvel: ${tenant.property}",
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp,
-                        color = Color(0xFF666666),
-                        fontFamily = montserratFont()
-                    )
                 }
 
                 Column {
@@ -159,7 +146,7 @@ fun TenantCard(tenant: Tenant, tenantViewModel: TenantViewModel) {
                         Text("\uD83D\uDCDE", fontSize = 14.sp, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = tenant.telephones[0],
+                            text = tenant.telephones[0].telephone ?: "",
                             fontWeight = FontWeight.Normal,
                             fontSize = 14.sp,
                             color = Color(0xFF333333),
@@ -184,7 +171,24 @@ fun TenantCard(tenant: Tenant, tenantViewModel: TenantViewModel) {
                     }
                 }
             }
-        }
+
+            Button(
+                onClick = {
+                    tenantViewModel.goToEditTenant(tenant)
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFF2603F)
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(
+                    text = "Ver Detalhes",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    fontFamily = montserratFont()
+                )
+            }
     }
 }
 

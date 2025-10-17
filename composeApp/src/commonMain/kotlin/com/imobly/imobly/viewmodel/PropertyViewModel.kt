@@ -23,6 +23,7 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
     val onLoadingState = mutableStateOf(false)
 
     val inputErrors = mutableStateOf(emptyMap<String, String>())
+    val messageError = mutableStateOf("")
 
     val showDialogState = mutableStateOf(false)
 
@@ -51,6 +52,7 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
         property.value = Property()
         selectedImages.value = emptyList()
         inputErrors.value = emptyMap()
+        messageError.value = ""
     }
 
     fun changeSearchText(it: String) {
@@ -110,6 +112,7 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
                 property.value = Property()
                 selectedImages.value = emptyList()
                 inputErrors.value = emptyMap()
+                messageError.value = ""
                 snackMessage.value.showSnackbar("Propriedade salva com sucesso!")
             } else {
                 val errors = mutableMapOf<String, String>()

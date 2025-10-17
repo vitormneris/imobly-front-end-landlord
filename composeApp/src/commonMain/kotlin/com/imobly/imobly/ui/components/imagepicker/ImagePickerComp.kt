@@ -20,7 +20,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.collections.emptyList
 
 @Composable
-fun ImagePickerComp(label: String, stateImages: MutableState<List<GalleryPhotoResult>>) {
+fun ImagePickerComp(label: String, stateImages: MutableState<List<GalleryPhotoResult>>, allowMultiple: Boolean = true) {
     val showGallery = remember { mutableStateOf(false) }
     val selectedImages = remember { stateImages }
 
@@ -38,7 +38,7 @@ fun ImagePickerComp(label: String, stateImages: MutableState<List<GalleryPhotoRe
                 showGallery.value = false
             },
             enableCrop = false,
-            allowMultiple = true,
+            allowMultiple = allowMultiple,
             mimeTypes = listOf(MimeType.IMAGE_PNG),
         )
     }

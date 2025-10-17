@@ -1,6 +1,5 @@
 package com.imobly.imobly.api.tenant
 
-import com.imobly.imobly.domain.Property
 import com.imobly.imobly.domain.ResponseMessage
 import com.imobly.imobly.domain.Tenant
 import io.github.ismoy.imagepickerkmp.domain.extensions.loadBytes
@@ -32,7 +31,8 @@ class TenantHttpClient (val httpClient: HttpClient) {
         httpClient.get("$baseUrl/encontrartodos")
             .body()
 
-    suspend fun create(tenant: Tenant, image: GalleryPhotoResult): ResponseMessage {
+    suspend fun create(tenant: Tenant, image: GalleryPhotoResult?): ResponseMessage {
+
         val response = httpClient.post("$baseUrl/inserir") {
             setBody(MultiPartFormDataContent(
                 formData {
@@ -43,14 +43,16 @@ class TenantHttpClient (val httpClient: HttpClient) {
                             append(HttpHeaders.ContentType, "application/json")
                         }
                     )
-                    append(
-                        key = "files",
-                        value = image.loadBytes(),
-                        headers = Headers.build {
-                            append(HttpHeaders.ContentDisposition, "filename=\"${image.fileName}\"")
-                            append(HttpHeaders.ContentType, "multipart/form-data")
-                        }
-                    )
+                    if (image != null) {
+                        append(
+                            key = "file",
+                            value = image.loadBytes(),
+                            headers = Headers.build {
+                                append(HttpHeaders.ContentDisposition, "filename=\"${image.fileName}\"")
+                                append(HttpHeaders.ContentType, "multipart/form-data")
+                            }
+                        )
+                    }
                 }
             ))
         }
@@ -61,7 +63,7 @@ class TenantHttpClient (val httpClient: HttpClient) {
         return response.body<ResponseMessage>()
     }
 
-    suspend fun update(id: String, tenant : Tenant, image: GalleryPhotoResult): ResponseMessage {
+    suspend fun update(id: String, tenant : Tenant, image: GalleryPhotoResult?): ResponseMessage {
         val response = httpClient.put("$baseUrl/atualizar/$id") {
             setBody(MultiPartFormDataContent(
                 formData {
@@ -72,14 +74,16 @@ class TenantHttpClient (val httpClient: HttpClient) {
                             append(HttpHeaders.ContentType, "application/json")
                         }
                     )
-                    append(
-                        key = "files",
-                        value = image.loadBytes(),
-                        headers = Headers.build {
-                            append(HttpHeaders.ContentDisposition, "filename=\"${image.fileName}\"")
-                            append(HttpHeaders.ContentType, "multipart/form-data")
-                        }
-                    )
+                    if (image != null) {
+                        append(
+                            key = "file",
+                            value = image.loadBytes(),
+                            headers = Headers.build {
+                                append(HttpHeaders.ContentDisposition, "filename=\"${image.fileName}\"")
+                                append(HttpHeaders.ContentType, "multipart/form-data")
+                            }
+                        )
+                    }
                 }
             ))
         }
