@@ -68,6 +68,10 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
 
     fun goToEditProperty(propertyNew: Property) {
         property.value = propertyNew
+        selectedImages.value = emptyList()
+        inputLockState.value = true
+        inputErrors.value = emptyMap()
+        messageError.value = ""
         navController.navigate("editproperty")
     }
     fun goToCreateProperty() {
@@ -93,11 +97,15 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
             onLoadingState.value = false
             if (response.status == 200) {
                 hiddenEditButton()
+                selectedImages.value = emptyList()
+                inputErrors.value = emptyMap()
+                messageError.value = ""
                 snackMessage.value.showSnackbar("Propriedade editada com sucesso!")
             } else {
                 val errors = mutableMapOf<String, String>()
                 response.errorFields?.forEach { errors[it.name] = it.description }
                 inputErrors.value = errors
+                messageError.value = response.message
             }
         }
     }
@@ -118,6 +126,7 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
                 val errors = mutableMapOf<String, String>()
                 response.errorFields?.forEach { errors[it.name] = it.description }
                 inputErrors.value = errors
+                messageError.value = response.message
             }
         }
     }

@@ -119,7 +119,7 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                         maxWidth = 780.dp,
                         readOnly = propertyViewModel.inputLockState.value,
                         isError = propertyViewModel.inputContainsError("bedrooms"),
-                        errorMessage = propertyViewModel.getInputErrorMessage("bedRooms")
+                        errorMessage = propertyViewModel.getInputErrorMessage("bedrooms")
                     )
                     Spacer(Modifier.size(10.dp))
                     InputComp(
@@ -150,7 +150,7 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                         maxWidth = 780.dp,
                         readOnly = propertyViewModel.inputLockState.value,
                         isError = propertyViewModel.inputContainsError("bathrooms"),
-                        errorMessage = propertyViewModel.getInputErrorMessage("bathRooms")
+                        errorMessage = propertyViewModel.getInputErrorMessage("bathrooms")
 
                     )
                     Spacer(Modifier.size(10.dp))
@@ -167,7 +167,6 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                         errorMessage = propertyViewModel.getInputErrorMessage("garageSpaces")
                     )
                 }
-
 
                 InputComp(
                     label = "Descrição",
@@ -261,47 +260,44 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                 )
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(Modifier.align(Alignment.CenterHorizontally)) {
-                        if (propertyViewModel.messageError.value != "") {
-                            MessageErrorComp(propertyViewModel.messageError.value, 14.sp)
-                        }
-                        if (propertyViewModel.inputLockState.value) {
-                            Row {
-                                ButtonComp(
-                                    "Editar dados",
-                                    { Icon(Icons.Default.Edit, "editar") },
-                                    PrimaryColor,
-                                    { propertyViewModel.hiddenEditButton() }
-                                )
-                                ButtonComp(
-                                    "Excluir",
-                                    { Icon(Icons.Default.Delete, "deletar") },
-                                    CancelColor,
-                                    { propertyViewModel.changeShowDialog() }
-                                )
+                    if (propertyViewModel.messageError.value != "") {
+                        MessageErrorComp(propertyViewModel.messageError.value, 14.sp)
+                    }
+
+                    if (propertyViewModel.inputLockState.value) {
+                            ButtonComp(
+                                "Editar dados",
+                                { Icon(Icons.Default.Edit, "editar") },
+                                PrimaryColor,
+                                { propertyViewModel.hiddenEditButton() }
+                            )
+                            ButtonComp(
+                                "Excluir",
+                                { Icon(Icons.Default.Delete, "deletar") },
+                                CancelColor,
+                                { propertyViewModel.changeShowDialog() }
+                            )
+
+                    } else {
+                        if (propertyViewModel.onLoadingState.value) {
+                            Box(Modifier.padding(20.dp)) {
+                                CircularProgressIndicator()
                             }
                         } else {
-                            if (propertyViewModel.onLoadingState.value) {
-                                Box(Modifier.padding(20.dp)) {
-                                    CircularProgressIndicator()
-                                }
-                            } else {
-                                Row {
-                                    ButtonComp(
-                                        "Salvar",
-                                        { Icon(Icons.Default.Check, "confirmar") },
-                                        ConfirmColor,
-                                        { propertyViewModel.editAction() }
-                                    )
+                            ButtonComp(
+                                "Salvar",
+                                { Icon(Icons.Default.Check, "confirmar") },
+                                ConfirmColor,
+                                { propertyViewModel.editAction() }
+                            )
 
-                                    ButtonComp(
-                                        "Cancelar",
-                                        { Icon(Icons.Default.Cancel, "cancelar") },
-                                        CancelColor,
-                                        { propertyViewModel.hiddenEditButton() }
-                                    )
-                                }
-                            }
+                            ButtonComp(
+                                "Cancelar",
+                                { Icon(Icons.Default.Cancel, "cancelar") },
+                                CancelColor,
+                                { propertyViewModel.hiddenEditButton() }
+                            )
+
                         }
                     }
                 }

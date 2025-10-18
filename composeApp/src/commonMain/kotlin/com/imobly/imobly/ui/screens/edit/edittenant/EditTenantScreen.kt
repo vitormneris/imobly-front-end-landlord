@@ -329,47 +329,42 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
 
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(Modifier.align(Alignment.CenterHorizontally)) {
-                        if (tenantViewModel.messageError.value != "") {
-                            MessageErrorComp(tenantViewModel.messageError.value, 16.sp)
-                        }
-                        if (tenantViewModel.inputLockState.value) {
-                            Row {
-                                ButtonComp(
-                                    "Editar dados",
-                                    { Icon(Icons.Default.Edit, "editar") },
-                                    PrimaryColor,
-                                    { tenantViewModel.hiddenEditButton() }
-                                )
-                                ButtonComp(
-                                    "Excluir",
-                                    { Icon(Icons.Default.Delete, "deletar") },
-                                    CancelColor,
-                                    { tenantViewModel.changeShowDialog() }
-                                )
+                    if (tenantViewModel.messageError.value != "") {
+                        MessageErrorComp(tenantViewModel.messageError.value, 16.sp)
+                    }
+                    if (tenantViewModel.inputLockState.value) {
+                        ButtonComp(
+                            "Editar dados",
+                            { Icon(Icons.Default.Edit, "editar") },
+                            PrimaryColor,
+                            { tenantViewModel.hiddenEditButton() },
+                        )
+                        ButtonComp(
+                            "Excluir",
+                            { Icon(Icons.Default.Delete, "deletar") },
+                            CancelColor,
+                            { tenantViewModel.changeShowDialog() },
+                        )
+                    } else {
+                        if (tenantViewModel.onLoadingState.value) {
+                            Box(Modifier.padding(20.dp)) {
+                                CircularProgressIndicator()
                             }
                         } else {
-                            if (tenantViewModel.onLoadingState.value) {
-                                Box(Modifier.padding(20.dp)) {
-                                    CircularProgressIndicator()
-                                }
-                            } else {
-                                Row {
-                                    ButtonComp(
-                                        "Salvar",
-                                        { Icon(Icons.Default.Check, "confirmar") },
-                                        ConfirmColor,
-                                        { tenantViewModel.editAction() }
-                                    )
 
-                                    ButtonComp(
-                                        "Cancelar",
-                                        { Icon(Icons.Default.Cancel, "cancelar") },
-                                        CancelColor,
-                                        { tenantViewModel.hiddenEditButton() }
-                                    )
-                                }
-                            }
+                            ButtonComp(
+                                "Salvar",
+                                { Icon(Icons.Default.Check, "confirmar") },
+                                ConfirmColor,
+                                { tenantViewModel.editAction() }
+                            )
+
+                            ButtonComp(
+                                "Cancelar",
+                                { Icon(Icons.Default.Cancel, "cancelar") },
+                                CancelColor,
+                                { tenantViewModel.hiddenEditButton() }
+                            )
                         }
                     }
                 }

@@ -109,7 +109,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                         fractionWidth = 0.4f,
                         maxWidth = 780.dp,
                         isError = propertyViewModel.inputContainsError("bedrooms"),
-                        errorMessage = propertyViewModel.getInputErrorMessage("bedRooms")
+                        errorMessage = propertyViewModel.getInputErrorMessage("bedrooms")
                     )
                     Spacer(Modifier.size(10.dp))
                     InputComp(
@@ -138,7 +138,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                         fractionWidth = 0.4f,
                         maxWidth = 780.dp,
                         isError = propertyViewModel.inputContainsError("bathrooms"),
-                        errorMessage = propertyViewModel.getInputErrorMessage("bathRooms")
+                        errorMessage = propertyViewModel.getInputErrorMessage("bathrooms")
 
                     )
                     Spacer(Modifier.size(10.dp))
@@ -154,7 +154,6 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                         errorMessage = propertyViewModel.getInputErrorMessage("garageSpaces")
                     )
                 }
-
 
                 InputComp(
                     label = "Descrição",

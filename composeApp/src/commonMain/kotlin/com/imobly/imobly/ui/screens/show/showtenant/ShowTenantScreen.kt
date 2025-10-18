@@ -101,6 +101,7 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
 fun TenantCard(tenant: Tenant, tenantViewModel: TenantViewModel) {
     Card(
         modifier = Modifier
+            .padding(10.dp)
             .widthIn(max = 700.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.White),

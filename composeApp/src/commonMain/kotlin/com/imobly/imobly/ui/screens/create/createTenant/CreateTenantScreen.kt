@@ -227,7 +227,6 @@ fun CreateTenantScreen(tenantViewModel: TenantViewModel) {
                     onValueChange = { tenantViewModel.changeBirthDate(it) },
                     isError = tenantViewModel.inputContainsError("birthDate"),
                     errorMessage = tenantViewModel.getInputErrorMessage("birthDate"),
-                    readOnly = tenantViewModel.inputLockState.value
                 )
 
                 InputComp(

@@ -59,6 +59,7 @@ class TenantViewModel(val navController: NavHostController): ViewModel() {
         telephoneOne.value = ""
         telephoneTwo.value = ""
         telephoneThree.value = ""
+        searchText.value = ""
     }
 
     fun hiddenEditButton() {
@@ -88,16 +89,21 @@ class TenantViewModel(val navController: NavHostController): ViewModel() {
         inputLockState.value = true
         inputErrors.value = emptyMap()
         messageError.value = ""
+        selectedImages.value = emptyList()
 
-        if (tenant.value.telephones.size == 1) {
-            telephoneOne.value = tenant.value.telephones[0].telephone ?: ""
-        } else if (tenant.value.telephones.size == 2) {
-            telephoneOne.value = tenant.value.telephones[0].telephone ?: ""
-            telephoneTwo.value = tenant.value.telephones[1].telephone ?: ""
-        } else if (tenant.value.telephones.size == 3) {
-            telephoneOne.value = tenant.value.telephones[0].telephone ?: ""
-            telephoneTwo.value = tenant.value.telephones[1].telephone ?: ""
-            telephoneThree.value = tenant.value.telephones[2].telephone ?: ""
+        when (tenant.value.telephones.size) {
+            1 -> {
+                telephoneOne.value = tenant.value.telephones[0].telephone ?: ""
+            }
+            2 -> {
+                telephoneOne.value = tenant.value.telephones[0].telephone ?: ""
+                telephoneTwo.value = tenant.value.telephones[1].telephone ?: ""
+            }
+            3 -> {
+                telephoneOne.value = tenant.value.telephones[0].telephone ?: ""
+                telephoneTwo.value = tenant.value.telephones[1].telephone ?: ""
+                telephoneThree.value = tenant.value.telephones[2].telephone ?: ""
+            }
         }
 
         navController.navigate("edittenant")
@@ -137,6 +143,9 @@ class TenantViewModel(val navController: NavHostController): ViewModel() {
                     selectedImages.value = emptyList()
                     inputErrors.value = emptyMap()
                     messageError.value = ""
+                    telephoneOne.value = ""
+                    telephoneTwo.value = ""
+                    telephoneThree.value = ""
                     snackMessage.value.showSnackbar("Locatário salvo com sucesso!")
                 } else {
                     val errors = mutableMapOf<String, String>()
@@ -176,6 +185,7 @@ class TenantViewModel(val navController: NavHostController): ViewModel() {
                 val errors = mutableMapOf<String, String>()
                 response.errorFields?.forEach { errors[it.name] = it.description }
                 inputErrors.value = errors
+                messageError.value = response.message
             }
         }
     }
