@@ -6,7 +6,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.imobly.imobly.ui.screens.LoginScreen
+import com.imobly.imobly.ui.screens.login.LoginScreen
 import com.imobly.imobly.ui.screens.create.createTenant.CreateTenantScreen
 import com.imobly.imobly.ui.screens.create.createproperty.CreatePropertyScreen
 import com.imobly.imobly.ui.screens.edit.editproperty.EditPropertyScreen

@@ -51,6 +51,22 @@ fun HomeScreen(navController: NavHostController) {
             PrimaryColor,
             { navController.navigate("showtenants") }
         )
+
+        Spacer(Modifier.height(10.dp))
+        ButtonComp(
+            "Gerenciar reportações",
+            {},
+            PrimaryColor,
+            { navController.navigate("showreports") }
+        )
+
+        Spacer(Modifier.height(10.dp))
+        ButtonComp(
+            "Login",
+            {},
+            PrimaryColor,
+            { navController.navigate("login") }
+        )
     }
 }
 

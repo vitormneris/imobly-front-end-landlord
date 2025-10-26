@@ -1,4 +1,4 @@
-package com.imobly.imobly.ui.screens
+package com.imobly.imobly.ui.screens.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
