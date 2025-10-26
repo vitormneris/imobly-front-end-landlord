@@ -18,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.imobly.imobly.ui.theme.colors.BackGroundColor
@@ -27,7 +29,7 @@ import com.imobly.imobly.ui.theme.fonts.montserratFont
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun TitleComp(text: String, buttonBackAction: () -> Unit) {
+fun TitleComp(text: String, buttonBackAction: () -> Unit, backButton: Boolean = true, fontSize: TextUnit = 20.sp) {
 
     Box(
         Modifier
@@ -35,20 +37,22 @@ fun TitleComp(text: String, buttonBackAction: () -> Unit) {
             .fillMaxWidth()
     ) {
 
-        Button(
-            modifier = Modifier
-                .width(60.dp)
-                .height(50.dp)
-                .background(
-                    PrimaryColor,
-                    shape = RoundedCornerShape(bottomEnd = 25.dp, topEnd = 25.dp)
-                ),
-            onClick = buttonBackAction,
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-            elevation = ButtonDefaults.buttonElevation(0.dp),
-            contentPadding = PaddingValues(0.dp)
-        ) {
-            Icon(Icons.Default.ArrowBackIosNew, "check")
+        if (backButton) {
+            Button(
+                modifier = Modifier
+                    .width(60.dp)
+                    .height(50.dp)
+                    .background(
+                        PrimaryColor,
+                        shape = RoundedCornerShape(bottomEnd = 25.dp, topEnd = 25.dp)
+                    ),
+                onClick = buttonBackAction,
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                elevation = ButtonDefaults.buttonElevation(0.dp),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Icon(Icons.Default.ArrowBackIosNew, "check")
+            }
         }
 
         Box(modifier = Modifier.align(Alignment.Center)) {
@@ -58,7 +62,7 @@ fun TitleComp(text: String, buttonBackAction: () -> Unit) {
             ) {
                 Text(
                     text,
-                    fontSize = 20.sp,
+                    fontSize = fontSize,
                     color = TitleColor,
                     fontWeight = FontWeight.ExtraBold,
                     fontFamily = montserratFont()

@@ -65,9 +65,9 @@ fun ShowReportsScreen(navController: NavHostController) {
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    TitleComp("Lista de Reportações") {
+                    TitleComp("Lista de Reportações", {
                         navController.navigate("home")
-                    }
+                    })
 
                     Box(
                         modifier = Modifier.fillMaxWidth(),

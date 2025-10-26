@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.imobly.imobly.ui.screens.LoginScreen
 import com.imobly.imobly.ui.screens.create.createTenant.CreateTenantScreen
 import com.imobly.imobly.ui.screens.create.createproperty.CreatePropertyScreen
 import com.imobly.imobly.ui.screens.edit.editproperty.EditPropertyScreen
@@ -14,6 +15,7 @@ import com.imobly.imobly.ui.screens.home.HomeScreen
 import com.imobly.imobly.ui.screens.show.showproperty.ShowPropertiesScreen
 import com.imobly.imobly.ui.screens.show.showreports.ShowReportsScreen
 import com.imobly.imobly.ui.screens.show.showtenant.ShowTenantScreen
+import com.imobly.imobly.viewmodel.LoginViewModel
 import com.imobly.imobly.viewmodel.PropertyViewModel
 import com.imobly.imobly.viewmodel.TenantViewModel
 
@@ -22,6 +24,7 @@ fun App() {
     val navController = rememberNavController()
     val propertyViewModel = viewModel { PropertyViewModel(navController) }
     val tenantViewModel = viewModel { TenantViewModel(navController) }
+    val loginViewModel = viewModel { LoginViewModel(navController) }
 
     MaterialTheme {
         NavHost(
@@ -54,6 +57,10 @@ fun App() {
 
             composable(route = "createtenant") {
                 CreateTenantScreen(tenantViewModel)
+            }
+
+            composable(route = "login") {
+                LoginScreen(loginViewModel)
             }
 
             composable(route = "showreports") {
