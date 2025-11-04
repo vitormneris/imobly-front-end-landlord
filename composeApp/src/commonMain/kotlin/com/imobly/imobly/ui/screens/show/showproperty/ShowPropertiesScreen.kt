@@ -165,7 +165,7 @@ fun PropertyCardComp(property: Property, propertyViewModel: PropertyViewModel) {
                         .padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
                     Text(
-                        text = "R$ ${property.rentalValue}",
+                        text = "R$ ${property.monthlyRent}",
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
                         color = Color.White,

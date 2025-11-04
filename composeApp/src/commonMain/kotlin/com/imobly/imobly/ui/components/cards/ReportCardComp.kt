@@ -19,6 +19,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.imobly.imobly.domain.ReportStatus
+import com.imobly.imobly.ui.theme.colors.CancelColor
+import com.imobly.imobly.ui.theme.colors.ConfirmColor
 import com.imobly.imobly.ui.theme.fonts.montserratFont
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -26,13 +29,25 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun ReportCardComp(
     title: String,
     description: String,
-    createdAt: String,
+    moment: String,
     status: String,
     response: String,
-    tenant: String
+    tenant: String,
+    action: () -> Unit
 ) {
+    val statusColor:Color = when (status){
+        ReportStatus.NEW.description -> Color(0xFF0059ff)
+        ReportStatus.PENDING.description-> Color(0xFFFFC107)
+        ReportStatus.RESOLVED.description-> ConfirmColor
+        else -> CancelColor
+    }
+
+
+//    Color(0xFFFFC107)pending
+//    Color(0xFF4CAF50)closed
     Card(
-        Modifier
+        onClick = action,
+        modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         colors = CardDefaults.cardColors(
@@ -65,7 +80,7 @@ fun ReportCardComp(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "🕒 $createdAt",
+                    "🕒 $moment",
                     fontSize = 12.sp,
                     color = Color.Gray,
                     fontFamily = montserratFont()
@@ -73,7 +88,7 @@ fun ReportCardComp(
                 Box(
                     modifier = Modifier
                         .background(
-                            color = if (status == "PENDENTE") Color(0xFFFFC107) else Color(0xFF4CAF50),
+                            color = statusColor,
                             shape = RoundedCornerShape(12.dp)
                         )
                         .padding(horizontal = 10.dp, vertical = 4.dp)
@@ -130,9 +145,10 @@ fun PreviewReportCardComp(){
             "Há goteiras no meu quarto",
             "Quando chove fica pingando bem em cima do guarda roupas que fica do lado da porta do banheiro.",
             "29/09/2025 às 13:47",
-            "Concluído",
+            "NEW",
             "Podemos agendar a visita de um pedreiro para resolver isso, vou te chamar no Whatsapp para podermos conversar melhor.",
-            "Roberto Durval Santos"
+            "Roberto Durval Santos",
+            {}
         )
 
     }

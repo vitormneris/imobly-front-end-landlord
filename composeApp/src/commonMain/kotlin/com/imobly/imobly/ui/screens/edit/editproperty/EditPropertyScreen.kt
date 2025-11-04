@@ -34,6 +34,7 @@ import com.imobly.imobly.ui.components.confirmdialog.ConfirmDialogComp
 import com.imobly.imobly.ui.components.button.ButtonComp
 import com.imobly.imobly.ui.components.carousel.CarouselComp
 import com.imobly.imobly.ui.components.carousel.CarouselKamelComp
+import com.imobly.imobly.ui.components.dropdown.DropdownComp
 import com.imobly.imobly.ui.components.imagepicker.ImagePickerComp
 import com.imobly.imobly.ui.components.input.InputComp
 import com.imobly.imobly.ui.components.messageerror.MessageErrorComp
@@ -97,12 +98,25 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                 InputComp(
                     label = "Aluguel mensal",
                     placeholder = "Ex: 1.800,00",
-                    value = propertyViewModel.property.value.rentalValue,
+                    value = propertyViewModel.property.value.monthlyRent,
                     onValueChange = { propertyViewModel.changeRental(it) },
                     isNumeric = true,
                     readOnly = propertyViewModel.inputLockState.value,
                     isError = propertyViewModel.inputContainsError("rentalValue"),
                     errorMessage = propertyViewModel.getInputErrorMessage("rentalValue")
+                )
+
+                DropdownComp(
+                    label = "Categoria",
+                    placeholder = "",
+                    options = propertyViewModel.categories.value.map { it.title },
+                    selectedOption = propertyViewModel.property.value.category.title,
+                    onOptionSelected = { selectedOption ->
+                        val category = propertyViewModel.categories.value.first { it.title == selectedOption }
+                        propertyViewModel.changeCategory(category)
+                    },
+                    isEnabled = !propertyViewModel.inputLockState.value
+
                 )
 
                 Row(

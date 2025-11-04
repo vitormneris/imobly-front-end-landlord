@@ -6,9 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.imobly.imobly.api.category.CategoryHttpClient
 import com.imobly.imobly.api.createHttpClient
 import com.imobly.imobly.api.property.PropertyHttpClient
+import com.imobly.imobly.domain.Category
 import com.imobly.imobly.domain.Property
+import com.imobly.imobly.domain.ReportStatus
 import com.imobly.imobly.domain.ResponseMessage
 import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
 import kotlinx.coroutines.launch
@@ -16,6 +19,9 @@ import kotlin.collections.emptyList
 
 class PropertyViewModel(val navController: NavHostController): ViewModel() {
     val property = mutableStateOf(Property())
+
+    val categories: MutableState<List<Category>> = mutableStateOf(emptyList())
+
     val selectedImages = mutableStateOf(emptyList<GalleryPhotoResult>())
 
     val inputLockState = mutableStateOf(true)
@@ -62,6 +68,8 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
     fun findAllAction() {
         viewModelScope.launch {
             val httpClient = PropertyHttpClient(createHttpClient())
+            val categoryHttpClient = CategoryHttpClient(createHttpClient())
+            categories.value = categoryHttpClient.searchAll()
             properties.value = httpClient.searchAll()
         }
     }
@@ -153,10 +161,10 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
     }
     fun changeRental(it: String) {
         property.value = property.value.copy(
-            rentalValue = if (it.toDoubleOrNull() != null || it == "") {
+            monthlyRent = if (it.toDoubleOrNull() != null || it == "") {
                 it
             } else {
-                property.value.rentalValue
+                property.value.monthlyRent
             }
         )
     }
@@ -252,4 +260,9 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
             address = property.value.address.copy(complement = it)
         )
     }
+
+    fun changeCategory(category: Category) {
+        property.value = property.value.copy(category = category)
+    }
+
 }

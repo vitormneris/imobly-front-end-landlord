@@ -27,8 +27,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
+import com.imobly.imobly.domain.ReportStatus
 import com.imobly.imobly.ui.components.button.ButtonComp
 import com.imobly.imobly.ui.components.carousel.CarouselComp
+import com.imobly.imobly.ui.components.dropdown.DropdownComp
 import com.imobly.imobly.ui.components.imagepicker.ImagePickerComp
 import com.imobly.imobly.ui.components.input.InputComp
 import com.imobly.imobly.ui.components.messageerror.MessageErrorComp
@@ -89,11 +91,22 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
                 InputComp(
                     label = "Aluguel mensal",
                     placeholder = "Ex: 1.800,00",
-                    value = propertyViewModel.property.value.rentalValue,
+                    value = propertyViewModel.property.value.monthlyRent,
                     onValueChange = { propertyViewModel.changeRental(it) },
                     isNumeric = true,
                     isError = propertyViewModel.inputContainsError("rentalValue"),
                     errorMessage = propertyViewModel.getInputErrorMessage("rentalValue")
+                )
+
+                DropdownComp(
+                    label = "Categoria",
+                    placeholder = "",
+                    options = propertyViewModel.categories.value.map { it.title },
+                    selectedOption = propertyViewModel.property.value.category!!.title,
+                    onOptionSelected = { selectedOption ->
+                        val category = propertyViewModel.categories.value.first { it.title == selectedOption }
+                        propertyViewModel.changeCategory(category)
+                    },
                 )
 
                 Row(

@@ -11,46 +11,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.imobly.imobly.domain.Report
 import com.imobly.imobly.ui.components.cards.ReportCardComp
 import com.imobly.imobly.ui.components.searchbar.SearchBarComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
+import com.imobly.imobly.viewmodel.ReportViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ShowReportsScreen(navController: NavHostController) {
-    var searchText by remember { mutableStateOf("") }
+fun ShowReportsScreen(reportViewModel: ReportViewModel) {
 
-    val reports = remember {
-        listOf(
-            ReportData(
-                title = "Parede rachando",
-                description = "A parede do portão está rachando",
-                date = "29/09/2025",
-                status = "PENDENTE",
-                message = "Vou te chamar no whatsapp para resolvermos isso",
-                reporter = "Rafael Henrique Lima"
-            ),
-            ReportData(
-                title = "Vazamento na pia",
-                description = "Há um vazamento pequeno na pia da cozinha",
-                date = "02/10/2025",
-                status = "EM ANÁLISE",
-                message = "Enviarei fotos no grupo do condomínio",
-                reporter = "Fernanda Moraes"
-            ),
-            ReportData(
-                title = "Lâmpada queimada",
-                description = "Corredor do térreo sem iluminação",
-                date = "10/10/2025",
-                status = "RESOLVIDO",
-                message = "Foi trocada pelo zelador",
-                reporter = "Carlos Silva"
-            )
-        )
-    }
+    val reports: MutableState<List<Report>> = remember{ reportViewModel.reports}
+    reportViewModel.findAllAction()
 
     Scaffold(
         topBar = { TopBarComp() },
@@ -66,7 +40,7 @@ fun ShowReportsScreen(navController: NavHostController) {
                         .fillMaxSize()
                 ) {
                     TitleComp("Lista de Reportações", {
-                        navController.navigate("home")
+                        reportViewModel.goToHome()
                     })
 
                     Box(
@@ -75,8 +49,8 @@ fun ShowReportsScreen(navController: NavHostController) {
                     ) {
                         SearchBarComp(
                             "Buscar reportações",
-                            searchText,
-                            { searchText = it }
+                            reportViewModel.searchText.value,
+                            { reportViewModel.changeSearchText(it) }
                         )
                     }
 
@@ -88,14 +62,17 @@ fun ShowReportsScreen(navController: NavHostController) {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         contentPadding = PaddingValues(bottom = 16.dp)
                     ) {
-                        items(reports) { report ->
+                        items(reports.value) { report ->
                             ReportCardComp(
                                 report.title,
-                                report.description,
-                                report.date,
-                                report.status,
                                 report.message,
-                                report.reporter
+                                report.moment.toString(),
+                                report.status.description,
+                                report.response,
+                                report.tenant.firstName,
+                                {
+                                    reportViewModel.goToEditReport(report)
+                                }
                             )
                         }
                     }
@@ -105,18 +82,9 @@ fun ShowReportsScreen(navController: NavHostController) {
     )
 }
 
-data class ReportData(
-    val title: String,
-    val description: String,
-    val date: String,
-    val status: String,
-    val message: String,
-    val reporter: String
-)
-
 @Composable
 @Preview
 fun ShowReportsScreenPreview() {
     val navControllerFake = rememberNavController()
-    ShowReportsScreen(navControllerFake)
+    ShowReportsScreen(ReportViewModel(navControllerFake))
 }

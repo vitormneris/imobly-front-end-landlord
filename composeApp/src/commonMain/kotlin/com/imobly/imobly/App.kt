@@ -10,6 +10,7 @@ import com.imobly.imobly.ui.screens.login.LoginScreen
 import com.imobly.imobly.ui.screens.create.createTenant.CreateTenantScreen
 import com.imobly.imobly.ui.screens.create.createproperty.CreatePropertyScreen
 import com.imobly.imobly.ui.screens.edit.editproperty.EditPropertyScreen
+import com.imobly.imobly.ui.screens.edit.editreport.EditReportScreen
 import com.imobly.imobly.ui.screens.edit.edittenant.EditTenantScreen
 import com.imobly.imobly.ui.screens.home.HomeScreen
 import com.imobly.imobly.ui.screens.show.showproperty.ShowPropertiesScreen
@@ -17,6 +18,7 @@ import com.imobly.imobly.ui.screens.show.showreports.ShowReportsScreen
 import com.imobly.imobly.ui.screens.show.showtenant.ShowTenantScreen
 import com.imobly.imobly.viewmodel.LoginViewModel
 import com.imobly.imobly.viewmodel.PropertyViewModel
+import com.imobly.imobly.viewmodel.ReportViewModel
 import com.imobly.imobly.viewmodel.TenantViewModel
 
 @Composable
@@ -25,6 +27,7 @@ fun App() {
     val propertyViewModel = viewModel { PropertyViewModel(navController) }
     val tenantViewModel = viewModel { TenantViewModel(navController) }
     val loginViewModel = viewModel { LoginViewModel(navController) }
+    val reportViewModel = viewModel { ReportViewModel(navController) }
 
     MaterialTheme {
         NavHost(
@@ -64,7 +67,11 @@ fun App() {
             }
 
             composable(route = "showreports") {
-                ShowReportsScreen(navController)
+                ShowReportsScreen(reportViewModel)
+            }
+
+            composable(route = "editreport") {
+                EditReportScreen(reportViewModel)
             }
         }
     }
