@@ -3,6 +3,7 @@ package com.imobly.imobly.ui.screens.edit.editproperty
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -22,11 +24,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
@@ -43,13 +43,14 @@ import com.imobly.imobly.ui.components.topbar.TopBarComp
 import com.imobly.imobly.ui.theme.colors.CancelColor
 import com.imobly.imobly.ui.theme.colors.ConfirmColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
-import com.imobly.imobly.ui.theme.fonts.montserratFont
 import com.imobly.imobly.viewmodel.PropertyViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
     val scrollState = rememberScrollState()
+
+    propertyViewModel.whenStartingThePage()
 
     Scaffold(
         topBar = { TopBarComp() },
@@ -70,7 +71,8 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
             Column(
                 Modifier
                     .verticalScroll(scrollState)
-                    .fillMaxSize(),
+                    .widthIn(max = 1000.dp)
+                    .fillMaxWidth(0.9f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -81,7 +83,6 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                 }
 
                 if (!propertyViewModel.inputLockState.value) {
-
                     ImagePickerComp("Escolha as imagens", propertyViewModel.selectedImages)
                 }
 
@@ -99,11 +100,11 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                     label = "Aluguel mensal",
                     placeholder = "Ex: 1.800,00",
                     value = propertyViewModel.property.value.monthlyRent,
-                    onValueChange = { propertyViewModel.changeRental(it) },
+                    onValueChange = { propertyViewModel.changeMonthlyRent(it) },
                     isNumeric = true,
                     readOnly = propertyViewModel.inputLockState.value,
-                    isError = propertyViewModel.inputContainsError("rentalValue"),
-                    errorMessage = propertyViewModel.getInputErrorMessage("rentalValue")
+                    isError = propertyViewModel.inputContainsError("monthlyRent"),
+                    errorMessage = propertyViewModel.getInputErrorMessage("monthlyRent")
                 )
 
                 DropdownComp(
@@ -120,8 +121,10 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                 )
 
                 Row(
-                    Modifier.fillMaxWidth().align(Alignment.CenterHorizontally),
-                    horizontalArrangement = Arrangement.Center
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     InputComp(
                         label = "Nº Domitórios",
@@ -129,11 +132,10 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                         value = propertyViewModel.property.value.bedrooms,
                         onValueChange = { propertyViewModel.changeBedrooms(it) },
                         isNumeric = true,
-                        fractionWidth = 0.4f,
-                        maxWidth = 780.dp,
                         readOnly = propertyViewModel.inputLockState.value,
                         isError = propertyViewModel.inputContainsError("bedrooms"),
-                        errorMessage = propertyViewModel.getInputErrorMessage("bedrooms")
+                        errorMessage = propertyViewModel.getInputErrorMessage("bedrooms"),
+                        modifier = Modifier.weight(1f)
                     )
                     Spacer(Modifier.size(10.dp))
                     InputComp(
@@ -142,17 +144,18 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                         value = propertyViewModel.property.value.area,
                         onValueChange = { propertyViewModel.changeArea(it) },
                         isNumeric = true,
-                        fractionWidth = 0.6f,
-                        maxWidth = 780.dp,
                         readOnly = propertyViewModel.inputLockState.value,
                         isError = propertyViewModel.inputContainsError("area"),
-                        errorMessage = propertyViewModel.getInputErrorMessage("area")
+                        errorMessage = propertyViewModel.getInputErrorMessage("area"),
+                        modifier = Modifier.weight(1f)
                     )
                 }
 
                 Row(
-                    Modifier.fillMaxWidth().align(Alignment.CenterHorizontally),
-                    horizontalArrangement = Arrangement.Center
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     InputComp(
                         label = "Nº Banheiros",
@@ -160,12 +163,10 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                         value = propertyViewModel.property.value.bathrooms,
                         onValueChange = { propertyViewModel.changeBathrooms(it) },
                         isNumeric = true,
-                        fractionWidth = 0.4f,
-                        maxWidth = 780.dp,
                         readOnly = propertyViewModel.inputLockState.value,
                         isError = propertyViewModel.inputContainsError("bathrooms"),
-                        errorMessage = propertyViewModel.getInputErrorMessage("bathrooms")
-
+                        errorMessage = propertyViewModel.getInputErrorMessage("bathrooms"),
+                        modifier = Modifier.weight(1f)
                     )
                     Spacer(Modifier.size(10.dp))
                     InputComp(
@@ -174,11 +175,10 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                         value = propertyViewModel.property.value.garageSpaces,
                         onValueChange = { propertyViewModel.changeGarageSpaces(it) },
                         isNumeric = true,
-                        fractionWidth = 0.6f,
-                        maxWidth = 780.dp,
                         readOnly = propertyViewModel.inputLockState.value,
                         isError = propertyViewModel.inputContainsError("garageSpaces"),
-                        errorMessage = propertyViewModel.getInputErrorMessage("garageSpaces")
+                        errorMessage = propertyViewModel.getInputErrorMessage("garageSpaces"),
+                        modifier = Modifier.weight(1f)
                     )
                 }
 
@@ -279,18 +279,26 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                     }
 
                     if (propertyViewModel.inputLockState.value) {
+                        FlowRow {
+
                             ButtonComp(
                                 "Editar dados",
                                 { Icon(Icons.Default.Edit, "editar") },
                                 PrimaryColor,
-                                { propertyViewModel.hiddenEditButton() }
+                                { propertyViewModel.hiddenEditButton() },
+                                185.dp,
+                                16.sp
                             )
+
                             ButtonComp(
                                 "Excluir",
                                 { Icon(Icons.Default.Delete, "deletar") },
                                 CancelColor,
-                                { propertyViewModel.changeShowDialog() }
+                                { propertyViewModel.changeShowDialog() },
+                                140.dp,
+                                16.sp
                             )
+                        }
 
                     } else {
                         if (propertyViewModel.onLoadingState.value) {
@@ -298,20 +306,25 @@ fun EditPropertyScreen(propertyViewModel: PropertyViewModel) {
                                 CircularProgressIndicator()
                             }
                         } else {
-                            ButtonComp(
-                                "Salvar",
-                                { Icon(Icons.Default.Check, "confirmar") },
-                                ConfirmColor,
-                                { propertyViewModel.editAction() }
-                            )
+                            FlowRow {
+                                ButtonComp(
+                                    "Salvar",
+                                    { Icon(Icons.Default.Check, "confirmar") },
+                                    ConfirmColor,
+                                    { propertyViewModel.editAction() },
+                                    140.dp,
+                                    16.sp
+                                )
 
-                            ButtonComp(
-                                "Cancelar",
-                                { Icon(Icons.Default.Cancel, "cancelar") },
-                                CancelColor,
-                                { propertyViewModel.hiddenEditButton() }
-                            )
-
+                                ButtonComp(
+                                    "Cancelar",
+                                    { Icon(Icons.Default.Cancel, "cancelar") },
+                                    CancelColor,
+                                    { propertyViewModel.hiddenEditButton() },
+                                    155.dp,
+                                    16.sp
+                                )
+                            }
                         }
                     }
                 }

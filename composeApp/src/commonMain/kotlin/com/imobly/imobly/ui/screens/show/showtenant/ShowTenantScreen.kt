@@ -147,7 +147,7 @@ fun TenantCard(tenant: Tenant, tenantViewModel: TenantViewModel) {
                         Text("\uD83D\uDCDE", fontSize = 14.sp, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = tenant.telephones[0].telephone ?: "",
+                            text = tenant.telephones.telephone1,
                             fontWeight = FontWeight.Normal,
                             fontSize = 14.sp,
                             color = Color(0xFF333333),

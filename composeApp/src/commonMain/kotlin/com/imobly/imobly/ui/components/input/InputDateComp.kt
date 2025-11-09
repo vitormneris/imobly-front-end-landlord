@@ -3,19 +3,28 @@ package com.imobly.imobly.ui.components.input
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -28,6 +37,7 @@ import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.ui.theme.fonts.montserratFont
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -37,26 +47,22 @@ fun InputDateComp(
     label: String ,
     value: String,
     onValueChange: (String) -> Unit,
-    fractionWidth: Float = 0.8f,
-    maxWidth: Dp = 1000.dp,
     isError: Boolean = false,
     errorMessage: String = "",
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
+    modifier: Modifier = Modifier.padding(16.dp).fillMaxWidth()
 ) {
     var showCalendar by remember { mutableStateOf(false) }
-
     Column(
-        modifier = Modifier
-            .widthIn(max = maxWidth)
-            .fillMaxWidth(fractionWidth)
-            .padding(vertical = 5.dp)
+        modifier = modifier
     ) {
         Text(
             label,
             fontFamily = montserratFont(),
             fontSize = 15.sp,
             fontWeight = FontWeight.ExtraBold,
-            color = PrimaryColor
+            color = PrimaryColor,
+            modifier = Modifier.padding(horizontal = 15.dp)
         )
 
         Box(
@@ -78,16 +84,18 @@ fun InputDateComp(
                     text = value.ifEmpty { "Selecionar data" },
                     fontFamily = montserratFont(),
                     fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
 
                 Icon(
                     imageVector = Icons.Filled.CalendarToday,
                     contentDescription = "Abrir calendário",
-                    tint = IconColor
+                    tint = Color.Black
                 )
             }
         }
+
         if (isError) {
             MessageErrorComp(errorMessage)
         }
@@ -179,7 +187,7 @@ fun DatePickerDialogCustom(
                             week.forEach { day ->
                                 if (day != null) {
                                     val isToday =
-                                        day == today.dayOfMonth && currentMonth == today.monthNumber && currentYear == today.year
+                                        day == today.day && currentMonth == today.month.number && currentYear == today.year
 
                                     Box(
                                         modifier = Modifier
@@ -234,7 +242,7 @@ fun getMonthName(month: Int): String =
         "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
     )[month - 1]
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun InputDateCompPreview() {
     Box(

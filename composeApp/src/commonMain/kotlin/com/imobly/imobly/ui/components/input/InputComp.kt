@@ -1,7 +1,9 @@
 package com.imobly.imobly.ui.components.input
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,22 +36,17 @@ fun InputComp(
     value: String,
     onValueChange: (String) -> Unit,
     isNumeric: Boolean = false,
-    fractionWidth: Float = 0.8f,
-    maxWidth: Dp = 1000.dp,
     singleLine: Boolean = true,
     readOnly: Boolean = false,
     isError: Boolean = false,
-    errorMessage: String = ""
+    errorMessage: String = "",
+    modifier: Modifier = Modifier.padding(16.dp).fillMaxWidth()
 ) {
-    var numLines = 1
-    if (!singleLine) {
-        numLines = 4
-    }
+    val numLines = if (singleLine) 1 else 4
 
     Column(
-        modifier = Modifier
-        .padding(vertical = 10.dp),
-        horizontalAlignment = Alignment.Start
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center
     ) {
         OutlinedTextField(
             label = {
@@ -68,9 +65,7 @@ fun InputComp(
                 Text(placeholder, fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
             },
             textStyle = TextStyle(fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.Bold),
-            modifier = Modifier
-                .widthIn(max = maxWidth)
-                .fillMaxWidth(fractionWidth),
+            modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 unfocusedTextColor = Color.Black,
                 unfocusedLabelColor = PrimaryColor,
@@ -93,7 +88,7 @@ fun InputComp(
 @Composable
 fun InputCompPreview() {
     Box(
-        Modifier.fillMaxSize(),
+        Modifier.fillMaxWidth(0.8f),
         contentAlignment = Alignment.Center
     ) {
         InputComp(

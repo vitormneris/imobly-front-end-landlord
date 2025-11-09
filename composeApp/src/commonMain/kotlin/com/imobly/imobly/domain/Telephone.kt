@@ -4,5 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Telephone(
-    val telephone: String? = null
+    var telephone1: String = "",
+    var telephone2: String? = "",
+    var telephone3: String? = ""
 )

@@ -1,11 +1,16 @@
 package com.imobly.imobly.api
 
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.HttpRequestPipeline
+import io.ktor.client.request.header
 import io.ktor.http.URLProtocol
+import io.ktor.http.encodedPath
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -17,14 +22,18 @@ fun createHttpClient(): HttpClient = HttpClient {
             isLenient = true
         })
     }
+
     install(Logging) {
         level = LogLevel.ALL
     }
+
     defaultRequest {
         url {
             protocol = URLProtocol.HTTP
             port = 8080
-            host = "192.168.0.96"
+            host = "192.168.0.150"
         }
     }
 }
+
+var TOKEN = ""

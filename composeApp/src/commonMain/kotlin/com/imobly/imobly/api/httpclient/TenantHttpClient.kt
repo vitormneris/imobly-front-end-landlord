@@ -1,6 +1,9 @@
-package com.imobly.imobly.api.tenant
+package com.imobly.imobly.api.httpclient
 
-import com.imobly.imobly.domain.ResponseMessage
+import com.imobly.imobly.api.TOKEN
+import com.imobly.imobly.api.dto.ErrorDTO
+import com.imobly.imobly.api.dto.Ok
+import com.imobly.imobly.api.dto.ResponseMessage
 import com.imobly.imobly.domain.Tenant
 import io.github.ismoy.imagepickerkmp.domain.extensions.loadBytes
 import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
@@ -10,6 +13,7 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
@@ -27,45 +31,17 @@ class TenantHttpClient (val httpClient: HttpClient) {
         explicitNulls = false
     }
 
-    suspend fun searchAll(): List<Tenant> =
-        httpClient.get("$baseUrl/encontrartodos")
-            .body()
-
-    suspend fun create(tenant: Tenant, image: GalleryPhotoResult?): ResponseMessage {
-
-        val response = httpClient.post("$baseUrl/inserir") {
-            setBody(MultiPartFormDataContent(
-                formData {
-                    append(
-                        key = "tenant",
-                        value = json.encodeToString(tenant),
-                        headers = Headers.build {
-                            append(HttpHeaders.ContentType, "application/json")
-                        }
-                    )
-                    if (image != null) {
-                        append(
-                            key = "file",
-                            value = image.loadBytes(),
-                            headers = Headers.build {
-                                append(HttpHeaders.ContentDisposition, "filename=\"${image.fileName}\"")
-                                append(HttpHeaders.ContentType, "multipart/form-data")
-                            }
-                        )
-                    }
-                }
-            ))
+    suspend fun searchAll(): List<Tenant> {
+        val response = httpClient.get("$baseUrl/encontrartodos") {
+            header("Authorization", "Bearer $TOKEN")
         }
-
-        if (response.status.isSuccess()) {
-            return ResponseMessage()
-        }
-        return response.body<ResponseMessage>()
+        return response.body()
     }
-
     suspend fun update(id: String, tenant : Tenant, image: GalleryPhotoResult?): ResponseMessage {
         val response = httpClient.put("$baseUrl/atualizar/$id") {
-            setBody(MultiPartFormDataContent(
+            header("Authorization", "Bearer $TOKEN")
+            setBody(
+                MultiPartFormDataContent(
                 formData {
                     append(
                         key = "tenant",
@@ -88,12 +64,18 @@ class TenantHttpClient (val httpClient: HttpClient) {
             ))
         }
         if (response.status.isSuccess()) {
-            return ResponseMessage()
+            return Ok()
         }
-        return response.body<ResponseMessage>()
+        return response.body<ErrorDTO>()
     }
 
-    suspend fun delete(id: String): Boolean {
-        return httpClient.delete("$baseUrl/deletar/$id").status.isSuccess()
+    suspend fun delete(id: String): ResponseMessage {
+        val response = httpClient.delete("$baseUrl/deletar/$id") {
+            header("Authorization", "Bearer $TOKEN")
+        }
+        if (response.status.isSuccess()) {
+            return Ok()
+        }
+        return response.body<ErrorDTO>()
     }
 }

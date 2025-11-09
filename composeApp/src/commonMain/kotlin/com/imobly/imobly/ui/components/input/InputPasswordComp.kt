@@ -41,16 +41,14 @@ fun InputPasswordComp(
     onValueChange: (String) -> Unit,
     passwordVisible: Boolean = false,
     changePasswordVisible: () -> Unit,
-    fractionWidth: Float = 0.8f,
-    maxWidth: Dp = 1000.dp,
     readOnly: Boolean = false,
     isError: Boolean = false,
-    errorMessage: String = ""
+    errorMessage: String = "",
+    modifier: Modifier = Modifier.padding(16.dp).fillMaxWidth()
 ) {
 
     Column(
-        modifier = Modifier
-            .padding(vertical = 10.dp),
+        modifier = modifier,
         horizontalAlignment = Alignment.Start
     ) {
         OutlinedTextField(
@@ -68,9 +66,7 @@ fun InputPasswordComp(
             isError = isError,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             textStyle = TextStyle(fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.Bold),
-            modifier = Modifier
-                .widthIn(max = maxWidth)
-                .fillMaxWidth(fractionWidth),
+            modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
                 Icon(
                     imageVector = if (passwordVisible) {

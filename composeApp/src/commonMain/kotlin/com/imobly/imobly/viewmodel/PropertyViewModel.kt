@@ -8,11 +8,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.imobly.imobly.api.category.CategoryHttpClient
 import com.imobly.imobly.api.createHttpClient
-import com.imobly.imobly.api.property.PropertyHttpClient
-import com.imobly.imobly.domain.Category
+import com.imobly.imobly.api.dto.ErrorDTO
+import com.imobly.imobly.api.dto.Ok
+import com.imobly.imobly.api.httpclient.PropertyHttpClient
 import com.imobly.imobly.domain.Property
-import com.imobly.imobly.domain.ReportStatus
-import com.imobly.imobly.domain.ResponseMessage
+import com.imobly.imobly.domain.Category
 import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
 import kotlinx.coroutines.launch
 import kotlin.collections.emptyList
@@ -52,6 +52,10 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
 
     fun hiddenEditButton() {
         inputLockState.value = !inputLockState.value
+    }
+
+    fun whenStartingThePage() {
+        onLoadingState.value = false
     }
 
     fun resetPage() {
@@ -94,47 +98,55 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
         navController.navigate("showproperties")
     }
 
-    fun editAction() {
-        viewModelScope.launch {
-            onLoadingState.value = true
-            val httpClient = PropertyHttpClient(createHttpClient())
-            var response = ResponseMessage(status = 500)
-            if (property.value.id != null) {
-                response = httpClient.update(property.value.id!!, property.value, selectedImages.value)
-            }
-            onLoadingState.value = false
-            if (response.status == 200) {
-                hiddenEditButton()
-                selectedImages.value = emptyList()
-                inputErrors.value = emptyMap()
-                messageError.value = ""
-                snackMessage.value.showSnackbar("Propriedade editada com sucesso!")
-            } else {
-                val errors = mutableMapOf<String, String>()
-                response.errorFields?.forEach { errors[it.name] = it.description }
-                inputErrors.value = errors
-                messageError.value = response.message
-            }
-        }
-    }
-
     fun createAction() {
         viewModelScope.launch {
             onLoadingState.value = true
             val httpClient = PropertyHttpClient(createHttpClient())
             val response = httpClient.create(property = property.value, selectedImages.value)
             onLoadingState.value = false
-            if (response.status == 200) {
-                property.value = Property()
-                selectedImages.value = emptyList()
-                inputErrors.value = emptyMap()
-                messageError.value = ""
-                snackMessage.value.showSnackbar("Propriedade salva com sucesso!")
-            } else {
-                val errors = mutableMapOf<String, String>()
-                response.errorFields?.forEach { errors[it.name] = it.description }
-                inputErrors.value = errors
-                messageError.value = response.message
+            when (response) {
+                is Ok -> {
+                    property.value = Property()
+                    selectedImages.value = emptyList()
+                    inputErrors.value = emptyMap()
+                    messageError.value = ""
+                    snackMessage.value.showSnackbar("Propriedade salva com sucesso!")
+                }
+                is ErrorDTO -> {
+                    val errors = mutableMapOf<String, String>()
+                    response.errorFields?.forEach { errors[it.name] = it.description }
+                    inputErrors.value = errors
+                    messageError.value = response.message
+                }
+            }
+        }
+    }
+
+    fun editAction() {
+        viewModelScope.launch {
+            onLoadingState.value = true
+            val httpClient = PropertyHttpClient(createHttpClient())
+            if (property.value.id != null) {
+                val response = httpClient.update(property.value.id!!, property.value, selectedImages.value)
+
+                onLoadingState.value = false
+                when (response) {
+                    is Ok -> {
+                        hiddenEditButton()
+                        selectedImages.value = emptyList()
+                        inputErrors.value = emptyMap()
+                        messageError.value = ""
+                        snackMessage.value.showSnackbar("Propriedade editada com sucesso!")
+                    }
+
+                    is ErrorDTO -> {
+                        val errors = mutableMapOf<String, String>()
+                        response.errorFields?.forEach { errors[it.name] = it.description }
+                        inputErrors.value = errors
+                        messageError.value = response.message
+                    }
+
+                }
             }
         }
     }
@@ -142,16 +154,19 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
     fun deleteAction() {
         viewModelScope.launch {
             val httpClient = PropertyHttpClient(createHttpClient())
-            var success = false
             if (property.value.id != null) {
-                success = httpClient.delete(property.value.id!!)
-            }
-            showDialogState.value = false
-            goToShowProperties()
-            if (success) {
-                snackMessage.value.showSnackbar("Propriedade deletada com sucesso!")
-            } else {
-                snackMessage.value.showSnackbar("Houve um problema ao deletar a propriedade!")
+                val response = httpClient.delete(property.value.id!!)
+                showDialogState.value = false
+                goToShowProperties()
+                when (response) {
+                    is Ok -> {
+                        snackMessage.value.showSnackbar("Propriedade deletada com sucesso!")
+                    }
+
+                    is ErrorDTO -> {
+                        snackMessage.value.showSnackbar("Houve um problema ao deletar a propriedade!")
+                    }
+                }
             }
         }
     }
@@ -159,7 +174,7 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
     fun changeTitle(it: String) {
         property.value = property.value.copy(title = it)
     }
-    fun changeRental(it: String) {
+    fun changeMonthlyRent(it: String) {
         property.value = property.value.copy(
             monthlyRent = if (it.toDoubleOrNull() != null || it == "") {
                 it
