@@ -67,6 +67,22 @@ fun HomeScreen(navController: NavHostController) {
             PrimaryColor,
             { navController.navigate("editlandlord") }
         )
+
+        Spacer(Modifier.height(10.dp))
+        ButtonComp(
+            "Cadastrar categoria",
+            {},
+            PrimaryColor,
+            { navController.navigate("createcategory") }
+        )
+
+        Spacer(Modifier.height(10.dp))
+        ButtonComp(
+            "Editar categoria",
+            {},
+            PrimaryColor,
+            { navController.navigate("editcategory") }
+        )
     }
 }
 

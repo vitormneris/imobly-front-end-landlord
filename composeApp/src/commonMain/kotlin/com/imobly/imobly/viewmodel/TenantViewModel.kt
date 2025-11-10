@@ -17,7 +17,7 @@ import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
 import kotlinx.coroutines.launch
 import kotlin.text.ifEmpty
 
-class TenantViewModel(val navController: NavHostController): ViewModel() {
+class TenantViewModel(private val navController: NavHostController): ViewModel() {
 
     val tenants: MutableState<List<Tenant>> = mutableStateOf(emptyList())
 

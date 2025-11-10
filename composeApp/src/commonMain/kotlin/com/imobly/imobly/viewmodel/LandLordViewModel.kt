@@ -15,7 +15,7 @@ import com.imobly.imobly.domain.LandLord
 import com.imobly.imobly.domain.Telephone
 import kotlinx.coroutines.launch
 
-class LandLordViewModel(val navController: NavHostController): ViewModel() {
+class LandLordViewModel(private val navController: NavHostController): ViewModel() {
     val landLord = mutableStateOf(LandLord())
     val inputErrors = mutableStateOf(emptyMap<String, String>())
     val messageError = mutableStateOf("")

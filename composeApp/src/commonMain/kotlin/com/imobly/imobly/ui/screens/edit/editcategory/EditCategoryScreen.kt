@@ -1,8 +1,6 @@
 package com.imobly.imobly.ui.screens.edit.editcategory
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -18,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.imobly.imobly.ui.components.button.ButtonComp
-import com.imobly.imobly.ui.components.dropdown.DropdownComp
+import com.imobly.imobly.ui.components.confirmdialog.ConfirmDialogComp
 import com.imobly.imobly.ui.components.input.InputComp
 import com.imobly.imobly.ui.components.messageerror.MessageErrorComp
 import com.imobly.imobly.ui.components.title.TitleComp
@@ -30,12 +28,14 @@ import com.imobly.imobly.viewmodel.CategoryViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun EditCategoryScreen(viewModel: CategoryViewModel) {
+fun EditCategoryScreen(categoryViewModel: CategoryViewModel) {
     val scrollState = rememberScrollState()
+
+    categoryViewModel.whenStartingThePage()
 
     Scaffold(
         topBar = { TopBarComp() },
-        snackbarHost = { SnackbarHost(viewModel.snackMessage.value) },
+        snackbarHost = { SnackbarHost(categoryViewModel.snackMessage.value) },
         contentWindowInsets = WindowInsets.systemBars
     ) { paddingValues ->
 
@@ -46,102 +46,87 @@ fun EditCategoryScreen(viewModel: CategoryViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-            TitleComp("Editar Categoria", { viewModel.goToShowCategories() })
+            TitleComp("Editar Categoria", { categoryViewModel.goToHome() })
 
             Column(
                 modifier = Modifier
                     .verticalScroll(scrollState)
-                    .fillMaxSize()
-                    .padding(horizontal = 20.dp),
+                    .widthIn(max = 1000.dp)
+                    .fillMaxWidth(0.9f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                // ===== INPUT: NOME =====
                 InputComp(
-                    label = "Nome da Categoria",
+                    label = "Título",
                     placeholder = "Ex: Residencial",
-                    value = viewModel.category.value.title,
-                    onValueChange = { viewModel.changeTitle(it) },
-                    isError = viewModel.inputContainsError("title"),
-                    errorMessage = viewModel.getInputErrorMessage("title"),
-                    readOnly = viewModel.inputLockState.value
+                    value = categoryViewModel.category.value.title,
+                    onValueChange = { categoryViewModel.changeTitle(it) },
+                    isError = categoryViewModel.inputContainsError("title"),
+                    errorMessage = categoryViewModel.getInputErrorMessage("title"),
+                    readOnly = categoryViewModel.inputLockState.value
                 )
-
-                // ===== DROPDOWN + PROPRIEDADES =====
-                DropdownComp(
-                    label = "Propriedade",
-                    placeholder = "Selecione ou digite...",
-                    options = viewModel.properties.value,
-                    selectedOption = viewModel.propertyText.value,
-                    onOptionSelected = { selected -> viewModel.changePropertyText(selected) },
-                    isEnabled = !viewModel.inputLockState.value
-                )
-
-                if (viewModel.properties.value.isNotEmpty()) {
-                    Text("Propriedades adicionadas:", style = MaterialTheme.typography.titleMedium)
-
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(max = 200.dp)
-                    ) {
-                        itemsIndexed(viewModel.properties.value) { index, prop ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(prop)
-                                if (!viewModel.inputLockState.value) {
-                                    IconButton(onClick = { viewModel.removeProperty(index) }) {
-                                        Icon(Icons.Default.Delete, contentDescription = "Remover")
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
 
                 Spacer(Modifier.height(20.dp))
 
-                // ===== AÇÕES =====
+                ConfirmDialogComp(
+                    categoryViewModel.showDialogState.value,
+                    "Está ação deletará a categoria",
+                    "Tem certeza que deseja continuar? Está ação é irreversível.",
+                    { categoryViewModel.deleteAction() },
+                    { categoryViewModel.changeShowDialog() }
+                )
+
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-                    if (viewModel.messageError.value.isNotEmpty()) {
-                        MessageErrorComp(viewModel.messageError.value, 14.sp)
+                    if (categoryViewModel.messageError.value != "") {
+                        MessageErrorComp(categoryViewModel.messageError.value, 16.sp)
                     }
+                    if (categoryViewModel.inputLockState.value) {
 
-                    if (viewModel.inputLockState.value) {
-                        ButtonComp(
-                            "Editar dados",
-                            { Icon(Icons.Default.Edit, "editar") },
-                            PrimaryColor
-                        ) { viewModel.hiddenEditButton() }
+                        FlowRow {
+                            ButtonComp(
+                                "Editar dados",
+                                { Icon(Icons.Default.Edit, "editar") },
+                                PrimaryColor,
+                                { categoryViewModel.hiddenEditButton() },
+                                185.dp,
+                                16.sp
+                            )
 
-                        ButtonComp(
-                            "Excluir",
-                            { Icon(Icons.Default.Delete, "deletar") },
-                            CancelColor
-                        ) { viewModel.changeShowDialog() }
+                            ButtonComp(
+                                "Excluir",
+                                { Icon(Icons.Default.Delete, "deletar") },
+                                CancelColor,
+                                { categoryViewModel.changeShowDialog() },
+                                140.dp,
+                                16.sp
+                            )
+                        }
 
                     } else {
-
-                        if (viewModel.onLoadingState.value) {
-                            Box(Modifier.padding(20.dp)) { CircularProgressIndicator() }
+                        if (categoryViewModel.onLoadingState.value) {
+                            Box(Modifier.padding(20.dp)) {
+                                CircularProgressIndicator()
+                            }
                         } else {
-                            ButtonComp(
-                                "Atualizar Categoria",
-                                { Icon(Icons.Default.Check, "atualizar") },
-                                ConfirmColor
-                            ) { viewModel.updateAction() }
+                            FlowRow {
+                                ButtonComp(
+                                    "Salvar",
+                                    { Icon(Icons.Default.Check, "confirmar") },
+                                    ConfirmColor,
+                                    { categoryViewModel.editAction() },
+                                    140.dp,
+                                    16.sp
+                                )
 
-                            ButtonComp(
-                                "Cancelar",
-                                { Icon(Icons.Default.Cancel, "cancelar") },
-                                CancelColor
-                            ) { viewModel.hiddenEditButton() }
+                                ButtonComp(
+                                    "Cancelar",
+                                    { Icon(Icons.Default.Cancel, "cancelar") },
+                                    CancelColor,
+                                    { categoryViewModel.hiddenEditButton() },
+                                    155.dp,
+                                    16.sp
+                                )
+                            }
                         }
                     }
                 }

@@ -17,7 +17,7 @@ import com.imobly.imobly.domain.enums.StatusReportEnum
 import com.imobly.imobly.domain.Tenant
 import kotlinx.coroutines.launch
 
-class ReportViewModel(val navController: NavController): ViewModel() {
+class ReportViewModel(private val navController: NavController): ViewModel() {
 
     val tenant = mutableStateOf(Tenant())
     val report = mutableStateOf(Report(

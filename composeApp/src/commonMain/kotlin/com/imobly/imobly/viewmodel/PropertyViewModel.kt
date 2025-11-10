@@ -17,7 +17,7 @@ import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
 import kotlinx.coroutines.launch
 import kotlin.collections.emptyList
 
-class PropertyViewModel(val navController: NavHostController): ViewModel() {
+class PropertyViewModel(private val navController: NavHostController): ViewModel() {
     val property = mutableStateOf(Property())
 
     val categories: MutableState<List<Category>> = mutableStateOf(emptyList())

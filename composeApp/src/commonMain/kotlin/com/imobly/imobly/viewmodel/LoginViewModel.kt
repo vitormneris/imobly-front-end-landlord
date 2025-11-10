@@ -13,7 +13,7 @@ import com.imobly.imobly.api.httpclient.AuthenticationHttpClient
 import com.imobly.imobly.domain.Auth
 import kotlinx.coroutines.launch
 
-class LoginViewModel(val navController: NavHostController): ViewModel() {
+class LoginViewModel(private val navController: NavHostController): ViewModel() {
 
     val email = mutableStateOf("")
     val password = mutableStateOf("")
