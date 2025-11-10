@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.imobly.imobly.api.category.CategoryHttpClient
+import com.imobly.imobly.api.httpclient.CategoryHttpClient
 import com.imobly.imobly.api.createHttpClient
 import com.imobly.imobly.api.dto.ErrorDTO
 import com.imobly.imobly.api.dto.Ok
@@ -55,6 +55,7 @@ class PropertyViewModel(val navController: NavHostController): ViewModel() {
     }
 
     fun whenStartingThePage() {
+        snackMessage.value = SnackbarHostState()
         onLoadingState.value = false
     }
 

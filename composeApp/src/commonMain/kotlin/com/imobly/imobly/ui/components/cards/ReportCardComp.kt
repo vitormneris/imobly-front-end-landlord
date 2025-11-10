@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -19,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.imobly.imobly.domain.ReportStatus
+import com.imobly.imobly.domain.enums.StatusReportEnum
 import com.imobly.imobly.ui.theme.colors.CancelColor
 import com.imobly.imobly.ui.theme.colors.ConfirmColor
 import com.imobly.imobly.ui.theme.fonts.montserratFont
@@ -36,20 +37,18 @@ fun ReportCardComp(
     action: () -> Unit
 ) {
     val statusColor:Color = when (status){
-        ReportStatus.NEW.description -> Color(0xFF0059ff)
-        ReportStatus.PENDING.description-> Color(0xFFFFC107)
-        ReportStatus.RESOLVED.description-> ConfirmColor
+        StatusReportEnum.NEW.description -> Color(0xFF0059ff)
+        StatusReportEnum.PENDING.description-> Color(0xFFFFC107)
+        StatusReportEnum.RESOLVED.description-> ConfirmColor
         else -> CancelColor
     }
 
-
-//    Color(0xFFFFC107)pending
-//    Color(0xFF4CAF50)closed
     Card(
         onClick = action,
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+            .padding(10.dp)
+            .widthIn(max = 700.dp)
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         ),

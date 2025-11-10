@@ -27,12 +27,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
-import com.imobly.imobly.domain.ReportStatus
 import com.imobly.imobly.ui.components.button.ButtonComp
 import com.imobly.imobly.ui.components.carousel.CarouselComp
-import com.imobly.imobly.ui.components.dropdown.DropdownComp
 import com.imobly.imobly.ui.components.imagepicker.ImagePickerComp
 import com.imobly.imobly.ui.components.input.InputComp
+import com.imobly.imobly.ui.components.input.InputDropdownComp
 import com.imobly.imobly.ui.components.messageerror.MessageErrorComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
@@ -82,15 +81,14 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
 
                     ImagePickerComp("Escolha as imagens", propertyViewModel.selectedImages)
 
-                    DropdownComp(
+                    InputDropdownComp(
                         label = "Categoria",
-                        placeholder = "",
                         options = propertyViewModel.categories.value.map { it.title },
-                        selectedOption = propertyViewModel.property.value.category!!.title,
+                        selectedOption = propertyViewModel.property.value.category.title,
                         onOptionSelected = { selectedOption ->
                             val category = propertyViewModel.categories.value.first { it.title == selectedOption }
                             propertyViewModel.changeCategory(category)
-                        },
+                        }
                     )
                     
                     InputComp(

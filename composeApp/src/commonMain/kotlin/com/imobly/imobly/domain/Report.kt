@@ -1,5 +1,6 @@
 package com.imobly.imobly.domain
 
+import com.imobly.imobly.domain.enums.StatusReportEnum
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
@@ -9,7 +10,7 @@ data class Report(
     val title: String = "",
     val message: String = "",
     val moment: LocalDateTime? = null,
-    val status: ReportStatus = ReportStatus.NEW,
+    val status: StatusReportEnum = StatusReportEnum.NEW,
     val response: String = "",
     val tenant: Tenant
 )

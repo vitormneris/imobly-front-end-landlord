@@ -18,11 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
-import com.imobly.imobly.domain.ReportStatus
+import com.imobly.imobly.domain.enums.StatusReportEnum
 import com.imobly.imobly.ui.components.button.ButtonComp
 import com.imobly.imobly.ui.components.confirmdialog.ConfirmDialogComp
-import com.imobly.imobly.ui.components.dropdown.DropdownComp
 import com.imobly.imobly.ui.components.input.InputComp
+import com.imobly.imobly.ui.components.input.InputDropdownComp
 import com.imobly.imobly.ui.components.messageerror.MessageErrorComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
@@ -35,6 +35,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun EditReportScreen(reportViewModel: ReportViewModel) {
     val scrollState = rememberScrollState()
+
+    reportViewModel.whenStartingThePage()
 
     Scaffold(
         topBar = {
@@ -57,7 +59,8 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
             Column (
                 Modifier
                     .verticalScroll(scrollState)
-                    .fillMaxSize(),
+                    .widthIn(max = 1000.dp)
+                    .fillMaxWidth(0.9f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
                 InputComp(
@@ -99,13 +102,12 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
                     readOnly = reportViewModel.inputLockState.value
                 )
 
-                DropdownComp(
+                InputDropdownComp(
                     label = "Status",
-                    placeholder = "",
-                    options = ReportStatus.entries.map { it.description },
+                    options = StatusReportEnum.entries.map { it.description },
                     selectedOption = reportViewModel.report.value.status.description,
                     onOptionSelected = {selectedOption-> reportViewModel.changeStatus(
-                        ReportStatus.entries.first {it.description == selectedOption}
+                        StatusReportEnum.entries.first {it.description == selectedOption}
                     )
                     },
                     isEnabled = !reportViewModel.inputLockState.value
@@ -118,6 +120,7 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
                     { reportViewModel.deleteAction() },
                     { reportViewModel.changeShowDialog() }
                 )
+
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
                     if (reportViewModel.messageError.value != "") {
@@ -125,44 +128,61 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
                     }
 
                     if (reportViewModel.inputLockState.value) {
-                        ButtonComp(
-                            "Editar dados",
-                            { Icon(Icons.Default.Edit, "editar") },
-                            PrimaryColor,
-                            { reportViewModel.hiddenEditButton() }
-                        )
-                        ButtonComp(
-                            "Excluir",
-                            { Icon(Icons.Default.Delete, "deletar") },
-                            CancelColor,
-                            { reportViewModel.changeShowDialog() }
-                        )
+                        FlowRow {
+
+                            ButtonComp(
+                                "Editar dados",
+                                { Icon(Icons.Default.Edit, "editar") },
+                                PrimaryColor,
+                                { reportViewModel.hiddenEditButton() },
+                                140.dp,
+                                16.sp
+                            )
+
+                            ButtonComp(
+                                "Excluir",
+                                { Icon(Icons.Default.Delete, "deletar") },
+                                CancelColor,
+                                { reportViewModel.changeShowDialog() },
+                                140.dp,
+                                16.sp
+                            )
+                        }
                     } else {
 
                         if (reportViewModel.onLoadingState.value) {
                             Box(Modifier.padding(20.dp)) {
                                 CircularProgressIndicator()
                             }
-                        } else{
-                            ButtonComp(
-                                "Atualizar Status",
-                                { Icon(Icons.Default.Check, "atualizar status") },
-                                ConfirmColor,
-                                { reportViewModel.updateStatusAction() }
-                            )
+                        } else {
+                            FlowRow {
 
-                            ButtonComp(
-                                "Enviar resposta",
-                                { Icon(Icons.Default.Check, "enviar resposta") },
-                                ConfirmColor,
-                                { reportViewModel.replyToReportAction() }
-                            )
-                            ButtonComp(
-                                "Cancelar",
-                                { Icon(Icons.Default.Cancel, "cancelar") },
-                                CancelColor,
-                                { reportViewModel.hiddenEditButton() }
-                            )
+                                ButtonComp(
+                                    "Atualizar Status",
+                                    { Icon(Icons.Default.Check, "atualizar status") },
+                                    ConfirmColor,
+                                    { reportViewModel.updateStatusAction() },
+                                    155.dp,
+                                    16.sp
+                                )
+
+                                ButtonComp(
+                                    "Enviar resposta",
+                                    { Icon(Icons.Default.Check, "enviar resposta") },
+                                    ConfirmColor,
+                                    { reportViewModel.replyToReportAction() },
+                                    155.dp,
+                                    16.sp
+                                )
+                                ButtonComp(
+                                    "Cancelar",
+                                    { Icon(Icons.Default.Cancel, "cancelar") },
+                                    CancelColor,
+                                    { reportViewModel.hiddenEditButton() },
+                                    155.dp,
+                                    16.sp
+                                )
+                            }
                         }
                     }
                 }

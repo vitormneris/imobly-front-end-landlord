@@ -49,6 +49,7 @@ class TenantViewModel(val navController: NavHostController): ViewModel() {
     }
 
     fun whenStartingThePage() {
+        snackMessage.value = SnackbarHostState()
         onLoadingState.value = false
     }
 

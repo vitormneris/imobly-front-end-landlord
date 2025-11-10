@@ -103,6 +103,7 @@ class LandLordViewModel(val navController: NavHostController): ViewModel() {
     }
 
     fun whenStartingThePage() {
+        snackMessage.value = SnackbarHostState()
         onLoadingState.value = false
     }
     fun resetPage() {

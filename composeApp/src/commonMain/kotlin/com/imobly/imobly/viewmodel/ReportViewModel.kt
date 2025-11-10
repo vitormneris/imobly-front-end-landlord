@@ -7,18 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.imobly.imobly.api.createHttpClient
-import com.imobly.imobly.api.report.ReportHttpClient
+import com.imobly.imobly.api.dto.ErrorDTO
+import com.imobly.imobly.api.dto.Ok
+import com.imobly.imobly.api.dto.ResponseReportDTO
+import com.imobly.imobly.api.dto.StatusReportDTO
+import com.imobly.imobly.api.httpclient.ReportHttpClient
 import com.imobly.imobly.domain.Report
-import com.imobly.imobly.domain.ReportStatus
-import com.imobly.imobly.domain.ResponseMessage
+import com.imobly.imobly.domain.enums.StatusReportEnum
 import com.imobly.imobly.domain.Tenant
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDateTime
-import kotlin.time.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
 
 class ReportViewModel(val navController: NavController): ViewModel() {
 
@@ -50,6 +47,11 @@ class ReportViewModel(val navController: NavController): ViewModel() {
 
     fun hiddenEditButton() {
         inputLockState.value = !inputLockState.value
+    }
+
+    fun whenStartingThePage() {
+        snackMessage.value = SnackbarHostState()
+        onLoadingState.value = false
     }
 
     fun resetPage() {
@@ -88,23 +90,26 @@ class ReportViewModel(val navController: NavController): ViewModel() {
 
     fun replyToReportAction() {
         viewModelScope.launch {
-            onLoadingState.value = true
             val httpClient = ReportHttpClient(createHttpClient())
-            var response = ResponseMessage(status = 500)
             if (report.value.id != null) {
-                response = httpClient.replyToReport(report.value.id!!, report.value.response )
-            }
-            onLoadingState.value = false
-            if (response.status == 200) {
-                hiddenEditButton()
-                inputErrors.value = emptyMap()
-                messageError.value = ""
-                snackMessage.value.showSnackbar("Resposta enviada!")
-            } else {
-                val errors = mutableMapOf<String, String>()
-                response.errorFields?.forEach { errors[it.name] = it.description }
-                inputErrors.value = errors
-                messageError.value = response.message
+                onLoadingState.value = true
+                val response = httpClient.replyToReport(report.value.id!!, ResponseReportDTO(report.value.response))
+                onLoadingState.value = false
+                when (response) {
+                    is Ok -> {
+                        hiddenEditButton()
+                        inputErrors.value = emptyMap()
+                        messageError.value = ""
+                        snackMessage.value.showSnackbar("Resposta enviada!")
+                    }
+
+                    is ErrorDTO -> {
+                        val errors = mutableMapOf<String, String>()
+                        response.errorFields?.forEach { errors[it.name] = it.description }
+                        inputErrors.value = errors
+                        messageError.value = response.message
+                    }
+                }
             }
         }
     }
@@ -113,21 +118,23 @@ class ReportViewModel(val navController: NavController): ViewModel() {
         viewModelScope.launch {
             onLoadingState.value = true
             val httpClient = ReportHttpClient(createHttpClient())
-            var response = ResponseMessage(status = 500)
             if (report.value.id != null) {
-                response = httpClient.updateStatus(report.value.id!!, report.value.status )
-            }
-            onLoadingState.value = false
-            if (response.status == 200) {
-                hiddenEditButton()
-                inputErrors.value = emptyMap()
-                messageError.value = ""
-                snackMessage.value.showSnackbar("Status atualizado!")
-            } else {
-                val errors = mutableMapOf<String, String>()
-                response.errorFields?.forEach { errors[it.name] = it.description }
-                inputErrors.value = errors
-                messageError.value = response.message
+                val response = httpClient.updateStatus(report.value.id!!, StatusReportDTO(report.value.status) )
+                onLoadingState.value = false
+                when (response) {
+                    is Ok -> {
+                        hiddenEditButton()
+                        inputErrors.value = emptyMap()
+                        messageError.value = ""
+                        snackMessage.value.showSnackbar("Status atualizado!")
+                    }
+                    is ErrorDTO -> {
+                        val errors = mutableMapOf<String, String>()
+                        response.errorFields?.forEach { errors[it.name] = it.description }
+                        inputErrors.value = errors
+                        messageError.value = response.message
+                    }
+                }
             }
         }
     }
@@ -135,16 +142,18 @@ class ReportViewModel(val navController: NavController): ViewModel() {
     fun deleteAction() {
         viewModelScope.launch {
             val httpClient = ReportHttpClient(createHttpClient())
-            var success = false
             if (report.value.id != null) {
-                success = httpClient.delete(report.value.id!!)
-            }
-            showDialogState.value = false
-            goToShowReports()
-            if (success) {
-                snackMessage.value.showSnackbar("Relato deletado com sucesso!")
-            } else {
-                snackMessage.value.showSnackbar("Houve um problema ao deletar o relato!")
+                val response = httpClient.delete(report.value.id!!)
+                showDialogState.value = false
+                goToShowReports()
+                when (response) {
+                    is Ok -> {
+                        snackMessage.value.showSnackbar("Relato deletado com sucesso!")
+                    }
+                    is ErrorDTO -> {
+                        snackMessage.value.showSnackbar("Houve um problema ao deletar o relato!")
+                    }
+                }
             }
         }
     }
@@ -161,9 +170,7 @@ class ReportViewModel(val navController: NavController): ViewModel() {
         report.value = report.value.copy(response = it)
     }
 
-    fun changeStatus(it: ReportStatus) {
+    fun changeStatus(it: StatusReportEnum) {
         report.value = report.value.copy(status = it)
     }
-
-
 }

@@ -1,8 +1,6 @@
-package com.imobly.imobly.domain
+package com.imobly.imobly.domain.enums
 
-import kotlinx.serialization.Serializable
-
-enum class ReportStatus(val description: String) {
+enum class StatusReportEnum(val description: String) {
     RESOLVED("Resolvido"),
     PENDING("Pendente"),
     NEW("Novo"),
