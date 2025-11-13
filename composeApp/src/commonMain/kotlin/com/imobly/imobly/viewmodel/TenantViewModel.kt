@@ -13,6 +13,7 @@ import com.imobly.imobly.api.httpclient.AuthenticationTenantHttpClient
 import com.imobly.imobly.api.httpclient.TenantHttpClient
 import com.imobly.imobly.domain.Telephone
 import com.imobly.imobly.domain.Tenant
+import com.imobly.imobly.domain.enums.MaritalStatusEnum
 import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
 import kotlinx.coroutines.launch
 import kotlin.text.ifEmpty
@@ -185,6 +186,14 @@ class TenantViewModel(private val navController: NavHostController): ViewModel()
                 }
             }
         }
+    }
+
+    fun maritalStatusOptions(): Map<String, String> {
+        val map = mutableMapOf<String, String>()
+        MaritalStatusEnum.entries.forEach {
+            map[it.description] = it.name
+        }
+        return map
     }
 
     fun changeFirstName(it: String) {

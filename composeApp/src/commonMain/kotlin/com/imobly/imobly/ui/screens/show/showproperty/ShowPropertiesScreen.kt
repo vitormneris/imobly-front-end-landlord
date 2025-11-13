@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,6 +39,7 @@ import com.imobly.imobly.ui.components.button.ButtonComp
 import com.imobly.imobly.ui.components.searchbar.SearchBarComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
+import com.imobly.imobly.ui.theme.colors.BackGroundColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.ui.theme.fonts.montserratFont
 import com.imobly.imobly.viewmodel.PropertyViewModel
@@ -53,11 +56,13 @@ fun ShowPropertiesScreen(propertyViewModel: PropertyViewModel) {
     Scaffold(
         topBar = { TopBarComp() },
         snackbarHost = {
-            SnackbarHost( propertyViewModel.snackMessage.value )
+            SnackbarHost(propertyViewModel.snackMessage.value)
         },
+        contentWindowInsets = WindowInsets.systemBars,
         content = { paddingValues ->
             Column(
                 modifier = Modifier
+                    .background(BackGroundColor)
                     .padding(paddingValues)
                     .fillMaxSize()
                     .background(Color(0xFFF8F9FA))

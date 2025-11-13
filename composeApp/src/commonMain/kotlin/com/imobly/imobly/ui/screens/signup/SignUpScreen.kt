@@ -30,18 +30,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.imobly.imobly.ui.components.button.ButtonComp
-import com.imobly.imobly.ui.components.clickable.ClickableComp
 import com.imobly.imobly.ui.components.input.InputComp
 import com.imobly.imobly.ui.components.input.InputPasswordComp
 import com.imobly.imobly.ui.components.messageerror.MessageErrorComp
 import com.imobly.imobly.ui.components.title.TitleComp
+import com.imobly.imobly.ui.theme.colors.BackGroundColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.ui.theme.fonts.montserratFont
 import com.imobly.imobly.viewmodel.LandLordViewModel
@@ -66,7 +65,7 @@ fun SignUpScreen(landLordViewModel: LandLordViewModel) {
         ) { paddingValues ->
             Box(
                 modifier = Modifier
-                    .background(Color(242, 96, 63))
+                    .background(PrimaryColor)
                     .padding(paddingValues)
             ) {
                 Column(
@@ -87,7 +86,7 @@ fun SignUpScreen(landLordViewModel: LandLordViewModel) {
                         .fillMaxSize()
                         .padding(paddingValues = PaddingValues(0.dp, 160.dp, 0.dp, 0.dp))
                         .background(
-                            Color.White,
+                            BackGroundColor,
                             shape = RoundedCornerShape(50.dp, 50.dp)
                         )
                         .clip(RoundedCornerShape(50.dp, 50.dp)),

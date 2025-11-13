@@ -24,6 +24,7 @@ import com.imobly.imobly.ui.components.button.ButtonComp
 import com.imobly.imobly.ui.components.searchbar.SearchBarComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
+import com.imobly.imobly.ui.theme.colors.BackGroundColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.ui.theme.fonts.montserratFont
 import com.imobly.imobly.viewmodel.TenantViewModel
@@ -41,10 +42,14 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
         topBar = {
             TopBarComp()
         },
-        snackbarHost = { SnackbarHost( tenantViewModel.snackMessage.value ) },
+        snackbarHost = {
+            SnackbarHost(tenantViewModel.snackMessage.value)
+        },
+        contentWindowInsets = WindowInsets.systemBars,
         content = { paddingValues ->
             Column(
                 modifier = Modifier
+                    .background(BackGroundColor)
                     .padding(paddingValues)
                     .fillMaxSize()
                     .background(Color(0xFFF8F9FA))

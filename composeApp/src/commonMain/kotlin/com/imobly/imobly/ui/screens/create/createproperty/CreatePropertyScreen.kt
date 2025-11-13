@@ -1,5 +1,6 @@
 package com.imobly.imobly.ui.screens.create.createproperty
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ import com.imobly.imobly.ui.components.input.InputDropdownComp
 import com.imobly.imobly.ui.components.messageerror.MessageErrorComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
+import com.imobly.imobly.ui.theme.colors.BackGroundColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.viewmodel.PropertyViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -59,6 +61,7 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
         ) { paddingValues ->
             Column(
                 Modifier
+                    .background(BackGroundColor)
                     .padding(paddingValues)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -83,10 +86,10 @@ fun CreatePropertyScreen(propertyViewModel: PropertyViewModel) {
 
                     InputDropdownComp(
                         label = "Categoria",
-                        options = propertyViewModel.categories.value.map { it.title },
+                        options = propertyViewModel.categoriesOptions(),
                         selectedOption = propertyViewModel.property.value.category.title,
                         onOptionSelected = { selectedOption ->
-                            val category = propertyViewModel.categories.value.first { it.title == selectedOption }
+                            val category = propertyViewModel.categories.value.first { it.id == selectedOption }
                             propertyViewModel.changeCategory(category)
                         }
                     )

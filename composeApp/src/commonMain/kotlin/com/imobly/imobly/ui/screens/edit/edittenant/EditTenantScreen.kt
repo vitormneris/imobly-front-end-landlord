@@ -1,6 +1,7 @@
 package com.imobly.imobly.ui.screens.edit.edittenant
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,6 +46,7 @@ import com.imobly.imobly.ui.components.input.InputDropdownComp
 import com.imobly.imobly.ui.components.messageerror.MessageErrorComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
+import com.imobly.imobly.ui.theme.colors.BackGroundColor
 import com.imobly.imobly.ui.theme.colors.CancelColor
 import com.imobly.imobly.ui.theme.colors.ConfirmColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
@@ -69,6 +71,7 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
     ) { paddingValues ->
         Column(
             Modifier
+                .background(BackGroundColor)
                 .padding(paddingValues)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -232,12 +235,12 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
 
                 InputDropdownComp(
                     label = "Estado Civil",
-                    options = MaritalStatusEnum.entries.map { it.label },
-                    selectedOption = tenantViewModel.tenant.value.maritalStatus.label,
+                    options = tenantViewModel.maritalStatusOptions(),
+                    selectedOption = tenantViewModel.tenant.value.maritalStatus.description,
                     onOptionSelected = { selectedLabel->
                         tenantViewModel.tenant.value =
                             tenantViewModel.tenant.value.copy(
-                                maritalStatus = MaritalStatusEnum.entries.first{ it.label== selectedLabel}) },
+                                maritalStatus = MaritalStatusEnum.entries.first{ it.name == selectedLabel}) },
                     isEnabled = !tenantViewModel.inputLockState.value
                 )
 

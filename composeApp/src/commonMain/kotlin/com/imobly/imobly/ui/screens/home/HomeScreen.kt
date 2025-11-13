@@ -83,6 +83,14 @@ fun HomeScreen(navController: NavHostController) {
             PrimaryColor,
             { navController.navigate("editcategory") }
         )
+
+        Spacer(Modifier.height(10.dp))
+        ButtonComp(
+            "Gerenciador contratos",
+            {},
+            PrimaryColor,
+            { navController.navigate("showleases") }
+        )
     }
 }
 

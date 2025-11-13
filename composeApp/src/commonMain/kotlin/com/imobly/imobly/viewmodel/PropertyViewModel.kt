@@ -172,6 +172,14 @@ class PropertyViewModel(private val navController: NavHostController): ViewModel
         }
     }
 
+    fun categoriesOptions(): Map<String, String> {
+        val map = mutableMapOf<String, String>()
+        categories.value.forEach {
+            map[it.title] = it.id ?: ""
+        }
+        return map
+    }
+
     fun changeTitle(it: String) {
         property.value = property.value.copy(title = it)
     }

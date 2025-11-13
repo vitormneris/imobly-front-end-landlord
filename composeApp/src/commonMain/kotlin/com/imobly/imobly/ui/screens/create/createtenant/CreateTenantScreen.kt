@@ -1,6 +1,7 @@
-package com.imobly.imobly.ui.screens.create.createTenant
+package com.imobly.imobly.ui.screens.create.createtenant
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,6 +44,7 @@ import com.imobly.imobly.ui.components.input.InputPasswordComp
 import com.imobly.imobly.ui.components.messageerror.MessageErrorComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
+import com.imobly.imobly.ui.theme.colors.BackGroundColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.viewmodel.TenantViewModel
 import io.github.ismoy.imagepickerkmp.domain.extensions.loadPainter
@@ -66,6 +68,7 @@ fun CreateTenantScreen(tenantViewModel: TenantViewModel) {
         ) { paddingValues ->
             Column(
                 Modifier
+                    .background(BackGroundColor)
                     .padding(paddingValues)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -221,12 +224,12 @@ fun CreateTenantScreen(tenantViewModel: TenantViewModel) {
 
                     InputDropdownComp(
                         label = "Estado Civil",
-                        options = MaritalStatusEnum.entries.map { it.label },
-                        selectedOption = tenantViewModel.tenant.value.maritalStatus.label,
+                        options = tenantViewModel.maritalStatusOptions(),
+                        selectedOption = tenantViewModel.tenant.value.maritalStatus.description,
                         onOptionSelected = { selectedLabel ->
                             tenantViewModel.tenant.value =
                                 tenantViewModel.tenant.value.copy(
-                                    maritalStatus = MaritalStatusEnum.entries.first { it.label == selectedLabel })
+                                    maritalStatus = MaritalStatusEnum.entries.first { it.description == selectedLabel })
                         },
                         isEnabled = tenantViewModel.inputLockState.value
                     )

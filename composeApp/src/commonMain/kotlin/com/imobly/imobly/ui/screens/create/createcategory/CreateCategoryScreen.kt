@@ -1,5 +1,6 @@
 package com.imobly.imobly.ui.screens.create.createcategory
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,6 +18,7 @@ import com.imobly.imobly.ui.components.input.InputComp
 import com.imobly.imobly.ui.components.messageerror.MessageErrorComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
+import com.imobly.imobly.ui.theme.colors.BackGroundColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.viewmodel.CategoryViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -35,6 +37,7 @@ fun CreateCategoryScreen(categoryViewModel: CategoryViewModel) {
 
         Column(
             modifier = Modifier
+                .background(BackGroundColor)
                 .padding(paddingValues)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,

@@ -7,21 +7,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.imobly.imobly.ui.screens.login.LoginScreen
-import com.imobly.imobly.ui.screens.create.createTenant.CreateTenantScreen
+import com.imobly.imobly.ui.screens.create.createtenant.CreateTenantScreen
 import com.imobly.imobly.ui.screens.create.createcategory.CreateCategoryScreen
+import com.imobly.imobly.ui.screens.create.createlease.CreateLeaseScreen
 import com.imobly.imobly.ui.screens.create.createproperty.CreatePropertyScreen
 import com.imobly.imobly.ui.screens.edit.editcategory.EditCategoryScreen
 import com.imobly.imobly.ui.screens.edit.editlandlord.EditLandLordScreen
+import com.imobly.imobly.ui.screens.edit.editlease.EditLeaseScreen
 import com.imobly.imobly.ui.screens.edit.editproperty.EditPropertyScreen
 import com.imobly.imobly.ui.screens.edit.editreport.EditReportScreen
 import com.imobly.imobly.ui.screens.edit.edittenant.EditTenantScreen
 import com.imobly.imobly.ui.screens.home.HomeScreen
+import com.imobly.imobly.ui.screens.show.showlease.ShowLeasesScreen
 import com.imobly.imobly.ui.screens.show.showproperty.ShowPropertiesScreen
 import com.imobly.imobly.ui.screens.show.showreports.ShowReportsScreen
 import com.imobly.imobly.ui.screens.show.showtenant.ShowTenantScreen
 import com.imobly.imobly.ui.screens.signup.SignUpScreen
 import com.imobly.imobly.viewmodel.CategoryViewModel
 import com.imobly.imobly.viewmodel.LandLordViewModel
+import com.imobly.imobly.viewmodel.LeaseViewModel
 import com.imobly.imobly.viewmodel.LoginViewModel
 import com.imobly.imobly.viewmodel.PropertyViewModel
 import com.imobly.imobly.viewmodel.ReportViewModel
@@ -36,6 +40,7 @@ fun App() {
     val loginViewModel = viewModel { LoginViewModel(navController) }
     val reportViewModel = viewModel { ReportViewModel(navController) }
     val categoryViewModel = viewModel { CategoryViewModel(navController) }
+    val leaseViewModel = viewModel { LeaseViewModel(navController) }
 
     MaterialTheme {
         NavHost(
@@ -96,6 +101,18 @@ fun App() {
 
             composable(route = "createcategory") {
                 CreateCategoryScreen(categoryViewModel)
+            }
+
+            composable(route = "showleases") {
+                ShowLeasesScreen(leaseViewModel)
+            }
+
+            composable(route = "editlease") {
+                EditLeaseScreen(leaseViewModel)
+            }
+
+            composable(route = "createlease") {
+                CreateLeaseScreen(leaseViewModel)
             }
         }
     }

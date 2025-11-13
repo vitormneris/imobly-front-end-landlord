@@ -15,6 +15,7 @@ import com.imobly.imobly.api.httpclient.ReportHttpClient
 import com.imobly.imobly.domain.Report
 import com.imobly.imobly.domain.enums.StatusReportEnum
 import com.imobly.imobly.domain.Tenant
+import com.imobly.imobly.domain.enums.MaritalStatusEnum
 import kotlinx.coroutines.launch
 
 class ReportViewModel(private val navController: NavController): ViewModel() {
@@ -156,6 +157,14 @@ class ReportViewModel(private val navController: NavController): ViewModel() {
                 }
             }
         }
+    }
+
+    fun statusReportOptions(): Map<String, String> {
+        val map = mutableMapOf<String, String>()
+        StatusReportEnum.entries.forEach {
+            map[it.description] = it.name
+        }
+        return map
     }
 
     fun changeTitle(it: String) {
