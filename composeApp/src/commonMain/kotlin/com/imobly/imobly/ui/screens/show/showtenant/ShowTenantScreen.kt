@@ -71,7 +71,7 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
                             "Cadastrar Locatário",
                             {  Icon(Icons.Default.Add, "Sinal de soma") },
                             PrimaryColor,
-                            { tenantViewModel.goToCreateTenant() }
+                            { tenantViewModel.goToCreateTenant() },
                         )
                     }
 
@@ -80,9 +80,10 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
                         contentAlignment = Alignment.Center
                     ) {
                         SearchBarComp(
-                            "Buscar locatários",
+                            "Buscar locatários por nome ou CPF",
                             tenantViewModel.searchText.value,
-                            { tenantViewModel.changeSearchText(it) }
+                            { tenantViewModel.changeSearchText(it) },
+                            { tenantViewModel.searchAction() }
                         )
                     }
 

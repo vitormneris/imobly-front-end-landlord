@@ -24,8 +24,8 @@ class LeaseHttpClient(val httpClient: HttpClient) {
 
     val baseUrl = "/locacoes"
 
-    suspend fun searchAll(): List<Lease> {
-        val response = httpClient.get("$baseUrl/encontrartodos") {
+    suspend fun searchAllByTitleOrName(titleOrName: String? = ""): List<Lease> {
+        val response = httpClient.get("$baseUrl/encontrartodos?nomeoutitulo=$titleOrName") {
             header("Authorization", "Bearer $TOKEN")
         }
         return response.body()

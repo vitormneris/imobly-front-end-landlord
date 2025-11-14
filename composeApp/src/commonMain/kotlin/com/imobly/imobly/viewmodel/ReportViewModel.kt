@@ -12,6 +12,7 @@ import com.imobly.imobly.api.dto.Ok
 import com.imobly.imobly.api.dto.ResponseReportDTO
 import com.imobly.imobly.api.dto.StatusReportDTO
 import com.imobly.imobly.api.httpclient.ReportHttpClient
+import com.imobly.imobly.api.httpclient.TenantHttpClient
 import com.imobly.imobly.domain.Report
 import com.imobly.imobly.domain.enums.StatusReportEnum
 import com.imobly.imobly.domain.Tenant
@@ -69,7 +70,7 @@ class ReportViewModel(private val navController: NavController): ViewModel() {
     fun findAllAction() {
         viewModelScope.launch {
             val httpClient = ReportHttpClient(createHttpClient())
-            reports.value = httpClient.searchAll()
+            reports.value = httpClient.searchAllByTitleOrMessage()
         }
     }
 
@@ -87,6 +88,14 @@ class ReportViewModel(private val navController: NavController): ViewModel() {
 
     fun goToShowReports() {
         navController.navigate("showreports")
+    }
+
+    fun searchAction() {
+        viewModelScope.launch {
+            val httpClient = ReportHttpClient(createHttpClient())
+            val list = httpClient.searchAllByTitleOrMessage(searchText.value)
+            reports.value = list
+        }
     }
 
     fun replyToReportAction() {

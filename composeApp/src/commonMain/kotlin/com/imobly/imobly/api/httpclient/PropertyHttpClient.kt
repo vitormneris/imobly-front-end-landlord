@@ -31,8 +31,8 @@ class PropertyHttpClient(val httpClient: HttpClient) {
         explicitNulls = false
     }
 
-    suspend fun searchAll(): List<Property> =
-        httpClient.get("$baseUrl/encontrartodos")
+    suspend fun searchAllByTitle(title: String? = ""): List<Property> =
+        httpClient.get("$baseUrl/encontrartodos?titulo=$title")
             .body()
 
     suspend fun create(property: Property, images: List<GalleryPhotoResult>): ResponseMessage {

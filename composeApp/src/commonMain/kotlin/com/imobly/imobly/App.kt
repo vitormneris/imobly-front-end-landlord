@@ -24,6 +24,7 @@ import com.imobly.imobly.ui.screens.show.showreports.ShowReportsScreen
 import com.imobly.imobly.ui.screens.show.showtenant.ShowTenantScreen
 import com.imobly.imobly.ui.screens.signup.SignUpScreen
 import com.imobly.imobly.viewmodel.CategoryViewModel
+import com.imobly.imobly.viewmodel.HomeViewModel
 import com.imobly.imobly.viewmodel.LandLordViewModel
 import com.imobly.imobly.viewmodel.LeaseViewModel
 import com.imobly.imobly.viewmodel.LoginViewModel
@@ -41,14 +42,14 @@ fun App() {
     val reportViewModel = viewModel { ReportViewModel(navController) }
     val categoryViewModel = viewModel { CategoryViewModel(navController) }
     val leaseViewModel = viewModel { LeaseViewModel(navController) }
+    val homeViewModel = viewModel { HomeViewModel(navController) }
+
 
     MaterialTheme {
-        NavHost(
-            navController = navController,
-            startDestination = "login"
-        ) {
+        NavHost(navController = navController, startDestination = "login") {
+
             composable(route = "home") {
-                HomeScreen(navController)
+                HomeScreen(homeViewModel)
             }
 
             composable(route = "showproperties") {

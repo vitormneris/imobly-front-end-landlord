@@ -26,7 +26,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ShowLeasesScreen(leaseViewModel: LeaseViewModel) {
-    leaseViewModel.searchAction()
+    leaseViewModel.findAllAction()
 
     Scaffold(
         topBar = { TopBarComp() },
@@ -62,9 +62,10 @@ fun ShowLeasesScreen(leaseViewModel: LeaseViewModel) {
                 contentAlignment = Alignment.Center
             ) {
                 SearchBarComp(
-                    "Buscar um imóvel",
+                    "Buscar locações pelo nome do locatário ou do imóvel",
                     leaseViewModel.searchText.value,
-                    { leaseViewModel.changeSearchText(it) }
+                    { leaseViewModel.changeSearchText(it) },
+                    { leaseViewModel.searchAction() }
                 )
             }
 

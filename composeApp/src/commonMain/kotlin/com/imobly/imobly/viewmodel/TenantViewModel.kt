@@ -80,7 +80,7 @@ class TenantViewModel(private val navController: NavHostController): ViewModel()
     fun findAllAction() {
         viewModelScope.launch {
             val httpClient = TenantHttpClient(createHttpClient())
-            tenants.value = httpClient.searchAll()
+            tenants.value = httpClient.searchAllByNameOrCpf()
         }
     }
 
@@ -103,6 +103,14 @@ class TenantViewModel(private val navController: NavHostController): ViewModel()
 
     fun goToCreateTenant() {
         navController.navigate("createtenant")
+    }
+
+    fun searchAction() {
+        viewModelScope.launch {
+            val httpClient = TenantHttpClient(createHttpClient())
+            val list = httpClient.searchAllByNameOrCpf(searchText.value)
+            tenants.value = list
+        }
     }
 
     fun signUpAction() {

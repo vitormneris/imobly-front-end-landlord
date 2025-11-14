@@ -64,9 +64,11 @@ fun ShowReportsScreen(reportViewModel: ReportViewModel) {
                         contentAlignment = Alignment.Center
                     ) {
                         SearchBarComp(
-                            "Buscar reportações",
+                            "Buscar reportações por título ou mensagem",
                             reportViewModel.searchText.value,
-                            { reportViewModel.changeSearchText(it) }
+                            { reportViewModel.changeSearchText(it) },
+                            { reportViewModel.searchAction() }
+
                         )
                     }
 

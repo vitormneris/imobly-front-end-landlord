@@ -103,7 +103,8 @@ fun ShowPropertiesScreen(propertyViewModel: PropertyViewModel) {
                         SearchBarComp(
                             "Buscar um imóvel",
                             propertyViewModel.searchText.value,
-                            { propertyViewModel.changeSearchText(it) }
+                            { propertyViewModel.changeSearchText(it) },
+                            { propertyViewModel.searchAction() }
                         )
                     }
 

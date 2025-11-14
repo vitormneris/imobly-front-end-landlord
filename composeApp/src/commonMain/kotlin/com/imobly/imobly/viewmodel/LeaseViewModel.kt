@@ -42,20 +42,28 @@ class LeaseViewModel(private val navController: NavHostController): ViewModel() 
         searchText.value = it
     }
 
-    fun searchAction() {
+    fun findAllAction() {
         viewModelScope.launch {
             val leaseHttpClient = LeaseHttpClient(createHttpClient())
             val tenantHttpClient = TenantHttpClient(createHttpClient())
             val propertyHttpClient = PropertyHttpClient(createHttpClient())
 
-            val leasesFound = leaseHttpClient.searchAll()
+            val leasesFound = leaseHttpClient.searchAllByTitleOrName()
             leases.value = leasesFound
 
-            val tenantsFound = tenantHttpClient.searchAll()
+            val tenantsFound = tenantHttpClient.searchAllByNameOrCpf()
             tenants.value = tenantsFound
 
-            val propertiesFound = propertyHttpClient.searchAll()
+            val propertiesFound = propertyHttpClient.searchAllByTitle()
             properties.value = propertiesFound
+        }
+    }
+
+    fun searchAction() {
+        viewModelScope.launch {
+            val httpClient = LeaseHttpClient(createHttpClient())
+            val list = httpClient.searchAllByTitleOrName(searchText.value)
+            leases.value = list
         }
     }
 

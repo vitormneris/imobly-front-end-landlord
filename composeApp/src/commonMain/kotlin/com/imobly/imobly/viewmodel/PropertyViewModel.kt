@@ -11,6 +11,7 @@ import com.imobly.imobly.api.createHttpClient
 import com.imobly.imobly.api.dto.ErrorDTO
 import com.imobly.imobly.api.dto.Ok
 import com.imobly.imobly.api.httpclient.PropertyHttpClient
+import com.imobly.imobly.api.httpclient.ReportHttpClient
 import com.imobly.imobly.domain.Property
 import com.imobly.imobly.domain.Category
 import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
@@ -74,8 +75,8 @@ class PropertyViewModel(private val navController: NavHostController): ViewModel
         viewModelScope.launch {
             val httpClient = PropertyHttpClient(createHttpClient())
             val categoryHttpClient = CategoryHttpClient(createHttpClient())
-            categories.value = categoryHttpClient.searchAll()
-            properties.value = httpClient.searchAll()
+            categories.value = categoryHttpClient.searchAllByTitle()
+            properties.value = httpClient.searchAllByTitle()
         }
     }
 
@@ -97,6 +98,14 @@ class PropertyViewModel(private val navController: NavHostController): ViewModel
 
     fun goToShowProperties() {
         navController.navigate("showproperties")
+    }
+
+    fun searchAction() {
+        viewModelScope.launch {
+            val httpClient = PropertyHttpClient(createHttpClient())
+            val list = httpClient.searchAllByTitle(searchText.value)
+            properties.value = list
+        }
     }
 
     fun createAction() {

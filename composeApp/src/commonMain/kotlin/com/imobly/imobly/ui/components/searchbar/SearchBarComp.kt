@@ -18,15 +18,26 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.imobly.imobly.ui.theme.fonts.montserratFont
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
 
+@OptIn(FlowPreview::class)
 @Composable
-fun SearchBarComp(label: String, value: String, onValueChange: (String) -> Unit) {
+fun SearchBarComp(label: String, value: String, onValueChange: (String) -> Unit, searchAction: () -> Unit) {
+    LaunchedEffect(value) {
+        snapshotFlow { value }
+            .debounce(600)
+            .collect { searchAction() }
+    }
+
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
@@ -41,7 +52,10 @@ fun SearchBarComp(label: String, value: String, onValueChange: (String) -> Unit)
         trailingIcon = {
             Icon(Icons.Default.Search, "Lupa")
         },
-        modifier = Modifier.widthIn(max = 600.dp).fillMaxWidth().padding(10.dp),
+        modifier = Modifier
+            .widthIn(max = 600.dp)
+            .fillMaxWidth()
+            .padding(10.dp),
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color(0xFFFFFFFF),
             unfocusedContainerColor = Color(0xFFFFFFFF),

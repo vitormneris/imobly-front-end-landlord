@@ -17,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -41,10 +42,11 @@ import com.imobly.imobly.ui.theme.colors.BackGroundColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.ui.theme.colors.TitleColor
 import com.imobly.imobly.ui.theme.fonts.montserratFont
+import com.imobly.imobly.viewmodel.HomeViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(homeViewModel: HomeViewModel) {
 
     val scrollState = rememberScrollState()
     val horizantalScrollState = rememberScrollState()
@@ -52,7 +54,7 @@ fun HomeScreen(navController: NavHostController) {
         topBar = {
             TopBarComp()
         },
-//        snackbarHost = { SnackbarHost( tenantViewModel.snackMessage.value ) },
+       snackbarHost = { SnackbarHost( homeViewModel.snackMessage.value ) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -110,7 +112,6 @@ fun HomeScreen(navController: NavHostController) {
                 )
 
                 TitleComp("Painel Administrativo", fontSize = 32.sp, backButton = false, buttonBackAction = {})
-//        Text("MEDIDA:$adaptiveWidth, Classe: ${adaptiveInfo.windowSizeClass}")
 
                 Row(
                     Modifier.horizontalScroll(horizantalScrollState)
@@ -207,7 +208,7 @@ fun HomeScreen(navController: NavHostController) {
                                         tint = backgroundColor,
                                     )
                                 },
-                                action = { navController.navigate("showproperties") },
+                                action = { homeViewModel.goToShowProperties() },
                                 backgroundColor = backgroundColor,
                                 highlightColor = highlightColor
 
@@ -224,7 +225,7 @@ fun HomeScreen(navController: NavHostController) {
                                         tint = backgroundColor,
                                     )
                                 },
-                                action = { navController.navigate("showtenants") },
+                                action = { homeViewModel.goToShowTenants() },
                                 backgroundColor = backgroundColor,
                                 highlightColor = highlightColor
 
@@ -241,7 +242,7 @@ fun HomeScreen(navController: NavHostController) {
                                         tint = backgroundColor,
                                     )
                                 },
-                                action = { navController.navigate("showreports") },
+                                action = { homeViewModel.goToShowReports() },
                                 backgroundColor = backgroundColor,
                                 highlightColor = highlightColor
 
@@ -258,7 +259,7 @@ fun HomeScreen(navController: NavHostController) {
                                         tint = backgroundColor,
                                     )
                                 },
-                                action = { navController.navigate("createcategory") },
+                                action = { homeViewModel.goToCreateCategory() },
                                 backgroundColor = backgroundColor,
                                 highlightColor = highlightColor
 
@@ -276,7 +277,7 @@ fun HomeScreen(navController: NavHostController) {
                                         tint = backgroundColor,
                                     )
                                 },
-                                action = { navController.navigate("showleases") },
+                                action = { homeViewModel.goToShowLeases() },
                                 backgroundColor = backgroundColor,
                                 highlightColor = highlightColor
 
@@ -293,7 +294,7 @@ fun HomeScreen(navController: NavHostController) {
                                         tint = backgroundColor,
                                     )
                                 },
-                                action = { navController.navigate("edittenant") },
+                                action = { homeViewModel.goToEditLandLord() },
                                 backgroundColor = backgroundColor,
                                 highlightColor = highlightColor
 
@@ -303,7 +304,8 @@ fun HomeScreen(navController: NavHostController) {
                 }
 
             }
-        })
+        }
+    )
 }
 
 @Composable
@@ -357,5 +359,5 @@ fun CardButtonComp(
 @Preview
 fun HomeScreenPreview() {
     val navController = rememberNavController()
-    HomeScreen(navController)
+    HomeScreen(HomeViewModel(navController))
 }

@@ -31,8 +31,8 @@ class TenantHttpClient (val httpClient: HttpClient) {
         explicitNulls = false
     }
 
-    suspend fun searchAll(): List<Tenant> {
-        val response = httpClient.get("$baseUrl/encontrartodos") {
+    suspend fun searchAllByNameOrCpf(nameOrCpf: String? = ""): List<Tenant> {
+        val response = httpClient.get("$baseUrl/encontrartodos?nomeoucpf=$nameOrCpf") {
             header("Authorization", "Bearer $TOKEN")
         }
         return response.body()

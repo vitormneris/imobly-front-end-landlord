@@ -22,8 +22,8 @@ class CategoryHttpClient(val httpClient: HttpClient) {
 
     val baseUrl = "/categorias"
 
-    suspend fun searchAll(): List<Category> =
-        httpClient.get("$baseUrl/encontrartodos")
+    suspend fun searchAllByTitle(title: String? = ""): List<Category> =
+        httpClient.get("$baseUrl/encontrartodos?titulo=$title")
             .body()
 
     suspend fun create(category : Category): ResponseMessage {

@@ -1,6 +1,7 @@
 package com.imobly.imobly.viewmodel
 
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,6 +21,8 @@ import kotlinx.coroutines.launch
 class CategoryViewModel(private val navController: NavHostController) : ViewModel() {
 
     var category = mutableStateOf(Category())
+
+    var categories = mutableStateOf<List<Category>>(emptyList())
     var properties = mutableStateOf(mutableListOf<String>())
     var propertyText = mutableStateOf("")
 
@@ -31,6 +34,8 @@ class CategoryViewModel(private val navController: NavHostController) : ViewMode
 
     var inputLockState = mutableStateOf(true)
     var showDialogState = mutableStateOf(false)
+
+    val searchText: MutableState<String> = mutableStateOf("")
 
     fun resetPage() {
         messageError.value = ""
@@ -78,7 +83,16 @@ class CategoryViewModel(private val navController: NavHostController) : ViewMode
         onLoadingState.value = false
     }
 
-     fun createAction() {
+    fun searchAction() {
+        viewModelScope.launch {
+            val httpClient = CategoryHttpClient(createHttpClient())
+            val list = httpClient.searchAllByTitle(searchText.value)
+            categories.value = list
+        }
+    }
+
+
+    fun createAction() {
          viewModelScope.launch {
              onLoadingState.value = true
              val httpClient = CategoryHttpClient(createHttpClient())
