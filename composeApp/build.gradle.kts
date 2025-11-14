@@ -55,6 +55,8 @@ kotlin {
             implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
             implementation("io.coil-kt.coil3:coil-network-ktor:3.0.0-alpha06")
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+            implementation("io.github.koalaplot:koalaplot-core:0.9.1")
+            implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.2.0")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
