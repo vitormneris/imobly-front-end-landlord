@@ -29,8 +29,6 @@ fun PieChartComp(
     data: List<Float>,
     labels: List<String>
 ) {
-
-
     val customColors = if (labels.contains("PAID")){
         listOf(
             Color(0xFF3caea3),
@@ -88,7 +86,6 @@ fun PieChartComp(
                     modifier = Modifier,
                     text= cleanedLabels[i])
             }
-
         )
     }
 }

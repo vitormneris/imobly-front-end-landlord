@@ -11,6 +11,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.imobly.imobly.domain.Lease
@@ -21,6 +24,7 @@ import com.imobly.imobly.ui.components.topbar.TopBarComp
 import com.imobly.imobly.ui.theme.colors.BackGroundColor
 import com.imobly.imobly.ui.theme.colors.CancelColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
+import com.imobly.imobly.ui.theme.fonts.montserratFont
 import com.imobly.imobly.viewmodel.LeaseViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -100,13 +104,19 @@ fun LeaseCard(lease: Lease, leaseViewModel: LeaseViewModel) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Text(lease.property.title, style = MaterialTheme.typography.titleMedium)
-            Text("Locatário: ${lease.tenant.firstName}")
-            Text("Período: ${lease.startDate} - ${lease.endDate}")
-            Text("Valor: ${lease.monthlyRent}")
-            Text(
-                text = "Status: ${if (lease.isEnabled) "Ativa" else "Inativa"}",
-                color = if (lease.isEnabled) PrimaryColor else CancelColor
+            TextInfoComp("Imóvel", lease.property.title)
+            TextInfoComp("Locatário", lease.tenant.firstName)
+            TextInfoComp("Duração do contrato", "${lease.startDate} - ${lease.endDate}")
+            TextInfoComp("Dia do vencimento", lease.paymentDueDay)
+            TextInfoComp("Aluguel", lease.monthlyRent)
+            TextInfoComp("Deposíto", lease.securityDeposit)
+            TextInfoComp("Criado em", lease.createdAt)
+            TextInfoComp("Última vez atualizado em", lease.lastUpdatedAt)
+            TextInfoComp("Duração em meses", lease.durationInMonths)
+            TextInfoComp(
+                "Status",
+                if (lease.isEnabled) "Ativa" else "Inativa",
+                if (lease.isEnabled) PrimaryColor else CancelColor
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -116,13 +126,33 @@ fun LeaseCard(lease: Lease, leaseViewModel: LeaseViewModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 ButtonComp(
-                    text = "Editar",
-                    icon = { Icon(Icons.Default.Edit, contentDescription = "Editar") },
+                    text = "Editar informações",
+                    icon = { },
                     color = PrimaryColor,
                     action = { leaseViewModel.goToEditLease(lease)  }
                 )
             }
         }
+    }
+}
+
+@Composable
+fun TextInfoComp(label: String, value: String, color: Color = Color.Black) {
+    Row(Modifier.padding(2.dp)) {
+        Text(
+            "${label}: ",
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            fontFamily = montserratFont(),
+            fontWeight = FontWeight.SemiBold
+        )
+        Text(
+            value,
+            color = color,
+            textAlign = TextAlign.Center,
+            fontFamily = montserratFont(),
+            fontWeight = FontWeight.Medium
+        )
     }
 }
 

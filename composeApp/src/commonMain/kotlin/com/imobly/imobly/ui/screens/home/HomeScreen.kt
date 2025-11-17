@@ -13,7 +13,6 @@ import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.ManageAccounts
 import androidx.compose.material.icons.outlined.OtherHouses
 import androidx.compose.material.icons.outlined.PeopleOutline
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
@@ -29,11 +28,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_EXPANDED_LOWER_BOUND
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
-import com.imobly.imobly.ui.components.button.ButtonComp
 import com.imobly.imobly.ui.components.charts.BarPlotComp
 import com.imobly.imobly.ui.components.charts.PieChartComp
 import com.imobly.imobly.ui.components.title.TitleComp
@@ -48,8 +45,12 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel) {
 
-    val scrollState = rememberScrollState()
-    val horizantalScrollState = rememberScrollState()
+    val verticalScrollState = rememberScrollState()
+
+    val horizontalScrollState = rememberScrollState()
+
+    homeViewModel.loadGraphics()
+
     Scaffold(
         topBar = {
             TopBarComp()
@@ -59,8 +60,9 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
             Column(
                 modifier = Modifier
                     .background(BackGroundColor)
+                    .padding(paddingValues)
                     .fillMaxSize()
-                    .verticalScroll(scrollState),
+                    .verticalScroll(verticalScrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
 
@@ -73,48 +75,10 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                     else -> 600.dp
                 }
 
-
-                val months =
-                    listOf(
-                        "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
-                        "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
-                    )
-
-
-                val totalByMonth = listOf(
-                    37920.00f,  // Janeiro - 13 imóveis
-                    41380.00f,  // Fevereiro - 14 imóveis (um a mais)
-                    35840.00f,  // Março - 12 imóveis (um a menos)
-                    39270.00f,  // Abril - 13 imóveis
-                    40050.00f,  // Maio - 13 imóveis
-                    42110.00f,  // Junho - 14 imóveis (um a mais)
-                    37480.00f,  // Julho - 12 imóveis (um a menos)
-                    40630.00f,  // Agosto - 13 imóveis
-                    39750.00f,  // Setembro - 13 imóveis
-                    41900.00f,  // Outubro - 14 imóveis (um a mais)
-                    38940.00f,  // Novembro - 13 imóveis
-                    38010.00f   // Dezembro - 12 imóveis (um a menos)
-                )
-
-
-                data class ChartData(
-                    val x: List<String>,
-                    val y: List<Float>
-                )
-
-                val paymentData = ChartData(
-                    x = listOf("PAID", "NOT_PAID"),
-                    y = listOf(11.0f, 3.0f)
-                )
-                val rentData = ChartData(
-                    x = listOf("RENTED", "NOT_RENTED"),
-                    y = listOf(13.0f, 1.0f)
-                )
-
                 TitleComp("Painel Administrativo", fontSize = 32.sp, backButton = false, buttonBackAction = {})
 
                 Row(
-                    Modifier.horizontalScroll(horizantalScrollState)
+                    Modifier.horizontalScroll(horizontalScrollState)
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -130,8 +94,8 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                             modifier = Modifier
                                 .width(adaptiveWidth - 120.dp)
                                 .padding(20.dp),
-                            xData = months,
-                            yData = totalByMonth
+                            xData = homeViewModel.rentByMonth.value.x,
+                            yData = homeViewModel.rentByMonth.value.y
                         )
                     }
 
@@ -149,8 +113,8 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                             modifier = Modifier
                                 .width(adaptiveWidth - 200.dp)
                                 .padding(20.dp),
-                            data = paymentData.y,
-                            labels = paymentData.x
+                            data = homeViewModel.rentsPaidThisMonth.value.y,
+                            labels = homeViewModel.rentsPaidThisMonth.value.x
                         )
                     }
 
@@ -168,8 +132,8 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                             modifier = Modifier
                                 .width(adaptiveWidth - 200.dp)
                                 .padding(20.dp),
-                            data = rentData.y,
-                            labels = rentData.x
+                            data = homeViewModel.rentedProperties.value.y,
+                            labels = homeViewModel.rentedProperties.value.x
                         )
                     }
                 }

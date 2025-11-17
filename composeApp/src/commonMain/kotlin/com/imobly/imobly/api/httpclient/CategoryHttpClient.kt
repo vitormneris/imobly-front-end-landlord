@@ -5,7 +5,6 @@ import com.imobly.imobly.api.dto.ErrorDTO
 import com.imobly.imobly.api.dto.Ok
 import com.imobly.imobly.api.dto.ResponseMessage
 import com.imobly.imobly.domain.Category
-import com.imobly.imobly.domain.LandLord
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete

@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.imobly.imobly.ui.theme.colors.BackGroundColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import imobly.composeapp.generated.resources.Res
 import imobly.composeapp.generated.resources.image_logo
@@ -30,6 +31,7 @@ fun TopBarComp() {
     Box(
         Modifier
             .fillMaxWidth()
+            .background(BackGroundColor)
             .height(60.dp)
             .padding(5.dp),
         contentAlignment = Alignment.Center

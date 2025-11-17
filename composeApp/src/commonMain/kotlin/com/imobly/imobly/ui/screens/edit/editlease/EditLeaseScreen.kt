@@ -44,14 +44,11 @@ fun EditLeaseScreen(leaseViewModel: LeaseViewModel) {
 
     Scaffold(
         topBar = { TopBarComp() },
-        snackbarHost = {
-            SnackbarHost(leaseViewModel.snackMessage.value)
-        },
+        snackbarHost = { SnackbarHost(leaseViewModel.snackMessage.value) },
         contentWindowInsets = WindowInsets.systemBars
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .verticalScroll(scrollState)
                 .background(BackGroundColor)
                 .padding(paddingValues)
                 .fillMaxSize(),
@@ -62,6 +59,7 @@ fun EditLeaseScreen(leaseViewModel: LeaseViewModel) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Column(modifier = Modifier
+                .verticalScroll(scrollState)
                 .widthIn(max = 1000.dp)
                 .fillMaxWidth(0.9f),
                 horizontalAlignment = Alignment.CenterHorizontally

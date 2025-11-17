@@ -26,15 +26,13 @@ import io.github.koalaplot.core.xygraph.rememberFloatLinearAxisModel
 fun BarPlotComp(
     modifier: Modifier = Modifier,
     xData: List<String>,
-    yData: List<Float>,
-
-    ){
-
-    val highestValue = yData.max()+3000f
-    val lowestValue = maxOf(yData.min()-6000f,0f)
+    yData: List<Float>
+) {
+    val highestValue = if (yData.isNotEmpty()) yData.max() + 3000f else 1000.0f
+    val lowestValue = if (yData.isNotEmpty()) maxOf(yData.min() - 6000f, 0f) else 0f
 
     val cleanedXData = xData.map { data->
-        when(data){
+        when(data) {
             "JANUARY"->"Jan"
             "FEBRUARY"->"Fev"
             "MARCH"->"Mar"
@@ -50,9 +48,6 @@ fun BarPlotComp(
             else -> data
         }
     }
-
-
-
 
     XYGraph(
         modifier = modifier
@@ -91,5 +86,4 @@ fun BarPlotComp(
             }
         )
     }
-
 }

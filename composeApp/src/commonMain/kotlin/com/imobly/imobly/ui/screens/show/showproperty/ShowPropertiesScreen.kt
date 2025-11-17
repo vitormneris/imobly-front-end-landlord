@@ -65,7 +65,6 @@ fun ShowPropertiesScreen(propertyViewModel: PropertyViewModel) {
                     .background(BackGroundColor)
                     .padding(paddingValues)
                     .fillMaxSize()
-                    .background(Color(0xFFF8F9FA))
             ) {
                 Column(
                     modifier = Modifier
