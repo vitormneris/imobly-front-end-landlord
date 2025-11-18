@@ -13,10 +13,13 @@ import com.imobly.imobly.api.httpclient.AuthenticationHttpClient
 import com.imobly.imobly.domain.Auth
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val navController: NavHostController): ViewModel() {
+class ResetPasswordViewModel(private val navController: NavHostController): ViewModel()  {
 
     val email = mutableStateOf("")
-    val password = mutableStateOf("")
+    val newPassword = mutableStateOf("")
+    val newPasswordConfirmation = mutableStateOf("")
+    val code = mutableStateOf("")
+
 
     val passwordVisibilityState = mutableStateOf(false)
     val onLoadingState = mutableStateOf(false)
@@ -26,12 +29,6 @@ class LoginViewModel(private val navController: NavHostController): ViewModel() 
 
     val messageError = mutableStateOf("")
 
-    fun goToSignUp() {
-        navController.navigate("signup")
-    }
-    fun goToForgotPassword() {
-        navController.navigate("forgotpassword")
-    }
 
     fun getInputErrorMessage(inputLabel: String): String {
         return inputErrors.value[inputLabel] ?: ""
@@ -45,40 +42,32 @@ class LoginViewModel(private val navController: NavHostController): ViewModel() 
         passwordVisibilityState.value = !passwordVisibilityState.value
     }
 
-    fun goToHome() {
-        navController.navigate("home")
+    fun goToLogin() {
+        navController.navigate("login")
     }
 
-    fun signInAction() {
-        val auth = Auth(email.value, password.value)
-        viewModelScope.launch {
-            onLoadingState.value = true
-            val httpClient = AuthenticationHttpClient(createHttpClient())
-            val response = httpClient.signIn(auth)
-            onLoadingState.value = false
-            when (response) {
-                is Ok -> {
-                    email.value = ""
-                    password.value = ""
-                    inputErrors.value = emptyMap()
-                    messageError.value = ""
-                    goToHome()
-                }
-                is ErrorDTO -> {
-                    val errors = mutableMapOf<String, String>()
-                    response.errorFields?.forEach { errors[it.name] = it.description }
-                    inputErrors.value = errors
-                    messageError.value = response.message
-                }
-            }
-        }
+    fun goToInsertCode() {
+        navController.navigate("insertcode")
     }
+
+    fun goToChangePassword() {
+        navController.navigate("changepassword")
+    }
+
 
     fun changeEmail(it: String) {
         email.value = it
     }
 
-    fun changePassword(it: String) {
-        password.value = it
+    fun changeCode(it: String) {
+        code.value = it
+    }
+
+    fun changeNewPassword(it: String) {
+        newPassword.value = it
+    }
+
+    fun changeNewPasswordConfirmation(it: String) {
+        newPasswordConfirmation.value = it
     }
 }

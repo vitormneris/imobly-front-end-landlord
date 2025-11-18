@@ -6,31 +6,27 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.imobly.imobly.ui.screens.login.LoginScreen
-import com.imobly.imobly.ui.screens.create.createtenant.CreateTenantScreen
+import com.imobly.imobly.ui.screens.changepassword.ChangePasswordScreen
 import com.imobly.imobly.ui.screens.create.createcategory.CreateCategoryScreen
 import com.imobly.imobly.ui.screens.create.createlease.CreateLeaseScreen
 import com.imobly.imobly.ui.screens.create.createproperty.CreatePropertyScreen
+import com.imobly.imobly.ui.screens.create.createtenant.CreateTenantScreen
 import com.imobly.imobly.ui.screens.edit.editcategory.EditCategoryScreen
 import com.imobly.imobly.ui.screens.edit.editlandlord.EditLandLordScreen
 import com.imobly.imobly.ui.screens.edit.editlease.EditLeaseScreen
 import com.imobly.imobly.ui.screens.edit.editproperty.EditPropertyScreen
 import com.imobly.imobly.ui.screens.edit.editreport.EditReportScreen
 import com.imobly.imobly.ui.screens.edit.edittenant.EditTenantScreen
+import com.imobly.imobly.ui.screens.forgotpassword.ForgotPasswordScreen
 import com.imobly.imobly.ui.screens.home.HomeScreen
+import com.imobly.imobly.ui.screens.insertcode.InsertCodeScreen
+import com.imobly.imobly.ui.screens.login.LoginScreen
 import com.imobly.imobly.ui.screens.show.showlease.ShowLeasesScreen
 import com.imobly.imobly.ui.screens.show.showproperty.ShowPropertiesScreen
 import com.imobly.imobly.ui.screens.show.showreports.ShowReportsScreen
 import com.imobly.imobly.ui.screens.show.showtenant.ShowTenantScreen
 import com.imobly.imobly.ui.screens.signup.SignUpScreen
-import com.imobly.imobly.viewmodel.CategoryViewModel
-import com.imobly.imobly.viewmodel.HomeViewModel
-import com.imobly.imobly.viewmodel.LandLordViewModel
-import com.imobly.imobly.viewmodel.LeaseViewModel
-import com.imobly.imobly.viewmodel.LoginViewModel
-import com.imobly.imobly.viewmodel.PropertyViewModel
-import com.imobly.imobly.viewmodel.ReportViewModel
-import com.imobly.imobly.viewmodel.TenantViewModel
+import com.imobly.imobly.viewmodel.*
 
 @Composable
 fun App() {
@@ -42,6 +38,7 @@ fun App() {
     val reportViewModel = viewModel { ReportViewModel(navController) }
     val categoryViewModel = viewModel { CategoryViewModel(navController) }
     val leaseViewModel = viewModel { LeaseViewModel(navController) }
+    val resetPasswordViewModel = viewModel { ResetPasswordViewModel(navController) }
     val homeViewModel = viewModel { HomeViewModel(navController) }
 
 
@@ -94,6 +91,18 @@ fun App() {
 
             composable(route = "editlandlord") {
                 EditLandLordScreen(landLordViewModel)
+            }
+
+            composable(route = "forgotpassword") {
+                ForgotPasswordScreen(resetPasswordViewModel)
+            }
+
+            composable(route = "insertcode") {
+                InsertCodeScreen(resetPasswordViewModel)
+            }
+
+            composable(route = "changepassword") {
+                ChangePasswordScreen(resetPasswordViewModel)
             }
 
             composable(route = "editcategory") {
