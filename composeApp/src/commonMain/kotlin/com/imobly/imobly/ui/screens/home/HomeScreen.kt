@@ -264,6 +264,60 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
 
                             )
                         }
+
+                        item {
+                            CardButtonComp(
+                                text = "Forgot password",
+                                icon = {
+                                    Icon(
+                                        Icons.Outlined.Category,
+                                        contentDescription = "esqueci a senha",
+                                        modifier = Modifier.fillMaxSize().padding(20.dp),
+                                        tint = backgroundColor,
+                                    )
+                                },
+                                action = { homeViewModel.goToForgotPassword() },
+                                backgroundColor = backgroundColor,
+                                highlightColor = highlightColor
+
+                            )
+                        }
+
+                        item {
+                            CardButtonComp(
+                                text = "Insert Code",
+                                icon = {
+                                    Icon(
+                                        Icons.Outlined.Category,
+                                        contentDescription = "codigo",
+                                        modifier = Modifier.fillMaxSize().padding(20.dp),
+                                        tint = backgroundColor,
+                                    )
+                                },
+                                action = { homeViewModel.goToInsertCode() },
+                                backgroundColor = backgroundColor,
+                                highlightColor = highlightColor
+
+                            )
+                        }
+
+                        item {
+                            CardButtonComp(
+                                text = "Change password",
+                                icon = {
+                                    Icon(
+                                        Icons.Outlined.Category,
+                                        contentDescription = "mudar senha",
+                                        modifier = Modifier.fillMaxSize().padding(20.dp),
+                                        tint = backgroundColor,
+                                    )
+                                },
+                                action = { homeViewModel.goToChangePassword() },
+                                backgroundColor = backgroundColor,
+                                highlightColor = highlightColor
+
+                            )
+                        }
                     }
                 }
 
