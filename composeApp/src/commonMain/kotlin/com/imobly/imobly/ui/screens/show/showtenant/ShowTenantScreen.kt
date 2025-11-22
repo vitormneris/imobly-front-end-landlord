@@ -61,19 +61,6 @@ fun ShowTenantScreen(tenantViewModel: TenantViewModel) {
                         tenantViewModel.goToHome()
                     })
 
-
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        ButtonComp(
-                            "Cadastrar Locatário",
-                            {  Icon(Icons.Default.Add, "Sinal de soma") },
-                            PrimaryColor,
-                            { tenantViewModel.goToCreateTenant() },
-                        )
-                    }
-
                     Box(
                         modifier = Modifier.fillMaxWidth(),
                         contentAlignment = Alignment.Center

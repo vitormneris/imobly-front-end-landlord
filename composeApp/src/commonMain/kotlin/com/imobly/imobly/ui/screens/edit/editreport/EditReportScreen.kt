@@ -55,7 +55,7 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ){
-            TitleComp("Editar relato",
+            TitleComp("Responda a reportação",
                 {reportViewModel.goToShowReports()}
             )
 
@@ -75,6 +75,7 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
                     errorMessage = reportViewModel.getInputErrorMessage("title"),
                     readOnly = true
                 )
+
                 InputComp(
                     label = "Autor",
                     placeholder = "Ex: Fernando",
@@ -84,6 +85,18 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
                     errorMessage = reportViewModel.getInputErrorMessage("tenant"),
                     readOnly = true
                 )
+
+                InputDropdownComp(
+                    label = "Propriedade",
+                    options = reportViewModel.propertiesOptions(),
+                    selectedOption = reportViewModel.tenantPropertySelected.value.title,
+                    onOptionSelected = { selectedOption ->
+                        val property = reportViewModel.tenantProperties.value.first { it.id == selectedOption }
+                        reportViewModel.changeProperty(property)
+                    },
+                    isEnabled = false
+                )
+
                 InputComp(
                     label = "Mensagem",
                     placeholder = "Ex: Está pingando muito no guarda roupa, preciso de ajuda.",
@@ -94,6 +107,7 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
                     singleLine = false,
                     readOnly = true
                 )
+
                 InputComp(
                     label = "Minha resposta:",
                     placeholder = "Ex: Estou resolvendo, aguarde..",
@@ -108,7 +122,7 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
                 InputDropdownComp(
                     label = "Status",
                     options = reportViewModel.statusReportOptions(),
-                    selectedOption = reportViewModel.report.value.status.description,
+                    selectedOption = reportViewModel.report.value.status.label,
                     onOptionSelected = {selectedOption-> reportViewModel.changeStatus(
                         StatusReportEnum.entries.first {it.name == selectedOption}
                     )
@@ -177,6 +191,7 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
                                     155.dp,
                                     16.sp
                                 )
+
                                 ButtonComp(
                                     "Cancelar",
                                     { Icon(Icons.Default.Cancel, "cancelar") },
@@ -185,6 +200,7 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
                                     155.dp,
                                     16.sp
                                 )
+
                             }
                         }
                     }

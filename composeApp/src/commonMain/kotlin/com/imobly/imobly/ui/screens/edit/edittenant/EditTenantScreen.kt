@@ -236,7 +236,7 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
                 InputDropdownComp(
                     label = "Estado Civil",
                     options = tenantViewModel.maritalStatusOptions(),
-                    selectedOption = tenantViewModel.tenant.value.maritalStatus.description,
+                    selectedOption = tenantViewModel.tenant.value.maritalStatus.label,
                     onOptionSelected = { selectedLabel->
                         tenantViewModel.tenant.value =
                             tenantViewModel.tenant.value.copy(

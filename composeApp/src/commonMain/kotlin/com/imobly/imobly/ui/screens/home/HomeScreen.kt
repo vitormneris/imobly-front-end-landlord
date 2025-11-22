@@ -44,7 +44,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel) {
-
     val verticalScrollState = rememberScrollState()
 
     val horizontalScrollState = rememberScrollState()
@@ -55,212 +54,212 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
         topBar = {
             TopBarComp()
         },
-       snackbarHost = { SnackbarHost( homeViewModel.snackMessage.value ) },
-        content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .background(BackGroundColor)
-                    .padding(paddingValues)
-                    .fillMaxSize()
-                    .verticalScroll(verticalScrollState),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+       snackbarHost = { SnackbarHost( homeViewModel.snackMessage.value ) }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .background(BackGroundColor)
+                .padding(paddingValues)
+                .fillMaxSize()
+                .verticalScroll(verticalScrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
 
+            val adaptiveInfo = currentWindowAdaptiveInfo()
+            val adaptiveWidth = when {
+                adaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_EXPANDED_LOWER_BOUND) -> 1100.dp
+                adaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND) -> 700.dp
+                else -> 600.dp
+            }
+
+            TitleComp("Painel Administrativo", fontSize = 32.sp, backButton = false, buttonBackAction = {})
+
+            Row(
+                Modifier.horizontalScroll(horizontalScrollState)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(top = 10.dp)
                 ) {
-
-                val adaptiveInfo = currentWindowAdaptiveInfo()
-                val adaptiveWidth = when {
-                    adaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_EXPANDED_LOWER_BOUND) -> 1100.dp
-                    adaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND) -> 700.dp
-                    else -> 600.dp
-                }
-
-                TitleComp("Painel Administrativo", fontSize = 32.sp, backButton = false, buttonBackAction = {})
-
-                Row(
-                    Modifier.horizontalScroll(horizontalScrollState)
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(top = 10.dp)
-                    ) {
-                        Text(
-                            text = "Comparação de valores pagos por mês",
-                            color = TitleColor,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 18.sp
-                        )
-                        BarPlotComp(
-                            modifier = Modifier
-                                .width(adaptiveWidth - 120.dp)
-                                .padding(20.dp),
-                            xData = homeViewModel.rentByMonth.value.x,
-                            yData = homeViewModel.rentByMonth.value.y
-                        )
-                    }
-
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(top = 10.dp),
-                    ) {
-                        Text(
-                            "Relação de parcelas pagas neste mês",
-                            color = TitleColor,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 18.sp
-                        )
-                        PieChartComp(
-                            modifier = Modifier
-                                .width(adaptiveWidth - 200.dp)
-                                .padding(20.dp),
-                            data = homeViewModel.rentsPaidThisMonth.value.y,
-                            labels = homeViewModel.rentsPaidThisMonth.value.x
-                        )
-                    }
-
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(top = 10.dp)
-                    ) {
-                        Text(
-                            "Relação de propriedades alugadas",
-                            color = TitleColor,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 18.sp
-                        )
-                        PieChartComp(
-                            modifier = Modifier
-                                .width(adaptiveWidth - 200.dp)
-                                .padding(20.dp),
-                            data = homeViewModel.rentedProperties.value.y,
-                            labels = homeViewModel.rentedProperties.value.x
-                        )
-                    }
-                }
-                Spacer(Modifier.height(30.dp))
-
-
-                val highlightColor = PrimaryColor
-                val backgroundColor = BackGroundColor
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(400.dp),
-                    Alignment.Center
-                ) {
-                    LazyVerticalGrid(
-                        columns = when (adaptiveWidth.value.toInt()) {
-                            1100 -> GridCells.Fixed(3)
-                            else -> GridCells.Fixed(2)
-                        },
+                    Text(
+                        text = "Comparação de valores pagos por mês",
+                        color = TitleColor,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp
+                    )
+                    BarPlotComp(
                         modifier = Modifier
-                            .width(adaptiveWidth),
-                        contentPadding = PaddingValues(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        userScrollEnabled = false
-                    ) {
-                        item {
-                            CardButtonComp(
-                                text = "Propriedades",
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.OtherHouses,
-                                        contentDescription = "propriedades",
-                                        modifier = Modifier.fillMaxSize().padding(20.dp),
-                                        tint = backgroundColor,
-                                    )
-                                },
-                                action = { homeViewModel.goToShowProperties() },
-                                backgroundColor = backgroundColor,
-                                highlightColor = highlightColor
+                            .width(adaptiveWidth - 120.dp)
+                            .padding(20.dp),
+                        xData = homeViewModel.rentByMonth.value.x,
+                        yData = homeViewModel.rentByMonth.value.y
+                    )
+                }
 
-                            )
-                        }
-                        item {
-                            CardButtonComp(
-                                text = "Locatários",
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.PeopleOutline,
-                                        contentDescription = "locatarios",
-                                        modifier = Modifier.fillMaxSize().padding(20.dp),
-                                        tint = backgroundColor,
-                                    )
-                                },
-                                action = { homeViewModel.goToShowTenants() },
-                                backgroundColor = backgroundColor,
-                                highlightColor = highlightColor
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(top = 10.dp),
+                ) {
+                    Text(
+                        "Relação de parcelas pagas neste mês",
+                        color = TitleColor,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp
+                    )
+                    PieChartComp(
+                        modifier = Modifier
+                            .width(adaptiveWidth - 200.dp)
+                            .padding(20.dp),
+                        data = homeViewModel.rentsPaidThisMonth.value.y,
+                        labels = homeViewModel.rentsPaidThisMonth.value.x
+                    )
+                }
 
-                            )
-                        }
-                        item {
-                            CardButtonComp(
-                                text = "Relatos",
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.Feedback,
-                                        contentDescription = "relatos",
-                                        modifier = Modifier.fillMaxSize().padding(20.dp),
-                                        tint = backgroundColor,
-                                    )
-                                },
-                                action = { homeViewModel.goToShowReports() },
-                                backgroundColor = backgroundColor,
-                                highlightColor = highlightColor
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(top = 10.dp)
+                ) {
+                    Text(
+                        "Relação de propriedades alugadas",
+                        color = TitleColor,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp
+                    )
+                    PieChartComp(
+                        modifier = Modifier
+                            .width(adaptiveWidth - 200.dp)
+                            .padding(20.dp),
+                        data = homeViewModel.rentedProperties.value.y,
+                        labels = homeViewModel.rentedProperties.value.x
+                    )
+                }
+            }
+            Spacer(Modifier.height(30.dp))
 
-                            )
-                        }
-                        item {
-                            CardButtonComp(
-                                text = "Cadastrar categoria",
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.Category,
-                                        contentDescription = "categoria",
-                                        modifier = Modifier.fillMaxSize().padding(20.dp),
-                                        tint = backgroundColor,
-                                    )
-                                },
-                                action = { homeViewModel.goToCreateCategory() },
-                                backgroundColor = backgroundColor,
-                                highlightColor = highlightColor
 
-                            )
-                        }
+            val highlightColor = PrimaryColor
+            val backgroundColor = BackGroundColor
 
-                        item {
-                            CardButtonComp(
-                                text = "Gerenciar Contratos",
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.ManageAccounts,
-                                        contentDescription = "contratos",
-                                        modifier = Modifier.fillMaxSize().padding(20.dp),
-                                        tint = backgroundColor,
-                                    )
-                                },
-                                action = { homeViewModel.goToShowLeases() },
-                                backgroundColor = backgroundColor,
-                                highlightColor = highlightColor
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(400.dp),
+                Alignment.Center
+            ) {
+                LazyVerticalGrid(
+                    columns = when (adaptiveWidth.value.toInt()) {
+                        1100 -> GridCells.Fixed(3)
+                        else -> GridCells.Fixed(2)
+                    },
+                    modifier = Modifier
+                        .width(adaptiveWidth),
+                    contentPadding = PaddingValues(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    userScrollEnabled = false
+                ) {
+                    item {
+                        CardButtonComp(
+                            text = "Propriedades",
+                            icon = {
+                                Icon(
+                                    Icons.Outlined.OtherHouses,
+                                    contentDescription = "propriedades",
+                                    modifier = Modifier.fillMaxSize().padding(20.dp),
+                                    tint = backgroundColor,
+                                )
+                            },
+                            action = { homeViewModel.goToShowProperties() },
+                            backgroundColor = backgroundColor,
+                            highlightColor = highlightColor
 
-                            )
-                        }
-                        item {
-                            CardButtonComp(
-                                text = "Ver perfil",
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.ManageAccounts,
-                                        contentDescription = "perfil",
-                                        modifier = Modifier.fillMaxSize().padding(20.dp),
-                                        tint = backgroundColor,
-                                    )
-                                },
-                                action = { homeViewModel.goToEditLandLord() },
-                                backgroundColor = backgroundColor,
-                                highlightColor = highlightColor
+                        )
+                    }
+                    item {
+                        CardButtonComp(
+                            text = "Locatários",
+                            icon = {
+                                Icon(
+                                    Icons.Outlined.PeopleOutline,
+                                    contentDescription = "locatarios",
+                                    modifier = Modifier.fillMaxSize().padding(20.dp),
+                                    tint = backgroundColor,
+                                )
+                            },
+                            action = { homeViewModel.goToShowTenants() },
+                            backgroundColor = backgroundColor,
+                            highlightColor = highlightColor
+
+                        )
+                    }
+                    item {
+                        CardButtonComp(
+                            text = "Reportações",
+                            icon = {
+                                Icon(
+                                    Icons.Outlined.Feedback,
+                                    contentDescription = "relatos",
+                                    modifier = Modifier.fillMaxSize().padding(20.dp),
+                                    tint = backgroundColor,
+                                )
+                            },
+                            action = { homeViewModel.goToShowReports() },
+                            backgroundColor = backgroundColor,
+                            highlightColor = highlightColor
+
+                        )
+                    }
+                    item {
+                        CardButtonComp(
+                            text = "Cadastrar categoria",
+                            icon = {
+                                Icon(
+                                    Icons.Outlined.Category,
+                                    contentDescription = "categoria",
+                                    modifier = Modifier.fillMaxSize().padding(20.dp),
+                                    tint = backgroundColor,
+                                )
+                            },
+                            action = { homeViewModel.goToCreateCategory() },
+                            backgroundColor = backgroundColor,
+                            highlightColor = highlightColor
+
+                        )
+                    }
+
+                    item {
+                        CardButtonComp(
+                            text = "Gerenciar Contratos",
+                            icon = {
+                                Icon(
+                                    Icons.Outlined.ManageAccounts,
+                                    contentDescription = "contratos",
+                                    modifier = Modifier.fillMaxSize().padding(20.dp),
+                                    tint = backgroundColor,
+                                )
+                            },
+                            action = { homeViewModel.goToShowLeases() },
+                            backgroundColor = backgroundColor,
+                            highlightColor = highlightColor
+
+                        )
+                    }
+                    item {
+                        CardButtonComp(
+                            text = "Ver perfil",
+                            icon = {
+                                Icon(
+                                    Icons.Outlined.ManageAccounts,
+                                    contentDescription = "perfil",
+                                    modifier = Modifier.fillMaxSize().padding(20.dp),
+                                    tint = backgroundColor,
+                                )
+                            },
+                            action = { homeViewModel.goToEditLandLord() },
+                            backgroundColor = backgroundColor,
+                            highlightColor = highlightColor
+
 
                             )
                         }
@@ -320,11 +319,11 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                         }
                     }
                 }
-
             }
         }
-    )
+    }
 }
+
 
 @Composable
 fun CardButtonComp(

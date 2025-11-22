@@ -80,17 +80,7 @@ fun ShowReportsScreen(reportViewModel: ReportViewModel) {
                         contentPadding = PaddingValues(bottom = 16.dp)
                     ) {
                         items(reports.value) { report ->
-                            ReportCardComp(
-                                report.title,
-                                report.message,
-                                report.moment.toString(),
-                                report.status.description,
-                                report.response,
-                                report.tenant.firstName,
-                                {
-                                    reportViewModel.goToEditReport(report)
-                                }
-                            )
+                            ReportCardComp( report, { reportViewModel.goToEditReport(report) } )
                         }
                     }
                 }
@@ -100,19 +90,11 @@ fun ShowReportsScreen(reportViewModel: ReportViewModel) {
 }
 
 @Composable
-fun ReportCardComp(
-    title: String,
-    description: String,
-    moment: String,
-    status: String,
-    response: String,
-    tenant: String,
-    action: () -> Unit
-) {
-    val statusColor:Color = when (status){
-        StatusReportEnum.NEW.description -> Color(0xFF0059ff)
-        StatusReportEnum.PENDING.description-> Color(0xFFFFC107)
-        StatusReportEnum.RESOLVED.description-> ConfirmColor
+fun ReportCardComp(report: Report, action: () -> Unit) {
+    val statusColor:Color = when (report.status){
+        StatusReportEnum.NEW -> Color(0xFF0059ff)
+        StatusReportEnum.PENDING-> Color(0xFFFFC107)
+        StatusReportEnum.RESOLVED-> ConfirmColor
         else -> CancelColor
     }
 
@@ -132,14 +114,14 @@ fun ReportCardComp(
             Modifier.padding(16.dp)
         ) {
             Text(
-                title,
+                report.title,
                 fontFamily = montserratFont(),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF222222)
             )
             Text(
-                description,
+                report.message,
                 modifier = Modifier.padding(top = 4.dp, bottom = 8.dp),
                 fontFamily = montserratFont(),
                 fontSize = 13.sp,
@@ -152,7 +134,7 @@ fun ReportCardComp(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "🕒 $moment",
+                    "🕒 ${report.moment}",
                     fontSize = 12.sp,
                     color = Color.Gray,
                     fontFamily = montserratFont()
@@ -166,7 +148,7 @@ fun ReportCardComp(
                         .padding(horizontal = 10.dp, vertical = 4.dp)
                 ) {
                     Text(
-                        status,
+                        report.status.label,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
@@ -175,7 +157,7 @@ fun ReportCardComp(
                 }
             }
 
-            if (response.isNotBlank()) {
+            if (report.response.isNotBlank()) {
                 Text(
                     "Resposta:",
                     fontWeight = FontWeight.SemiBold,
@@ -184,7 +166,7 @@ fun ReportCardComp(
                     fontFamily = montserratFont()
                 )
                 Text(
-                    response,
+                    report.response,
                     fontSize = 12.sp,
                     color = Color(0xFF444444),
                     fontFamily = montserratFont()
@@ -192,7 +174,16 @@ fun ReportCardComp(
             }
 
             Text(
-                "Inquilino: $tenant",
+                "Inquilino: ${report.tenant.firstName}  ${report.tenant.lastName}",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF333333),
+                modifier = Modifier.padding(top = 8.dp),
+                fontFamily = montserratFont()
+            )
+
+            Text(
+                "Imóvel: ${report.property.title}",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color(0xFF333333),

@@ -13,6 +13,7 @@ import com.imobly.imobly.api.dto.ResponseReportDTO
 import com.imobly.imobly.api.dto.StatusReportDTO
 import com.imobly.imobly.api.httpclient.ReportHttpClient
 import com.imobly.imobly.api.httpclient.TenantHttpClient
+import com.imobly.imobly.domain.Property
 import com.imobly.imobly.domain.Report
 import com.imobly.imobly.domain.enums.StatusReportEnum
 import com.imobly.imobly.domain.Tenant
@@ -22,6 +23,8 @@ import kotlinx.coroutines.launch
 class ReportViewModel(private val navController: NavController): ViewModel() {
 
     val tenant = mutableStateOf(Tenant())
+    val tenantProperties = mutableStateOf<List<Property>>(emptyList())
+    val tenantPropertySelected = mutableStateOf(Property())
     val report = mutableStateOf(Report(
         tenant = tenant.value
     ))
@@ -75,6 +78,7 @@ class ReportViewModel(private val navController: NavController): ViewModel() {
     }
 
     fun goToEditReport(reportNew: Report) {
+        changeProperty(reportNew.property)
         report.value = reportNew
         inputLockState.value = true
         inputErrors.value = emptyMap()
@@ -171,7 +175,7 @@ class ReportViewModel(private val navController: NavController): ViewModel() {
     fun statusReportOptions(): Map<String, String> {
         val map = mutableMapOf<String, String>()
         StatusReportEnum.entries.forEach {
-            map[it.description] = it.name
+            map[it.label] = it.name
         }
         return map
     }
@@ -190,5 +194,17 @@ class ReportViewModel(private val navController: NavController): ViewModel() {
 
     fun changeStatus(it: StatusReportEnum) {
         report.value = report.value.copy(status = it)
+    }
+
+    fun propertiesOptions(): Map<String, String> {
+        val map = mutableMapOf<String, String>()
+        tenantProperties.value.forEach {
+            map[it.title] = it.id ?: ""
+        }
+        return map
+    }
+
+    fun changeProperty(property: Property) {
+        tenantPropertySelected.value = property
     }
 }

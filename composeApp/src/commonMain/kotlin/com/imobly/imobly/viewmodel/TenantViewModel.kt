@@ -9,14 +9,12 @@ import androidx.navigation.NavHostController
 import com.imobly.imobly.api.createHttpClient
 import com.imobly.imobly.api.dto.ErrorDTO
 import com.imobly.imobly.api.dto.Ok
-import com.imobly.imobly.api.httpclient.AuthenticationTenantHttpClient
 import com.imobly.imobly.api.httpclient.TenantHttpClient
 import com.imobly.imobly.domain.Telephone
 import com.imobly.imobly.domain.Tenant
 import com.imobly.imobly.domain.enums.MaritalStatusEnum
 import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
 import kotlinx.coroutines.launch
-import kotlin.text.ifEmpty
 
 class TenantViewModel(private val navController: NavHostController): ViewModel() {
 
@@ -113,40 +111,6 @@ class TenantViewModel(private val navController: NavHostController): ViewModel()
         }
     }
 
-    fun signUpAction() {
-        if (selectedImages.value.isNotEmpty()) {
-            viewModelScope.launch {
-                onLoadingState.value = true
-                val httpClient = AuthenticationTenantHttpClient(createHttpClient())
-                var imageToSend: GalleryPhotoResult? = null
-                if (selectedImages.value.isNotEmpty()) {
-                    imageToSend = selectedImages.value.first()
-                }
-                val response = httpClient.signUp(tenant.value, imageToSend)
-                onLoadingState.value = false
-                when (response) {
-                    is Ok -> {
-                        tenant.value = Tenant()
-                        selectedImages.value = emptyList()
-                        inputErrors.value = emptyMap()
-                        messageError.value = ""
-                        snackMessage.value.showSnackbar("Locatário salvo com sucesso!")
-                    }
-
-                    is ErrorDTO -> {
-                        val errors = mutableMapOf<String, String>()
-                        response.errorFields?.forEach { errors[it.name] = it.description }
-                        inputErrors.value = errors
-                        messageError.value = response.message
-                    }
-
-                }
-            }
-        } else {
-            messageError.value = "Você deve enviar uma imagem"
-        }
-    }
-
     fun editAction() {
         viewModelScope.launch {
             onLoadingState.value = true
@@ -182,9 +146,9 @@ class TenantViewModel(private val navController: NavHostController): ViewModel()
                 val response = httpClient.delete(tenant.value.id!!)
 
                 showDialogState.value = false
-                goToShowTenants()
                 when (response) {
                     is Ok -> {
+                        goToShowTenants()
                         snackMessage.value.showSnackbar("Locatário deletado com sucesso!")
                     }
 
@@ -199,7 +163,7 @@ class TenantViewModel(private val navController: NavHostController): ViewModel()
     fun maritalStatusOptions(): Map<String, String> {
         val map = mutableMapOf<String, String>()
         MaritalStatusEnum.entries.forEach {
-            map[it.description] = it.name
+            map[it.label] = it.name
         }
         return map
     }

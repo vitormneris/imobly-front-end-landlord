@@ -69,10 +69,6 @@ fun App() {
                 EditTenantScreen(tenantViewModel)
             }
 
-            composable(route = "createtenant") {
-                CreateTenantScreen(tenantViewModel)
-            }
-
             composable(route = "login") {
                 LoginScreen(loginViewModel)
             }
