@@ -67,48 +67,6 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
                 InputComp(
-                    label = "Título",
-                    placeholder = "Ex: Goteira no quarto",
-                    value = reportViewModel.report.value.title,
-                    onValueChange = { reportViewModel.changeTitle(it) },
-                    isError = reportViewModel.inputContainsError("title"),
-                    errorMessage = reportViewModel.getInputErrorMessage("title"),
-                    readOnly = true
-                )
-
-                InputComp(
-                    label = "Autor",
-                    placeholder = "Ex: Fernando",
-                    value = reportViewModel.report.value.tenant.firstName,
-                    onValueChange = {  },
-                    isError = reportViewModel.inputContainsError("tenante"),
-                    errorMessage = reportViewModel.getInputErrorMessage("tenant"),
-                    readOnly = true
-                )
-
-                InputDropdownComp(
-                    label = "Propriedade",
-                    options = reportViewModel.propertiesOptions(),
-                    selectedOption = reportViewModel.tenantPropertySelected.value.title,
-                    onOptionSelected = { selectedOption ->
-                        val property = reportViewModel.tenantProperties.value.first { it.id == selectedOption }
-                        reportViewModel.changeProperty(property)
-                    },
-                    isEnabled = false
-                )
-
-                InputComp(
-                    label = "Mensagem",
-                    placeholder = "Ex: Está pingando muito no guarda roupa, preciso de ajuda.",
-                    value = reportViewModel.report.value.message,
-                    onValueChange = { reportViewModel.changeMessage(it) },
-                    isError = reportViewModel.inputContainsError("message"),
-                    errorMessage = reportViewModel.getInputErrorMessage("message"),
-                    singleLine = false,
-                    readOnly = true
-                )
-
-                InputComp(
                     label = "Minha resposta:",
                     placeholder = "Ex: Estou resolvendo, aguarde..",
                     value = reportViewModel.report.value.response,

@@ -264,4 +264,8 @@ class LeaseViewModel(private val navController: NavHostController): ViewModel() 
     fun goToShowLeases() {
         navController.navigate("showleases")
     }
+
+    fun goToShowPayments() {
+
+    }
 }

@@ -279,8 +279,8 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                                 backgroundColor = backgroundColor,
                                 highlightColor = highlightColor
 
-                            )
-                        }
+                        )
+                    }
 
                         item {
                             CardButtonComp(
@@ -315,8 +315,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                                 backgroundColor = backgroundColor,
                                 highlightColor = highlightColor
 
-                            )
-                        }
+                        )
                     }
                 }
             }
