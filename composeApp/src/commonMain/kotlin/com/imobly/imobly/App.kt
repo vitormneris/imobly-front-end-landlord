@@ -10,7 +10,6 @@ import com.imobly.imobly.ui.screens.changepassword.ChangePasswordScreen
 import com.imobly.imobly.ui.screens.create.createcategory.CreateCategoryScreen
 import com.imobly.imobly.ui.screens.create.createlease.CreateLeaseScreen
 import com.imobly.imobly.ui.screens.create.createproperty.CreatePropertyScreen
-import com.imobly.imobly.ui.screens.create.createtenant.CreateTenantScreen
 import com.imobly.imobly.ui.screens.edit.editcategory.EditCategoryScreen
 import com.imobly.imobly.ui.screens.edit.editlandlord.EditLandLordScreen
 import com.imobly.imobly.ui.screens.edit.editlease.EditLeaseScreen
