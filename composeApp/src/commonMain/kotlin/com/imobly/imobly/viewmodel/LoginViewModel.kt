@@ -26,6 +26,13 @@ class LoginViewModel(private val navController: NavHostController): ViewModel() 
 
     val messageError = mutableStateOf("")
 
+    fun resetPage() {
+        email.value = ""
+        password.value = ""
+        inputErrors.value = emptyMap()
+        messageError.value = ""
+    }
+
     fun goToSignUp() {
         navController.navigate("signup")
     }

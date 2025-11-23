@@ -161,7 +161,7 @@ fun TextInfoComp(label: String, value: String, color: Color = Color.Black) {
 }
 @Preview
 @Composable
-fun PreviewShowLeaseScreen() {
+fun ShowLeasesPreview() {
     val navControllerFake = rememberNavController()
     ShowLeasesScreen(LeaseViewModel(navControllerFake))
 }

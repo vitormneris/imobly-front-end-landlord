@@ -104,7 +104,7 @@ fun ShowPropertiesScreen(propertyViewModel: PropertyViewModel) {
                         contentAlignment = Alignment.Center
                     ) {
                         SearchBarComp(
-                            "Buscar um imóvel",
+                            "Buscar imóveis pelo título",
                             propertyViewModel.searchText.value,
                             { propertyViewModel.changeSearchText(it) },
                             { propertyViewModel.searchAction() }

@@ -53,6 +53,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun LoginScreen(loginViewModel: LoginViewModel) {
     val scrollState = rememberScrollState()
 
+    loginViewModel.resetPage()
+
     MaterialTheme {
         Scaffold(
             topBar = {},

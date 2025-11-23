@@ -1,7 +1,8 @@
-package com.imobly.imobly.ui.screens.changepassword
+package com.imobly.imobly.ui.screens.recoverypassword.insertcode
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,10 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.imobly.imobly.ui.components.button.ButtonComp
-import com.imobly.imobly.ui.components.input.InputPasswordComp
+import com.imobly.imobly.ui.components.input.InputOtpComp
 import com.imobly.imobly.ui.components.messageerror.MessageErrorComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.theme.colors.BackGroundColor
@@ -28,9 +31,8 @@ import imobly.composeapp.generated.resources.Res
 import imobly.composeapp.generated.resources.image_logo_white
 import org.jetbrains.compose.resources.painterResource
 
-
 @Composable
-fun ChangePasswordScreen(resetPasswordViewModel: ResetPasswordViewModel) {
+fun InsertCodeScreen(resetPasswordViewModel: ResetPasswordViewModel) {
     val scrollState = rememberScrollState()
 
     MaterialTheme {
@@ -82,30 +84,11 @@ fun ChangePasswordScreen(resetPasswordViewModel: ResetPasswordViewModel) {
                             .fillMaxWidth(0.9f),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-
-                        Text("Quase lá! Defina uma nova senha e volte a acessar sua conta", fontFamily = montserratFont())
-
-
-                        InputPasswordComp(
-                            label = "Nova senha",
-                            placeholder = "Ex: ABCD1234",
-                            value = resetPasswordViewModel.newPassword.value,
-                            onValueChange = { resetPasswordViewModel.changeNewPassword(it) },
-                            isError = resetPasswordViewModel.inputContainsError("password"),
-                            errorMessage = resetPasswordViewModel.getInputErrorMessage("password"),
-                            passwordVisible = resetPasswordViewModel.passwordVisibilityState.value,
-                            changePasswordVisible = { resetPasswordViewModel.changePasswordVisibility() }
-                        )
-
-                        InputPasswordComp(
-                            label = "Confirmar senha",
-                            placeholder = "Ex: ABCD1234",
-                            value = resetPasswordViewModel.newPassword.value,
-                            onValueChange = { resetPasswordViewModel.changeNewPasswordConfirmation(it) },
-                            isError = resetPasswordViewModel.inputContainsError("password"),
-                            errorMessage = resetPasswordViewModel.getInputErrorMessage("password"),
-                            passwordVisible = resetPasswordViewModel.passwordVisibilityState.value,
-                            changePasswordVisible = { resetPasswordViewModel.changePasswordVisibility() }
+                        Text("Insira o código que enviamos ao seu e-mail para prosseguir com a troca da senha", fontFamily = montserratFont())
+                        InputOtpComp(
+                            value = resetPasswordViewModel.code.value,
+                            onValueChange ={ resetPasswordViewModel.changeCode(it) },
+                            isError = resetPasswordViewModel.inputContainsError("code"),
                         )
                     }
 
@@ -113,11 +96,27 @@ fun ChangePasswordScreen(resetPasswordViewModel: ResetPasswordViewModel) {
                         MessageErrorComp(resetPasswordViewModel.messageError.value, 16.sp)
                     }
                     ButtonComp(
-                        "Continuar",
-                        { },
-                        PrimaryColor,
-                        { resetPasswordViewModel.goToLogin() }
+                        text="Continuar",
+                        color=PrimaryColor,
+                        action = { resetPasswordViewModel.validateCodeAction() },
+                        icon = {}
                     )
+
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.Bottom,
+                        modifier = Modifier.fillMaxSize().padding(vertical = 50.dp),
+                    ) {
+
+                        Text(
+                            "Voltar ao Login",
+                            textAlign = TextAlign.Center,
+                            fontFamily = montserratFont(),
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.clickable { resetPasswordViewModel.goToLogin() }
+                        )
+
+                    }
                 }
             }
         }

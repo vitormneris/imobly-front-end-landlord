@@ -7,10 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.imobly.imobly.api.createHttpClient
+import com.imobly.imobly.api.dto.EmailDTO
 import com.imobly.imobly.api.dto.ErrorDTO
 import com.imobly.imobly.api.dto.Ok
+import com.imobly.imobly.api.dto.ResetPasswordDTO
 import com.imobly.imobly.api.httpclient.AuthenticationHttpClient
+import com.imobly.imobly.api.httpclient.LandLordHttpClient
+import com.imobly.imobly.api.httpclient.PasswordRecoveryHttpClient
 import com.imobly.imobly.domain.Auth
+import com.imobly.imobly.domain.LandLord
 import kotlinx.coroutines.launch
 
 class ResetPasswordViewModel(private val navController: NavHostController): ViewModel()  {
@@ -20,7 +25,6 @@ class ResetPasswordViewModel(private val navController: NavHostController): View
     val newPasswordConfirmation = mutableStateOf("")
     val code = mutableStateOf("")
 
-
     val passwordVisibilityState = mutableStateOf(false)
     val onLoadingState = mutableStateOf(false)
 
@@ -28,7 +32,6 @@ class ResetPasswordViewModel(private val navController: NavHostController): View
     val snackMessage : MutableState<SnackbarHostState> = mutableStateOf( SnackbarHostState() )
 
     val messageError = mutableStateOf("")
-
 
     fun getInputErrorMessage(inputLabel: String): String {
         return inputErrors.value[inputLabel] ?: ""
@@ -54,7 +57,6 @@ class ResetPasswordViewModel(private val navController: NavHostController): View
         navController.navigate("changepassword")
     }
 
-
     fun changeEmail(it: String) {
         email.value = it
     }
@@ -69,5 +71,82 @@ class ResetPasswordViewModel(private val navController: NavHostController): View
 
     fun changeNewPasswordConfirmation(it: String) {
         newPasswordConfirmation.value = it
+    }
+
+    fun sendRequestByEmailAction() {
+        messageError.value = ""
+
+        viewModelScope.launch {
+            onLoadingState.value = true
+            val httpClient = PasswordRecoveryHttpClient(createHttpClient())
+            val response = httpClient.requestCode(EmailDTO(email.value))
+            onLoadingState.value = false
+            when (response) {
+                is Ok -> {
+                    goToInsertCode()
+                    snackMessage.value.showSnackbar("Código enviado com sucesso!")
+                }
+
+                is ErrorDTO -> {
+                    val errors = mutableMapOf<String, String>()
+                    response.errorFields?.forEach { errors[it.name] = it.description }
+                    inputErrors.value = errors
+                    messageError.value = response.message
+                }
+            }
+        }
+    }
+
+    fun validateCodeAction() {
+        messageError.value = ""
+
+        viewModelScope.launch {
+            onLoadingState.value = true
+            val httpClient = PasswordRecoveryHttpClient(createHttpClient())
+            val response = httpClient.validateCode(email.value, code.value)
+            onLoadingState.value = false
+            when (response) {
+                is Ok -> {
+                    goToChangePassword()
+                    snackMessage.value.showSnackbar("Código validado com sucesso!")
+                }
+
+                is ErrorDTO -> {
+                    code.value = ""
+                    val errors = mutableMapOf<String, String>()
+                    response.errorFields?.forEach { errors[it.name] = it.description }
+                    inputErrors.value = errors
+                    messageError.value = response.message
+                }
+            }
+        }
+    }
+
+    fun resetPasswordAction() {
+        if (newPassword.value != newPasswordConfirmation.value) {
+            messageError.value = "As senhas não são iguais"
+            return
+        }
+        messageError.value = ""
+
+        viewModelScope.launch {
+            onLoadingState.value = true
+            val httpClient = PasswordRecoveryHttpClient(createHttpClient())
+            val response = httpClient.resetPassword(ResetPasswordDTO(email.value, code.value, newPassword.value))
+            onLoadingState.value = false
+            when (response) {
+                is Ok -> {
+                    goToLogin()
+                    snackMessage.value.showSnackbar("Senha trocada com sucesso!")
+                }
+
+                is ErrorDTO -> {
+                    val errors = mutableMapOf<String, String>()
+                    response.errorFields?.forEach { errors[it.name] = it.description }
+                    inputErrors.value = errors
+                    messageError.value = response.message
+                }
+            }
+        }
     }
 }

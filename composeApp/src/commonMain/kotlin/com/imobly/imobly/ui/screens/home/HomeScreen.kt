@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.ManageAccounts
@@ -161,7 +163,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                 ) {
                     item {
                         CardButtonComp(
-                            text = "Propriedades",
+                            text = "Gerenciar propriedades",
                             icon = {
                                 Icon(
                                     Icons.Outlined.OtherHouses,
@@ -178,7 +180,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                     }
                     item {
                         CardButtonComp(
-                            text = "Locatários",
+                            text = "Gerenciar locatários",
                             icon = {
                                 Icon(
                                     Icons.Outlined.PeopleOutline,
@@ -195,7 +197,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                     }
                     item {
                         CardButtonComp(
-                            text = "Reportações",
+                            text = "Gerenciar reportações",
                             icon = {
                                 Icon(
                                     Icons.Outlined.Feedback,
@@ -212,7 +214,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                     }
                     item {
                         CardButtonComp(
-                            text = "Cadastrar categoria",
+                            text = "Gerenciar categoria",
                             icon = {
                                 Icon(
                                     Icons.Outlined.Category,
@@ -221,7 +223,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                                     tint = backgroundColor,
                                 )
                             },
-                            action = { homeViewModel.goToCreateCategory() },
+                            action = { homeViewModel.goToShowCategories() },
                             backgroundColor = backgroundColor,
                             highlightColor = highlightColor
 
@@ -230,7 +232,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
 
                     item {
                         CardButtonComp(
-                            text = "Gerenciar Contratos",
+                            text = "Gerenciar contratos",
                             icon = {
                                 Icon(
                                     Icons.Outlined.ManageAccounts,
@@ -262,38 +264,20 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
 
 
                             )
-                        }
-
-                        item {
-                            CardButtonComp(
-                                text = "Forgot password",
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.Category,
-                                        contentDescription = "esqueci a senha",
-                                        modifier = Modifier.fillMaxSize().padding(20.dp),
-                                        tint = backgroundColor,
-                                    )
-                                },
-                                action = { homeViewModel.goToForgotPassword() },
-                                backgroundColor = backgroundColor,
-                                highlightColor = highlightColor
-
-                        )
                     }
 
                         item {
                             CardButtonComp(
-                                text = "Insert Code",
+                                text = "Trocar o E-mail",
                                 icon = {
                                     Icon(
-                                        Icons.Outlined.Category,
-                                        contentDescription = "codigo",
+                                        Icons.Default.Email,
+                                        contentDescription = "Email",
                                         modifier = Modifier.fillMaxSize().padding(20.dp),
                                         tint = backgroundColor,
                                     )
                                 },
-                                action = { homeViewModel.goToInsertCode() },
+                                action = { homeViewModel.goToSendEmail() },
                                 backgroundColor = backgroundColor,
                                 highlightColor = highlightColor
 
@@ -302,21 +286,21 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
 
                         item {
                             CardButtonComp(
-                                text = "Change password",
+                                text = "Deslogar",
                                 icon = {
                                     Icon(
-                                        Icons.Outlined.Category,
-                                        contentDescription = "mudar senha",
+                                        Icons.AutoMirrored.Filled.ExitToApp,
+                                        contentDescription = "Perfil",
                                         modifier = Modifier.fillMaxSize().padding(20.dp),
                                         tint = backgroundColor,
                                     )
                                 },
-                                action = { homeViewModel.goToChangePassword() },
+                                action = { homeViewModel.logOut() },
                                 backgroundColor = backgroundColor,
                                 highlightColor = highlightColor
 
-                        )
-                    }
+                            )
+                        }
                 }
             }
         }

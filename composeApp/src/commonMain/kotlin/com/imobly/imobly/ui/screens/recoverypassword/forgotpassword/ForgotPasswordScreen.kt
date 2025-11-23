@@ -1,4 +1,4 @@
-package com.imobly.imobly.ui.screens.forgotpassword
+package com.imobly.imobly.ui.screens.recoverypassword.forgotpassword
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -98,7 +98,7 @@ fun ForgotPasswordScreen(resetPasswordViewModel: ResetPasswordViewModel) {
                     ButtonComp(
                         text="Continuar",
                         color=PrimaryColor,
-                        action = { resetPasswordViewModel.goToInsertCode() },
+                        action = { resetPasswordViewModel.sendRequestByEmailAction() },
                         icon = {}
                     )
 

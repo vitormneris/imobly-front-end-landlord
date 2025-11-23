@@ -26,7 +26,7 @@ class CategoryHttpClient(val httpClient: HttpClient) {
             .body()
 
     suspend fun create(category : Category): ResponseMessage {
-        val response = httpClient.post("$baseUrl/inserir") {
+        val response = httpClient.post("$baseUrl/criar") {
             header("Authorization", "Bearer $TOKEN")
             contentType(ContentType.Application.Json)
             setBody(category)

@@ -1,4 +1,4 @@
-package com.imobly.imobly.ui.screens.category
+package com.imobly.imobly.ui.screens.show.showcategory
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,80 +9,74 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
+import com.imobly.imobly.domain.Category
 import com.imobly.imobly.ui.components.button.ButtonComp
 import com.imobly.imobly.ui.components.searchbar.SearchBarComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
+import com.imobly.imobly.ui.theme.colors.BackGroundColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
 import com.imobly.imobly.ui.theme.fonts.montserratFont
 import com.imobly.imobly.viewmodel.CategoryViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ShowCategoriesScreen(viewModel: CategoryViewModel) {
-
-    val categories by viewModel.categories
-    val search by viewModel.searchText
-
-    LaunchedEffect(Unit) {
-        viewModel.findAllAction()
-    }
+fun ShowCategoriesScreen(categoryViewModel: CategoryViewModel) {
+    categoryViewModel.searchAction()
 
     Scaffold(
         topBar = { TopBarComp() },
-        snackbarHost = { SnackbarHost(viewModel.snackMessage.value) }
+        snackbarHost = { SnackbarHost(categoryViewModel.snackMessage.value) }
     ) { paddingValues ->
 
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .background(Color(0xFFF8F9FA))
+                .background(BackGroundColor)
         ) {
 
             TitleComp(
                 text = "Categorias",
-                buttonBackAction = { viewModel.goToHome() }
+                buttonBackAction = { categoryViewModel.goToHome() },
+                true
             )
 
-            // Botão de cadastrar nova categoria
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 ButtonComp(
                     "Cadastrar categoria",
                     { Icon(Icons.Default.Add, contentDescription = null) },
-                    PrimaryColor
-                ) { viewModel.goToCreateCategory() }
+                    PrimaryColor,
+                    { categoryViewModel.goToCreateCategory() }
+                )
             }
 
-            // Barra de busca
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 SearchBarComp(
-                    label = "Buscar uma categoria",
-                    value = search,
-                    onValueChange = { viewModel.changeSearchText(it) }
+                    "Buscar categorias pelo título",
+                    categoryViewModel.searchText.value,
+                    { categoryViewModel.changeSearchText(it) },
+                    { categoryViewModel.searchAction() }
                 )
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Lista de categorias
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(categories) { category ->
-                    CategoryCardComp(category, viewModel)
+                items(categoryViewModel.categories.value) { category ->
+                    CategoryCardComp(category, categoryViewModel)
                 }
             }
         }
@@ -90,19 +84,18 @@ fun ShowCategoriesScreen(viewModel: CategoryViewModel) {
 }
 
 @Composable
-fun CategoryCardComp(
-    category: com.imobly.imobly.domain.Category,
-    viewModel: CategoryViewModel
-) {
+fun CategoryCardComp(category: Category, categoryViewModel: CategoryViewModel) {
 
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp)
-            .widthIn(max = 1000.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        shape = RoundedCornerShape(16.dp)
+            .padding(10.dp)
+            .widthIn(max = 700.dp)
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
 
         Column(modifier = Modifier.padding(16.dp)) {
@@ -168,7 +161,7 @@ fun CategoryCardComp(
             ) {
 
                 Button(
-                    onClick = { viewModel.goToEditCategory(category) },
+                    onClick = { categoryViewModel.goToEditCategory(category) },
                     modifier = Modifier
                         .height(42.dp)
                         .weight(1f),
@@ -185,23 +178,6 @@ fun CategoryCardComp(
                 }
 
                 Spacer(modifier = Modifier.width(12.dp))
-
-                IconButton(
-                    onClick = { viewModel.deleteAction(category) },
-                    modifier = Modifier
-                        .size(42.dp)
-                        .background(
-                            Color(0xFFF2603F).copy(alpha = 0.15f),
-                            CircleShape
-                        )
-                        .clip(CircleShape)
-                ) {
-                    Icon(
-                        Icons.Default.Delete,
-                        contentDescription = "Excluir",
-                        tint = Color(0xFFF2603F)
-                    )
-                }
             }
         }
     }

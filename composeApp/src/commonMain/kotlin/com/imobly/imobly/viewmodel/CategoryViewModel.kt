@@ -14,6 +14,7 @@ import com.imobly.imobly.api.httpclient.PropertyHttpClient
 import com.imobly.imobly.api.httpclient.TenantHttpClient
 import com.imobly.imobly.domain.Category
 import com.imobly.imobly.domain.Property
+import com.imobly.imobly.domain.Tenant
 import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -23,8 +24,6 @@ class CategoryViewModel(private val navController: NavHostController) : ViewMode
     var category = mutableStateOf(Category())
 
     var categories = mutableStateOf<List<Category>>(emptyList())
-    var properties = mutableStateOf(mutableListOf<String>())
-    var propertyText = mutableStateOf("")
 
     var onLoadingState = mutableStateOf(false)
     val inputErrors = mutableStateOf(emptyMap<String, String>())
@@ -39,8 +38,6 @@ class CategoryViewModel(private val navController: NavHostController) : ViewMode
 
     fun resetPage() {
         messageError.value = ""
-        propertyText.value = ""
-        properties.value.clear()
         category.value = Category()
         inputLockState.value = true
     }
@@ -56,18 +53,6 @@ class CategoryViewModel(private val navController: NavHostController) : ViewMode
 
     fun changeTitle(title: String) {
         category.value = category.value.copy(title = title)
-    }
-
-    fun changePropertyText(text: String) {
-        propertyText.value = text
-    }
-
-    fun removeProperty(index: Int) {
-        val list = properties.value.toMutableList()
-        if (index in list.indices) {
-            list.removeAt(index)
-            properties.value = list
-        }
     }
 
     fun inputContainsError(inputLabel: String): Boolean {
@@ -103,7 +88,7 @@ class CategoryViewModel(private val navController: NavHostController) : ViewMode
                      category.value = Category()
                      inputErrors.value = emptyMap()
                      messageError.value = ""
-                     snackMessage.value.showSnackbar("Categoria salva com sucesso!")
+                     snackMessage.value.showSnackbar("Categoria criada com sucesso!")
                  }
                  is ErrorDTO -> {
                      val errors = mutableMapOf<String, String>()
@@ -160,11 +145,27 @@ class CategoryViewModel(private val navController: NavHostController) : ViewMode
           }
     }
 
+    fun changeSearchText(it: String) {
+        searchText.value = it
+    }
+
     fun goToShowCategories() {
         navController.navigate("showcategories")
     }
 
     fun goToHome() {
         navController.navigate("home")
+    }
+
+    fun goToEditCategory(newCategory: Category) {
+        category.value = newCategory
+        inputLockState.value = true
+        inputErrors.value = emptyMap()
+        messageError.value = ""
+        navController.navigate("editcategory")
+    }
+
+    fun goToCreateCategory() {
+        navController.navigate("createcategory")
     }
 }

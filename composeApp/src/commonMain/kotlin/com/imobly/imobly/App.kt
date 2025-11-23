@@ -6,7 +6,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.imobly.imobly.ui.screens.changepassword.ChangePasswordScreen
+import com.imobly.imobly.ui.screens.changeemail.sendcode.SendCodeScreen
+import com.imobly.imobly.ui.screens.changeemail.sendemail.SendEmailScreen
+import com.imobly.imobly.ui.screens.recoverypassword.changepassword.ChangePasswordScreen
 import com.imobly.imobly.ui.screens.create.createcategory.CreateCategoryScreen
 import com.imobly.imobly.ui.screens.create.createlease.CreateLeaseScreen
 import com.imobly.imobly.ui.screens.create.createproperty.CreatePropertyScreen
@@ -16,10 +18,11 @@ import com.imobly.imobly.ui.screens.edit.editlease.EditLeaseScreen
 import com.imobly.imobly.ui.screens.edit.editproperty.EditPropertyScreen
 import com.imobly.imobly.ui.screens.edit.editreport.EditReportScreen
 import com.imobly.imobly.ui.screens.edit.edittenant.EditTenantScreen
-import com.imobly.imobly.ui.screens.forgotpassword.ForgotPasswordScreen
+import com.imobly.imobly.ui.screens.recoverypassword.forgotpassword.ForgotPasswordScreen
 import com.imobly.imobly.ui.screens.home.HomeScreen
-import com.imobly.imobly.ui.screens.insertcode.InsertCodeScreen
+import com.imobly.imobly.ui.screens.recoverypassword.insertcode.InsertCodeScreen
 import com.imobly.imobly.ui.screens.login.LoginScreen
+import com.imobly.imobly.ui.screens.show.showcategory.ShowCategoriesScreen
 import com.imobly.imobly.ui.screens.show.showlease.ShowLeasesScreen
 import com.imobly.imobly.ui.screens.show.showproperty.ShowPropertiesScreen
 import com.imobly.imobly.ui.screens.show.showreports.ShowReportsScreen
@@ -39,7 +42,7 @@ fun App() {
     val leaseViewModel = viewModel { LeaseViewModel(navController) }
     val resetPasswordViewModel = viewModel { ResetPasswordViewModel(navController) }
     val homeViewModel = viewModel { HomeViewModel(navController) }
-
+    val changeEmailViewModel = viewModel { ChangeEmailViewModel(navController) }
 
     MaterialTheme {
         NavHost(navController = navController, startDestination = "login") {
@@ -100,6 +103,10 @@ fun App() {
                 ChangePasswordScreen(resetPasswordViewModel)
             }
 
+            composable(route = "showcategories") {
+                ShowCategoriesScreen(categoryViewModel)
+            }
+
             composable(route = "editcategory") {
                 EditCategoryScreen(categoryViewModel)
             }
@@ -118,6 +125,14 @@ fun App() {
 
             composable(route = "createlease") {
                 CreateLeaseScreen(leaseViewModel)
+            }
+
+            composable(route = "sendemail") {
+                SendEmailScreen(changeEmailViewModel)
+            }
+
+            composable(route = "sendcode") {
+                SendCodeScreen(changeEmailViewModel)
             }
         }
     }

@@ -102,7 +102,7 @@ fun EditLandLordScreen(landLordViewModel: LandLordViewModel) {
                     placeholder = "joao@dominio.com",
                     value = landLordViewModel.landLord.value.email,
                     onValueChange = { landLordViewModel.changeEmail(it) },
-                    readOnly = landLordViewModel.inputLockState.value,
+                    readOnly = true,
                     isError = landLordViewModel.inputContainsError("email"),
                     errorMessage = landLordViewModel.getInputErrorMessage("email")
                 )

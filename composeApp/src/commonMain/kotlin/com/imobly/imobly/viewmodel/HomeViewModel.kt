@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.imobly.imobly.api.TOKEN
 import com.imobly.imobly.api.createHttpClient
 import com.imobly.imobly.api.dto.ErrorDTO
 import com.imobly.imobly.api.dto.Ok
@@ -25,6 +26,9 @@ class HomeViewModel(private val navController: NavHostController): ViewModel() {
         navController.navigate("showproperties")
     }
 
+    fun goToShowCategories() {
+        navController.navigate("showcategories")
+    }
     fun goToShowTenants() {
         navController.navigate("showtenants")
     }
@@ -35,6 +39,10 @@ class HomeViewModel(private val navController: NavHostController): ViewModel() {
 
     fun goToCreateCategory() {
         navController.navigate("createcategory")
+    }
+
+    fun goToSendEmail() {
+        navController.navigate("sendemail")
     }
 
     fun goToShowLeases() {
@@ -89,4 +97,19 @@ class HomeViewModel(private val navController: NavHostController): ViewModel() {
             rentsPaidThisMonth.value = list
         }
     }
+
+    fun goToLogin() {
+        TOKEN = ""
+        navController.navigate("login")
+    }
+
+    fun logOut() {
+        TOKEN = ""
+        goToLogin()
+        viewModelScope.launch {
+            snackMessage.value.showSnackbar("Sua conta foi deslogada sucesso!")
+        }
+    }
+
+    fun isLogged() = TOKEN.isNotEmpty()
 }

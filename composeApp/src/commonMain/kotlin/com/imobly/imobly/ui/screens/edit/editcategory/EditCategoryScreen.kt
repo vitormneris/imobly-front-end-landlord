@@ -49,7 +49,7 @@ fun EditCategoryScreen(categoryViewModel: CategoryViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-            TitleComp("Editar Categoria", { categoryViewModel.goToHome() })
+            TitleComp("Editar Categoria", { categoryViewModel.goToShowCategories() }, true)
 
             Column(
                 modifier = Modifier
