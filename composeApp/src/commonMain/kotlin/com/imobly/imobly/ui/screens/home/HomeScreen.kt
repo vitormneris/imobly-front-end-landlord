@@ -1,10 +1,15 @@
 package com.imobly.imobly.ui.screens.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
+import androidx.compose.foundation.gestures.snapping.snapFlingBehavior
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -22,6 +27,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -77,66 +83,21 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
 
             TitleComp("Painel Administrativo", fontSize = 32.sp, backButton = false, buttonBackAction = {})
 
-            Row(
-                Modifier.horizontalScroll(horizontalScrollState)
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(top = 10.dp)
+            if (adaptiveWidth >= 1100.dp) {
+                Row(
+                    Modifier.horizontalScroll(horizontalScrollState)
                 ) {
-                    Text(
-                        text = "Comparação de valores pagos por mês",
-                        color = TitleColor,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 18.sp
-                    )
-                    BarPlotComp(
-                        modifier = Modifier
-                            .width(adaptiveWidth - 120.dp)
-                            .padding(20.dp),
-                        xData = homeViewModel.rentByMonth.value.x,
-                        yData = homeViewModel.rentByMonth.value.y
-                    )
+                    ChartContainer(adaptiveWidth, homeViewModel)
                 }
 
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(top = 10.dp),
+            } else {
+                Row(
+                    Modifier.horizontalScroll(horizontalScrollState)
                 ) {
-                    Text(
-                        "Relação de parcelas pagas neste mês",
-                        color = TitleColor,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 18.sp
-                    )
-                    PieChartComp(
-                        modifier = Modifier
-                            .width(adaptiveWidth - 200.dp)
-                            .padding(20.dp),
-                        data = homeViewModel.rentsPaidThisMonth.value.y,
-                        labels = homeViewModel.rentsPaidThisMonth.value.x
-                    )
-                }
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(top = 10.dp)
-                ) {
-                    Text(
-                        "Relação de propriedades alugadas",
-                        color = TitleColor,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 18.sp
-                    )
-                    PieChartComp(
-                        modifier = Modifier
-                            .width(adaptiveWidth - 200.dp)
-                            .padding(20.dp),
-                        data = homeViewModel.rentedProperties.value.y,
-                        labels = homeViewModel.rentedProperties.value.x
-                    )
+                    ChartContainer(adaptiveWidth, homeViewModel)
                 }
             }
+
             Spacer(Modifier.height(30.dp))
 
 
@@ -352,6 +313,67 @@ fun CardButtonComp(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun ChartContainer(adaptiveWidth: Dp, homeViewModel: HomeViewModel){
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(top = 10.dp)
+    ) {
+        Text(
+            text = "Comparação de valores pagos por mês",
+            color = TitleColor,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 18.sp
+        )
+        BarPlotComp(
+            modifier = Modifier
+                .width(adaptiveWidth - 200.dp)
+                .padding(20.dp),
+            xData = homeViewModel.rentByMonth.value.x,
+            yData = homeViewModel.rentByMonth.value.y
+        )
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(top = 10.dp),
+    ) {
+        Text(
+            "Relação de parcelas pagas neste mês",
+            color = TitleColor,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 18.sp
+        )
+        PieChartComp(
+            modifier = Modifier
+                .width(adaptiveWidth - 200.dp)
+                .padding(20.dp),
+            data = homeViewModel.rentsPaidThisMonth.value.y,
+            labels = homeViewModel.rentsPaidThisMonth.value.x
+        )
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(top = 10.dp)
+    ) {
+        Text(
+            "Relação de propriedades alugadas",
+            color = TitleColor,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 18.sp
+        )
+        PieChartComp(
+            modifier = Modifier
+                .width(adaptiveWidth - 200.dp)
+                .padding(20.dp),
+            data = homeViewModel.rentedProperties.value.y,
+            labels = homeViewModel.rentedProperties.value.x
+        )
     }
 }
 
