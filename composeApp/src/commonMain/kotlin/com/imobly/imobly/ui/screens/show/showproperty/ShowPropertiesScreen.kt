@@ -57,121 +57,91 @@ fun ShowPropertiesScreen(propertyViewModel: PropertyViewModel) {
     val properties: MutableState<List<Property>> = remember { propertyViewModel.properties }
     propertyViewModel.findAllAction()
 
-    Scaffold(
-        topBar = { TopBarComp() },
-        snackbarHost = {
-            SnackbarHost(propertyViewModel.snackMessage.value)
-        },
-        contentWindowInsets = WindowInsets.systemBars,
-        content = { paddingValues ->
+    Scaffold(topBar = { TopBarComp() }, snackbarHost = {
+        SnackbarHost(propertyViewModel.snackMessage.value)
+    }, contentWindowInsets = WindowInsets.systemBars, content = { paddingValues ->
+        Column(
+            modifier = Modifier.background(BackGroundColor).padding(paddingValues).fillMaxSize()
+        ) {
             Column(
-                modifier = Modifier
-                    .background(BackGroundColor)
-                    .padding(paddingValues)
-                    .fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {}
+
+
+                TitleComp("Meus Imóveis", {
+                    propertyViewModel.goToHome()
+                })
+
+
+                Box(
+                    modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                    }
-
-
-                    TitleComp("Meus Imóveis", {
-                        propertyViewModel.goToHome()
-                    })
-
-
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        ButtonComp(
-                            "Cadastrar imóvel",
-                            {  Icon(Icons.Default.Add, "Sinal de soma") },
-                            PrimaryColor,
-                            { propertyViewModel.goToCreateProperty() }
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        SearchBarComp(
-                            "Buscar imóveis pelo título",
-                            propertyViewModel.searchText.value,
-                            { propertyViewModel.changeSearchText(it) },
-                            { propertyViewModel.searchAction() }
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(20.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        items(properties.value) { property ->
-                            PropertyCardComp(property, propertyViewModel)
-                        }
-                    }
-
+                    ButtonComp(
+                        "Cadastrar imóvel",
+                        { Icon(Icons.Default.Add, "Sinal de soma") },
+                        PrimaryColor,
+                        { propertyViewModel.goToCreateProperty() })
                 }
+
+                Box(
+                    modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center
+                ) {
+                    SearchBarComp(
+                        "Buscar imóveis pelo título",
+                        propertyViewModel.searchText.value,
+                        { propertyViewModel.changeSearchText(it) },
+                        { propertyViewModel.searchAction() })
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    items(properties.value) { property ->
+                        PropertyCardComp(property, propertyViewModel)
+                    }
+                }
+
             }
         }
-    )
+    })
 }
 
 @Composable
 fun PropertyCardComp(property: Property, propertyViewModel: PropertyViewModel) {
     Card(
-        modifier = Modifier
-            .widthIn(max = 1000.dp)
-            .fillMaxWidth()
-            .padding(15.dp),
+        modifier = Modifier.widthIn(max = 1000.dp).fillMaxWidth().padding(15.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF)),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         shape = RoundedCornerShape(16.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.fillMaxWidth().height(180.dp)
+                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)), contentAlignment = Alignment.Center
             ) {
 
                 KamelImage(
                     resource = { asyncPainterResource(property.pathImages.first()) },
                     contentDescription = "Imagem do imóvel ${property.title}",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                    modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
                     contentScale = ContentScale.Crop,
                     onLoading = { progress -> CircularProgressIndicator({ progress }) },
-                    onFailure = { CircularProgressIndicator() }
-                )
+                    onFailure = { CircularProgressIndicator() })
 
 
                 Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(12.dp)
-                        .background(
-                            color = Color(0xFFF2603F),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                    modifier = Modifier.align(Alignment.TopEnd).padding(12.dp).background(
+                        color = Color(0xFFF2603F), shape = RoundedCornerShape(8.dp)
+                    ).padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
                     Text(
                         text = "R$ ${property.monthlyRent}",
@@ -184,9 +154,7 @@ fun PropertyCardComp(property: Property, propertyViewModel: PropertyViewModel) {
             }
 
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
+                modifier = Modifier.fillMaxSize().padding(16.dp)
             ) {
                 Text(
                     text = property.title,
@@ -215,26 +183,18 @@ fun PropertyCardComp(property: Property, propertyViewModel: PropertyViewModel) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         TextInfoComp(
-                            "Área: ${property.area} m²",
-                            { Icon(Icons.Default.SquareFoot, "Área") }
-                        )
+                            "Área: ${property.area} m²", { Icon(Icons.Default.SquareFoot, "Área") })
                         Spacer(modifier = Modifier.width(12.dp))
                         TextInfoComp(
-                            "Nª quartos: ${property.bedrooms}",
-                            { Icon(Icons.Default.Bed, "Quartos") }
-                        )
+                            "Nª quartos: ${property.bedrooms}", { Icon(Icons.Default.Bed, "Quartos") })
                     }
 
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         TextInfoComp(
-                            "Vagas garagem: ${property.garageSpaces}",
-                            { Icon(Icons.Default.Garage, "Garagem") }
-                        )
+                            "Vagas garagem: ${property.garageSpaces}", { Icon(Icons.Default.Garage, "Garagem") })
                         Spacer(modifier = Modifier.width(12.dp))
                         TextInfoComp(
-                            "Nª banheiros: ${property.bathrooms}",
-                            { Icon(Icons.Default.Bathtub, "Banheiros") }
-                        )
+                            "Nª banheiros: ${property.bathrooms}", { Icon(Icons.Default.Bathtub, "Banheiros") })
                     }
                 }
 
@@ -243,14 +203,9 @@ fun PropertyCardComp(property: Property, propertyViewModel: PropertyViewModel) {
                 Button(
                     onClick = {
                         propertyViewModel.goToEditProperty(property)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(42.dp),
-                    colors = ButtonDefaults.buttonColors(
+                    }, modifier = Modifier.fillMaxWidth().height(42.dp), colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFF2603F)
-                    ),
-                    shape = RoundedCornerShape(12.dp)
+                    ), shape = RoundedCornerShape(12.dp)
                 ) {
                     Text(
                         text = "Ver Detalhes",
@@ -265,15 +220,11 @@ fun PropertyCardComp(property: Property, propertyViewModel: PropertyViewModel) {
 }
 
 @Composable
-fun TextInfoComp(text: String, icon: @Composable  () -> Unit) {
+fun TextInfoComp(text: String, icon: @Composable () -> Unit) {
     Box(
-        modifier = Modifier
-            .size(20.dp)
-            .background(
-                color = Color(0xFFF2603F).copy(alpha = 0.2f),
-                shape = CircleShape
-            ),
-        contentAlignment = Alignment.Center
+        modifier = Modifier.size(20.dp).background(
+            color = Color(0xFFF2603F).copy(alpha = 0.2f), shape = CircleShape
+        ), contentAlignment = Alignment.Center
     ) {
         icon()
     }

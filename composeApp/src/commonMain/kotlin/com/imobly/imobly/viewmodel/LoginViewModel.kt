@@ -13,7 +13,7 @@ import com.imobly.imobly.api.httpclient.AuthenticationHttpClient
 import com.imobly.imobly.domain.Auth
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val navController: NavHostController): ViewModel() {
+class LoginViewModel(private val navController: NavHostController) : ViewModel() {
 
     val email = mutableStateOf("")
     val password = mutableStateOf("")
@@ -22,7 +22,7 @@ class LoginViewModel(private val navController: NavHostController): ViewModel() 
     val onLoadingState = mutableStateOf(false)
 
     val inputErrors = mutableStateOf(emptyMap<String, String>())
-    val snackMessage : MutableState<SnackbarHostState> = mutableStateOf( SnackbarHostState() )
+    val snackMessage: MutableState<SnackbarHostState> = mutableStateOf(SnackbarHostState())
 
     val messageError = mutableStateOf("")
 
@@ -36,6 +36,7 @@ class LoginViewModel(private val navController: NavHostController): ViewModel() 
     fun goToSignUp() {
         navController.navigate("signup")
     }
+
     fun goToForgotPassword() {
         navController.navigate("forgotpassword")
     }
@@ -71,6 +72,7 @@ class LoginViewModel(private val navController: NavHostController): ViewModel() 
                     messageError.value = ""
                     goToHome()
                 }
+
                 is ErrorDTO -> {
                     val errors = mutableMapOf<String, String>()
                     response.errorFields?.forEach { errors[it.name] = it.description }

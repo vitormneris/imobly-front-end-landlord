@@ -9,26 +9,29 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
+import com.imobly.imobly.domain.MonthlyInstallment
 import com.imobly.imobly.domain.Payment
+import com.imobly.imobly.domain.enums.PaymentStatusEnum
 import com.imobly.imobly.ui.components.searchbar.SearchBarComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
 import com.imobly.imobly.ui.theme.colors.BackGroundColor
+import com.imobly.imobly.ui.theme.colors.CancelColor
+import com.imobly.imobly.ui.theme.colors.ConfirmColor
 import com.imobly.imobly.ui.theme.fonts.montserratFont
 import com.imobly.imobly.viewmodel.PaymentViewModel
+import com.imobly.imobly.viewmodel.SharedRepository
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ShowPaymentsScreen(paymentViewModel: PaymentViewModel) {
 
-    val payments = paymentViewModel.payments
-    paymentViewModel.findAllAction()
+    paymentViewModel.payment.value =  SharedRepository.payment ?: Payment()
 
     Scaffold(
         topBar = { TopBarComp() },
@@ -43,7 +46,7 @@ fun ShowPaymentsScreen(paymentViewModel: PaymentViewModel) {
                 .fillMaxSize()
         ) {
 
-            TitleComp("Pagamentos", { paymentViewModel.goToHome() })
+            TitleComp("Pagamentos", { paymentViewModel.goToShowLeases() }, true)
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -67,10 +70,11 @@ fun ShowPaymentsScreen(paymentViewModel: PaymentViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                items(payments.value) { payment ->
-                    PaymentCard(payment) {
-                        paymentViewModel.goToOpen(payment)
-                    }
+                items(paymentViewModel.payment.value.installments) { installment ->
+                    PaymentCard(
+                        installment = installment,
+                        onClick = { paymentViewModel.goToInstallment(installment) }
+                    )
                 }
             }
         }
@@ -78,22 +82,25 @@ fun ShowPaymentsScreen(paymentViewModel: PaymentViewModel) {
 }
 
 @Composable
-fun PaymentCard(payment: Payment, onClick: () -> Unit) {
+fun PaymentCard(installment: MonthlyInstallment, onClick: () -> Unit) {
 
     Card(
+        onClick = onClick,
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-            .clip(RoundedCornerShape(16.dp)),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(4.dp),
-        onClick = onClick
+            .padding(10.dp)
+            .widthIn(max = 700.dp)
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
 
         Column(Modifier.padding(20.dp)) {
 
             Text(
-                text = "Valor: R$ ${payment.rentalValue}",
+                text = "Valor: R$ ${installment.monthlyRent}",
                 fontWeight = FontWeight.Bold,
                 fontFamily = montserratFont(),
                 fontSize = 20.sp,
@@ -107,17 +114,19 @@ fun PaymentCard(payment: Payment, onClick: () -> Unit) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Status: ${payment.status}",
+                    text = "Status: ${installment.status}",
                     fontSize = 14.sp,
-                    color = if (payment.status.lowercase() == "pago")
-                        Color(0xFF2ECC71)
-                    else Color(0xFFF2603F),
+                    color = when (installment.status) {
+                        PaymentStatusEnum.PAID -> ConfirmColor
+                        PaymentStatusEnum.PENDING -> Color(0xFFF2603F)
+                        else -> CancelColor
+                    },
                     fontWeight = FontWeight.Bold,
                     fontFamily = montserratFont()
                 )
 
                 Text(
-                    text = "Vencimento: ${payment.dueDate}",
+                    text = "Vencimento: ${installment.dueDate}",
                     fontSize = 14.sp,
                     color = Color(0xFF444444),
                     fontFamily = montserratFont()
@@ -127,7 +136,7 @@ fun PaymentCard(payment: Payment, onClick: () -> Unit) {
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
-                text = "Emissão: ${payment.issueDate}",
+                text = "Mês: ${installment.month}",
                 fontSize = 14.sp,
                 color = Color(0xFF777777),
                 fontFamily = montserratFont()
@@ -138,7 +147,7 @@ fun PaymentCard(payment: Payment, onClick: () -> Unit) {
 
 @Preview
 @Composable
-fun ShowPaymentsScreenPreview() {
-    val nav = rememberNavController()
-    ShowPaymentsScreen(PaymentViewModel(nav))
+fun ShowPaymentsPreview() {
+    val navFake = rememberNavController()
+    ShowPaymentsScreen(PaymentViewModel(navFake))
 }

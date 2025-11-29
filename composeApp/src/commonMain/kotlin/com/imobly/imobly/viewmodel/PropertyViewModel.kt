@@ -11,14 +11,13 @@ import com.imobly.imobly.api.createHttpClient
 import com.imobly.imobly.api.dto.ErrorDTO
 import com.imobly.imobly.api.dto.Ok
 import com.imobly.imobly.api.httpclient.PropertyHttpClient
-import com.imobly.imobly.api.httpclient.ReportHttpClient
 import com.imobly.imobly.domain.Property
 import com.imobly.imobly.domain.Category
 import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
 import kotlinx.coroutines.launch
 import kotlin.collections.emptyList
 
-class PropertyViewModel(private val navController: NavHostController): ViewModel() {
+class PropertyViewModel(private val navController: NavHostController) : ViewModel() {
     val property = mutableStateOf(Property())
 
     val categories: MutableState<List<Category>> = mutableStateOf(emptyList())
@@ -37,7 +36,7 @@ class PropertyViewModel(private val navController: NavHostController): ViewModel
     val searchText: MutableState<String> = mutableStateOf("")
     val properties: MutableState<List<Property>> = mutableStateOf(emptyList())
 
-    val snackMessage : MutableState<SnackbarHostState> = mutableStateOf( SnackbarHostState() )
+    val snackMessage: MutableState<SnackbarHostState> = mutableStateOf(SnackbarHostState())
 
     fun inputContainsError(inputLabel: String): Boolean {
         return inputErrors.value.keys.contains(inputLabel)
@@ -88,6 +87,7 @@ class PropertyViewModel(private val navController: NavHostController): ViewModel
         messageError.value = ""
         navController.navigate("editproperty")
     }
+
     fun goToCreateProperty() {
         navController.navigate("createproperty")
     }
@@ -122,6 +122,7 @@ class PropertyViewModel(private val navController: NavHostController): ViewModel
                     messageError.value = ""
                     snackMessage.value.showSnackbar("Propriedade salva com sucesso!")
                 }
+
                 is ErrorDTO -> {
                     val errors = mutableMapOf<String, String>()
                     response.errorFields?.forEach { errors[it.name] = it.description }
@@ -192,6 +193,7 @@ class PropertyViewModel(private val navController: NavHostController): ViewModel
     fun changeTitle(it: String) {
         property.value = property.value.copy(title = it)
     }
+
     fun changeMonthlyRent(it: String) {
         property.value = property.value.copy(
             monthlyRent = if (it.toDoubleOrNull() != null || it == "") {

@@ -44,28 +44,28 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
         topBar = {
             TopBarComp()
         },
-        snackbarHost = { SnackbarHost( reportViewModel.snackMessage.value ) },
+        snackbarHost = { SnackbarHost(reportViewModel.snackMessage.value) },
         contentWindowInsets = WindowInsets.systemBars
-    ){
-            paddingValues ->
-        Column (
+    ) { paddingValues ->
+        Column(
             Modifier
                 .background(BackGroundColor)
                 .padding(paddingValues)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-        ){
-            TitleComp("Responda a reportação",
-                {reportViewModel.goToShowReports()}
+        ) {
+            TitleComp(
+                "Responda a reportação",
+                { reportViewModel.goToShowReports() }
             )
 
-            Column (
+            Column(
                 Modifier
                     .verticalScroll(scrollState)
                     .widthIn(max = 1000.dp)
                     .fillMaxWidth(0.9f),
                 horizontalAlignment = Alignment.CenterHorizontally
-            ){
+            ) {
                 InputComp(
                     label = "Minha resposta:",
                     placeholder = "Ex: Estou resolvendo, aguarde..",
@@ -81,9 +81,10 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
                     label = "Status",
                     options = reportViewModel.statusReportOptions(),
                     selectedOption = reportViewModel.report.value.status.label,
-                    onOptionSelected = {selectedOption-> reportViewModel.changeStatus(
-                        StatusReportEnum.entries.first {it.name == selectedOption}
-                    )
+                    onOptionSelected = { selectedOption ->
+                        reportViewModel.changeStatus(
+                            StatusReportEnum.entries.first { it.name == selectedOption }
+                        )
                     },
                     isEnabled = !reportViewModel.inputLockState.value
                 )
@@ -133,19 +134,10 @@ fun EditReportScreen(reportViewModel: ReportViewModel) {
                             FlowRow {
 
                                 ButtonComp(
-                                    "Atualizar Status",
-                                    { Icon(Icons.Default.Check, "atualizar status") },
+                                    "Atualizar",
+                                    { Icon(Icons.Default.Check, "atualizar") },
                                     ConfirmColor,
-                                    { reportViewModel.updateStatusAction() },
-                                    155.dp,
-                                    16.sp
-                                )
-
-                                ButtonComp(
-                                    "Enviar resposta",
-                                    { Icon(Icons.Default.Check, "enviar resposta") },
-                                    ConfirmColor,
-                                    { reportViewModel.replyToReportAction() },
+                                    { reportViewModel.updateAction() },
                                     155.dp,
                                     16.sp
                                 )

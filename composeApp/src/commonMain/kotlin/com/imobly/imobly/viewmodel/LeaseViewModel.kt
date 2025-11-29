@@ -6,20 +6,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import com.imobly.imobly.api.createHttpClient
 import com.imobly.imobly.api.dto.ErrorDTO
 import com.imobly.imobly.api.dto.LeaseDTO
 import com.imobly.imobly.api.dto.Ok
 import com.imobly.imobly.api.httpclient.LeaseHttpClient
+import com.imobly.imobly.api.httpclient.PaymentHttpClient
 import com.imobly.imobly.api.httpclient.PropertyHttpClient
 import com.imobly.imobly.api.httpclient.TenantHttpClient
 import com.imobly.imobly.domain.Lease
 import com.imobly.imobly.domain.Property
 import com.imobly.imobly.domain.Tenant
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
-class LeaseViewModel(private val navController: NavHostController): ViewModel() {
+class LeaseViewModel(private val navController: NavHostController) : ViewModel() {
     val lease = mutableStateOf(Lease())
+    val active = mutableStateOf(true)
     val leases = mutableStateOf<List<Lease>>(emptyList())
 
     val properties: MutableState<List<Property>> = mutableStateOf(emptyList())
@@ -36,7 +40,7 @@ class LeaseViewModel(private val navController: NavHostController): ViewModel() 
 
     val inputLockState = mutableStateOf(true)
 
-    val snackMessage : MutableState<SnackbarHostState> = mutableStateOf( SnackbarHostState() )
+    val snackMessage: MutableState<SnackbarHostState> = mutableStateOf(SnackbarHostState())
 
     fun changeSearchText(it: String) {
         searchText.value = it
@@ -48,7 +52,7 @@ class LeaseViewModel(private val navController: NavHostController): ViewModel() 
             val tenantHttpClient = TenantHttpClient(createHttpClient())
             val propertyHttpClient = PropertyHttpClient(createHttpClient())
 
-            val leasesFound = leaseHttpClient.searchAllByTitleOrName()
+            val leasesFound = leaseHttpClient.searchAllByTitleOrNameOrActive()
             leases.value = leasesFound
 
             val tenantsFound = tenantHttpClient.searchAllByNameOrCpf()
@@ -62,7 +66,7 @@ class LeaseViewModel(private val navController: NavHostController): ViewModel() 
     fun searchAction() {
         viewModelScope.launch {
             val httpClient = LeaseHttpClient(createHttpClient())
-            val list = httpClient.searchAllByTitleOrName(searchText.value)
+            val list = httpClient.searchAllByTitleOrNameOrActive(searchText.value, active.value)
             leases.value = list
         }
     }
@@ -202,6 +206,7 @@ class LeaseViewModel(private val navController: NavHostController): ViewModel() 
         snackMessage.value = SnackbarHostState()
         onLoadingState.value = false
     }
+
     fun resetPage() {
         lease.value = Lease()
         inputErrors.value = emptyMap()
@@ -218,6 +223,21 @@ class LeaseViewModel(private val navController: NavHostController): ViewModel() 
         return map
     }
 
+    fun activeOptions(): Map<String, String> {
+        return mapOf(Pair("ATIVOS", "true"), Pair("DESATIVADOS", "false"))
+    }
+
+    fun onOptionSelectedActive(activeSelected: String) {
+        active.value = activeSelected == "true"
+        searchAction()
+    }
+
+    fun selectedOption() =
+        when (active.value) {
+            true -> "ATIVOS"
+            false -> "DESATIVADOS"
+        }
+
     fun tenantsOptions(): Map<String, String> {
         val map = mutableMapOf<String, String>()
         tenants.value.forEach {
@@ -226,11 +246,11 @@ class LeaseViewModel(private val navController: NavHostController): ViewModel() 
         return map
     }
 
-    fun onOptionSelectedTenant(id: String){
+    fun onOptionSelectedTenant(id: String) {
         tenantSelected.value = tenants.value.first { it.id == id }
     }
 
-    fun onOptionSelectedProperty(id: String){
+    fun onOptionSelectedProperty(id: String) {
         propertySelected.value = properties.value.first { it.id == id }
     }
 
@@ -261,11 +281,19 @@ class LeaseViewModel(private val navController: NavHostController): ViewModel() 
         messageError.value = ""
         navController.navigate("editlease")
     }
+
     fun goToShowLeases() {
         navController.navigate("showleases")
     }
 
-    fun goToShowPayments() {
-
+    fun goToShowPayments(lease: Lease) {
+        viewModelScope.launch {
+            if (lease.id != null) {
+                val httpClient = PaymentHttpClient(createHttpClient())
+                val payment = httpClient.searchByLeaseId(lease.id)
+                SharedRepository.payment = payment
+                navController.navigate("showpayments")
+            }
+        }
     }
 }

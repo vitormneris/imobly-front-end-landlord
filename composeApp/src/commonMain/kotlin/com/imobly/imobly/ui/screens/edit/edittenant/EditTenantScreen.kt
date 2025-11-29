@@ -66,7 +66,7 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
         topBar = {
             TopBarComp()
         },
-        snackbarHost = { SnackbarHost( tenantViewModel.snackMessage.value ) },
+        snackbarHost = { SnackbarHost(tenantViewModel.snackMessage.value) },
         contentWindowInsets = WindowInsets.systemBars
     ) { paddingValues ->
         Column(
@@ -193,7 +193,7 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
                         label = "RG",
                         placeholder = "Ex: 00.000.000-0",
                         value = tenantViewModel.tenant.value.rg,
-                        onValueChange = { tenantViewModel.changeCpf(it) },
+                        onValueChange = { tenantViewModel.changeRg(it) },
                         isNumeric = true,
                         readOnly = tenantViewModel.inputLockState.value,
                         isError = tenantViewModel.inputContainsError("rg"),
@@ -237,10 +237,11 @@ fun EditTenantScreen(tenantViewModel: TenantViewModel) {
                     label = "Estado Civil",
                     options = tenantViewModel.maritalStatusOptions(),
                     selectedOption = tenantViewModel.tenant.value.maritalStatus.label,
-                    onOptionSelected = { selectedLabel->
+                    onOptionSelected = { selectedLabel ->
                         tenantViewModel.tenant.value =
                             tenantViewModel.tenant.value.copy(
-                                maritalStatus = MaritalStatusEnum.entries.first{ it.name == selectedLabel}) },
+                                maritalStatus = MaritalStatusEnum.entries.first { it.name == selectedLabel })
+                    },
                     isEnabled = !tenantViewModel.inputLockState.value
                 )
 

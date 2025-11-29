@@ -11,14 +11,10 @@ import com.imobly.imobly.api.dto.EmailDTO
 import com.imobly.imobly.api.dto.ErrorDTO
 import com.imobly.imobly.api.dto.Ok
 import com.imobly.imobly.api.dto.ResetPasswordDTO
-import com.imobly.imobly.api.httpclient.AuthenticationHttpClient
-import com.imobly.imobly.api.httpclient.LandLordHttpClient
 import com.imobly.imobly.api.httpclient.PasswordRecoveryHttpClient
-import com.imobly.imobly.domain.Auth
-import com.imobly.imobly.domain.LandLord
 import kotlinx.coroutines.launch
 
-class ResetPasswordViewModel(private val navController: NavHostController): ViewModel()  {
+class ResetPasswordViewModel(private val navController: NavHostController) : ViewModel() {
 
     val email = mutableStateOf("")
     val newPassword = mutableStateOf("")
@@ -29,7 +25,7 @@ class ResetPasswordViewModel(private val navController: NavHostController): View
     val onLoadingState = mutableStateOf(false)
 
     val inputErrors = mutableStateOf(emptyMap<String, String>())
-    val snackMessage : MutableState<SnackbarHostState> = mutableStateOf( SnackbarHostState() )
+    val snackMessage: MutableState<SnackbarHostState> = mutableStateOf(SnackbarHostState())
 
     val messageError = mutableStateOf("")
 

@@ -15,7 +15,7 @@ import com.imobly.imobly.domain.LandLord
 import com.imobly.imobly.domain.Telephone
 import kotlinx.coroutines.launch
 
-class LandLordViewModel(private val navController: NavHostController): ViewModel() {
+class LandLordViewModel(private val navController: NavHostController) : ViewModel() {
     val landLord = mutableStateOf(LandLord())
     val inputErrors = mutableStateOf(emptyMap<String, String>())
     val messageError = mutableStateOf("")
@@ -25,7 +25,7 @@ class LandLordViewModel(private val navController: NavHostController): ViewModel
 
     val inputLockState = mutableStateOf(true)
 
-    val snackMessage : MutableState<SnackbarHostState> = mutableStateOf( SnackbarHostState() )
+    val snackMessage: MutableState<SnackbarHostState> = mutableStateOf(SnackbarHostState())
 
     fun findProfile() {
         viewModelScope.launch {
@@ -92,7 +92,7 @@ class LandLordViewModel(private val navController: NavHostController): ViewModel
                 }
 
                 is ErrorDTO -> {
-                    snackMessage.value.showSnackbar("Houve um problema ao deletar a locatário!")
+                    messageError.value = response.message
                 }
             }
         }
@@ -106,11 +106,13 @@ class LandLordViewModel(private val navController: NavHostController): ViewModel
         snackMessage.value = SnackbarHostState()
         onLoadingState.value = false
     }
+
     fun resetPage() {
         landLord.value = LandLord()
         inputErrors.value = emptyMap()
         messageError.value = ""
     }
+
     fun changePasswordVisibility() {
         passwordVisibilityState.value = !passwordVisibilityState.value
     }
@@ -148,27 +150,33 @@ class LandLordViewModel(private val navController: NavHostController): ViewModel
     }
 
     fun changeTelephoneOne(it: String) {
-        landLord.value = landLord.value.copy(telephones = Telephone(
-            it,
-            landLord.value.telephones.telephone2,
-            landLord.value.telephones.telephone3
-        ))
+        landLord.value = landLord.value.copy(
+            telephones = Telephone(
+                it,
+                landLord.value.telephones.telephone2,
+                landLord.value.telephones.telephone3
+            )
+        )
     }
 
     fun changeTelephoneTwo(it: String) {
-        landLord.value = landLord.value.copy(telephones = Telephone(
-            landLord.value.telephones.telephone1,
-            it,
-            landLord.value.telephones.telephone3
-        ))
+        landLord.value = landLord.value.copy(
+            telephones = Telephone(
+                landLord.value.telephones.telephone1,
+                it,
+                landLord.value.telephones.telephone3
+            )
+        )
     }
 
     fun changeTelephoneThree(it: String) {
-        landLord.value = landLord.value.copy(telephones = Telephone(
-            landLord.value.telephones.telephone1,
-            landLord.value.telephones.telephone2,
-            it
-        ))
+        landLord.value = landLord.value.copy(
+            telephones = Telephone(
+                landLord.value.telephones.telephone1,
+                landLord.value.telephones.telephone2,
+                it
+            )
+        )
     }
 
     fun changePassword(it: String) {

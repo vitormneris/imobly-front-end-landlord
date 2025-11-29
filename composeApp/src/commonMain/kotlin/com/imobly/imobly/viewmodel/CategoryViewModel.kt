@@ -78,26 +78,27 @@ class CategoryViewModel(private val navController: NavHostController) : ViewMode
 
 
     fun createAction() {
-         viewModelScope.launch {
-             onLoadingState.value = true
-             val httpClient = CategoryHttpClient(createHttpClient())
-             val response = httpClient.create(category.value)
-             onLoadingState.value = false
-             when (response) {
-                 is Ok -> {
-                     category.value = Category()
-                     inputErrors.value = emptyMap()
-                     messageError.value = ""
-                     snackMessage.value.showSnackbar("Categoria criada com sucesso!")
-                 }
-                 is ErrorDTO -> {
-                     val errors = mutableMapOf<String, String>()
-                     response.errorFields?.forEach { errors[it.name] = it.description }
-                     inputErrors.value = errors
-                     messageError.value = response.message
-                 }
-             }
-         }
+        viewModelScope.launch {
+            onLoadingState.value = true
+            val httpClient = CategoryHttpClient(createHttpClient())
+            val response = httpClient.create(category.value)
+            onLoadingState.value = false
+            when (response) {
+                is Ok -> {
+                    category.value = Category()
+                    inputErrors.value = emptyMap()
+                    messageError.value = ""
+                    snackMessage.value.showSnackbar("Categoria criada com sucesso!")
+                }
+
+                is ErrorDTO -> {
+                    val errors = mutableMapOf<String, String>()
+                    response.errorFields?.forEach { errors[it.name] = it.description }
+                    inputErrors.value = errors
+                    messageError.value = response.message
+                }
+            }
+        }
     }
 
     fun editAction() {
@@ -124,25 +125,25 @@ class CategoryViewModel(private val navController: NavHostController) : ViewMode
         }
     }
 
-      fun deleteAction() {
-          viewModelScope.launch {
-              val httpClient = TenantHttpClient(createHttpClient())
-              if (category.value.id != null) {
-                  val response = httpClient.delete(category.value.id!!)
+    fun deleteAction() {
+        viewModelScope.launch {
+            val httpClient = CategoryHttpClient(createHttpClient())
+            if (category.value.id != null) {
+                val response = httpClient.delete(category.value.id!!)
 
-                  showDialogState.value = false
-                  goToShowCategories()
-                  when (response) {
-                      is Ok -> {
-                          snackMessage.value.showSnackbar("Categoria deletada com sucesso!")
-                      }
+                showDialogState.value = false
+                when (response) {
+                    is Ok -> {
+                        goToShowCategories()
+                        snackMessage.value.showSnackbar("Categoria deletada com sucesso!")
+                    }
 
-                      is ErrorDTO -> {
-                          snackMessage.value.showSnackbar("Houve um problema ao deletar a categoria!")
-                      }
-                  }
-              }
-          }
+                    is ErrorDTO -> {
+                        messageError.value = response.message
+                    }
+                }
+            }
+        }
     }
 
     fun changeSearchText(it: String) {

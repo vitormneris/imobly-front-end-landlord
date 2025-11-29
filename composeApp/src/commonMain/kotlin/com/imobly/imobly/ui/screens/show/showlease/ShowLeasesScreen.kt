@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Money
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,7 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.imobly.imobly.domain.Lease
+import com.imobly.imobly.domain.enums.StatusReportEnum
 import com.imobly.imobly.ui.components.button.ButtonComp
+import com.imobly.imobly.ui.components.input.InputDropdownComp
 import com.imobly.imobly.ui.components.searchbar.SearchBarComp
 import com.imobly.imobly.ui.components.title.TitleComp
 import com.imobly.imobly.ui.components.topbar.TopBarComp
@@ -43,36 +46,47 @@ fun ShowLeasesScreen(leaseViewModel: LeaseViewModel) {
         contentWindowInsets = WindowInsets.systemBars,
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .background(BackGroundColor)
-                .padding(paddingValues)
-                .fillMaxSize()
+            modifier = Modifier.background(BackGroundColor).padding(paddingValues).fillMaxSize()
         ) {
             TitleComp(text = "Locações", buttonBackAction = { leaseViewModel.goToHome() })
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center
             ) {
                 ButtonComp(
                     "Cadastrar contrato",
-                    {  Icon(Icons.Default.Add, "Sinal de soma") },
+                    { Icon(Icons.Default.Add, "Sinal de soma") },
                     PrimaryColor,
                     { leaseViewModel.goToCreateLease() }
                 )
             }
 
             Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center
             ) {
                 SearchBarComp(
                     "Buscar locações pelo nome do locatário ou do imóvel",
                     leaseViewModel.searchText.value,
                     { leaseViewModel.changeSearchText(it) },
                     { leaseViewModel.searchAction() }
+                )
+            }
+
+            Box(
+                modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center
+            ) {
+                InputDropdownComp(
+                    label = "Status",
+                    options = leaseViewModel.activeOptions(),
+                    selectedOption = leaseViewModel.selectedOption(),
+                    onOptionSelected = { selectedOption ->
+                        leaseViewModel.onOptionSelectedActive(selectedOption)
+                    },
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .widthIn(max = 700.dp)
                 )
             }
 
@@ -101,15 +115,11 @@ fun LeaseCard(lease: Lease, leaseViewModel: LeaseViewModel) {
             .padding(10.dp)
             .widthIn(max = 700.dp)
             .fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        shape = RoundedCornerShape(16.dp), elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             TextInfoComp("Imóvel", lease.property.title)
             TextInfoComp("Locatário", lease.tenant.firstName)
@@ -126,12 +136,18 @@ fun LeaseCard(lease: Lease, leaseViewModel: LeaseViewModel) {
                 if (lease.isEnabled) "Ativo" else "Inativo",
                 if (lease.isEnabled) ConfirmColor else CancelColor
             )
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+            Row(Modifier.fillMaxWidth(), Arrangement.Center) {
                 ButtonComp(
                     "Atualizar dados",
                     { Icon(Icons.Default.Edit, "Atualizar dados") },
                     PrimaryColor,
                     { leaseViewModel.goToEditLease(lease) }
+                )
+                ButtonComp(
+                    "Ver pagamentos",
+                    { Icon(Icons.Default.Money, "Atualizar dados") },
+                    PrimaryColor,
+                    { leaseViewModel.goToShowPayments(lease) }
                 )
             }
         }
@@ -159,6 +175,7 @@ fun TextInfoComp(label: String, value: String, color: Color = Color.Black) {
         )
     }
 }
+
 @Preview
 @Composable
 fun ShowLeasesPreview() {

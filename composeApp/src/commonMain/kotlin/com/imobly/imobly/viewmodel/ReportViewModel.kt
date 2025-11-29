@@ -9,25 +9,23 @@ import androidx.navigation.NavController
 import com.imobly.imobly.api.createHttpClient
 import com.imobly.imobly.api.dto.ErrorDTO
 import com.imobly.imobly.api.dto.Ok
-import com.imobly.imobly.api.dto.ResponseReportDTO
-import com.imobly.imobly.api.dto.StatusReportDTO
+import com.imobly.imobly.api.dto.UpdateReportDTO
 import com.imobly.imobly.api.httpclient.ReportHttpClient
-import com.imobly.imobly.api.httpclient.TenantHttpClient
 import com.imobly.imobly.domain.Property
 import com.imobly.imobly.domain.Report
 import com.imobly.imobly.domain.enums.StatusReportEnum
 import com.imobly.imobly.domain.Tenant
-import com.imobly.imobly.domain.enums.MaritalStatusEnum
 import kotlinx.coroutines.launch
 
-class ReportViewModel(private val navController: NavController): ViewModel() {
+class ReportViewModel(private val navController: NavController) : ViewModel() {
 
     val tenant = mutableStateOf(Tenant())
-    val tenantProperties = mutableStateOf<List<Property>>(emptyList())
     val tenantPropertySelected = mutableStateOf(Property())
-    val report = mutableStateOf(Report(
-        tenant = tenant.value
-    ))
+    val report = mutableStateOf(
+        Report(
+            tenant = tenant.value
+        )
+    )
     val inputLockState = mutableStateOf(true)
     val onLoadingState = mutableStateOf(false)
     val inputErrors = mutableStateOf(emptyMap<String, String>())
@@ -61,7 +59,7 @@ class ReportViewModel(private val navController: NavController): ViewModel() {
 
     fun resetPage() {
         tenant.value = Tenant()
-        report.value = Report(tenant= tenant.value)
+        report.value = Report(tenant = tenant.value)
         inputErrors.value = emptyMap()
         messageError.value = ""
     }
@@ -102,46 +100,21 @@ class ReportViewModel(private val navController: NavController): ViewModel() {
         }
     }
 
-    fun replyToReportAction() {
-        viewModelScope.launch {
-            val httpClient = ReportHttpClient(createHttpClient())
-            if (report.value.id != null) {
-                onLoadingState.value = true
-                val response = httpClient.replyToReport(report.value.id!!, ResponseReportDTO(report.value.response))
-                onLoadingState.value = false
-                when (response) {
-                    is Ok -> {
-                        hiddenEditButton()
-                        inputErrors.value = emptyMap()
-                        messageError.value = ""
-                        snackMessage.value.showSnackbar("Resposta enviada!")
-                    }
-
-                    is ErrorDTO -> {
-                        val errors = mutableMapOf<String, String>()
-                        response.errorFields?.forEach { errors[it.name] = it.description }
-                        inputErrors.value = errors
-                        messageError.value = response.message
-                    }
-                }
-            }
-        }
-    }
-
-    fun updateStatusAction() {
+    fun updateAction() {
         viewModelScope.launch {
             onLoadingState.value = true
             val httpClient = ReportHttpClient(createHttpClient())
             if (report.value.id != null) {
-                val response = httpClient.updateStatus(report.value.id!!, StatusReportDTO(report.value.status) )
+                val response = httpClient.update(report.value.id!!, UpdateReportDTO(report.value.status, report.value.response))
                 onLoadingState.value = false
                 when (response) {
                     is Ok -> {
                         hiddenEditButton()
                         inputErrors.value = emptyMap()
                         messageError.value = ""
-                        snackMessage.value.showSnackbar("Status atualizado!")
+                        snackMessage.value.showSnackbar("Reportação respondida!")
                     }
+
                     is ErrorDTO -> {
                         val errors = mutableMapOf<String, String>()
                         response.errorFields?.forEach { errors[it.name] = it.description }
@@ -164,8 +137,9 @@ class ReportViewModel(private val navController: NavController): ViewModel() {
                     is Ok -> {
                         snackMessage.value.showSnackbar("Relato deletado com sucesso!")
                     }
+
                     is ErrorDTO -> {
-                        snackMessage.value.showSnackbar("Houve um problema ao deletar o relato!")
+                        messageError.value = response.message
                     }
                 }
             }
@@ -180,28 +154,12 @@ class ReportViewModel(private val navController: NavController): ViewModel() {
         return map
     }
 
-    fun changeTitle(it: String) {
-        report.value = report.value.copy(title = it)
-    }
-
-    fun changeMessage(it: String) {
-        report.value = report.value.copy(message = it)
-    }
-
     fun changeResponse(it: String) {
         report.value = report.value.copy(response = it)
     }
 
     fun changeStatus(it: StatusReportEnum) {
         report.value = report.value.copy(status = it)
-    }
-
-    fun propertiesOptions(): Map<String, String> {
-        val map = mutableMapOf<String, String>()
-        tenantProperties.value.forEach {
-            map[it.title] = it.id ?: ""
-        }
-        return map
     }
 
     fun changeProperty(property: Property) {

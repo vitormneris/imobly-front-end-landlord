@@ -19,8 +19,8 @@ import com.imobly.imobly.domain.graph.RentedProperties
 import com.imobly.imobly.domain.graph.RentsPaidThisMonth
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val navController: NavHostController): ViewModel() {
-    val snackMessage : MutableState<SnackbarHostState> = mutableStateOf( SnackbarHostState() )
+class HomeViewModel(private val navController: NavHostController) : ViewModel() {
+    val snackMessage: MutableState<SnackbarHostState> = mutableStateOf(SnackbarHostState())
 
     fun goToShowProperties() {
         navController.navigate("showproperties")
@@ -29,6 +29,7 @@ class HomeViewModel(private val navController: NavHostController): ViewModel() {
     fun goToShowCategories() {
         navController.navigate("showcategories")
     }
+
     fun goToShowTenants() {
         navController.navigate("showtenants")
     }
@@ -52,12 +53,15 @@ class HomeViewModel(private val navController: NavHostController): ViewModel() {
     fun goToEditLandLord() {
         navController.navigate("editlandlord")
     }
+
     fun goToForgotPassword() {
         navController.navigate("forgotpassword")
     }
+
     fun goToInsertCode() {
         navController.navigate("insertcode")
     }
+
     fun goToChangePassword() {
         navController.navigate("changepassword")
     }
@@ -110,6 +114,4 @@ class HomeViewModel(private val navController: NavHostController): ViewModel() {
             snackMessage.value.showSnackbar("Sua conta foi deslogada sucesso!")
         }
     }
-
-    fun isLogged() = TOKEN.isNotEmpty()
 }

@@ -16,7 +16,7 @@ import com.imobly.imobly.domain.enums.MaritalStatusEnum
 import io.github.ismoy.imagepickerkmp.domain.models.GalleryPhotoResult
 import kotlinx.coroutines.launch
 
-class TenantViewModel(private val navController: NavHostController): ViewModel() {
+class TenantViewModel(private val navController: NavHostController) : ViewModel() {
 
     val tenants: MutableState<List<Tenant>> = mutableStateOf(emptyList())
 
@@ -30,18 +30,14 @@ class TenantViewModel(private val navController: NavHostController): ViewModel()
 
     val onLoadingState = mutableStateOf(false)
 
-    val passwordVisibilityState = mutableStateOf(false)
 
     val inputErrors = mutableStateOf(emptyMap<String, String>())
+
     val messageError = mutableStateOf("")
 
     val showDialogState = mutableStateOf(false)
 
-    val snackMessage : MutableState<SnackbarHostState> = mutableStateOf( SnackbarHostState() )
-
-    fun changePasswordVisibility() {
-        passwordVisibilityState.value = !passwordVisibilityState.value
-    }
+    val snackMessage: MutableState<SnackbarHostState> = mutableStateOf(SnackbarHostState())
 
     fun changeShowDialog() {
         showDialogState.value = !showDialogState.value
@@ -63,6 +59,7 @@ class TenantViewModel(private val navController: NavHostController): ViewModel()
     fun hiddenEditButton() {
         inputLockState.value = !inputLockState.value
     }
+
     fun changeSearchText(it: String) {
         searchText.value = it
     }
@@ -97,10 +94,6 @@ class TenantViewModel(private val navController: NavHostController): ViewModel()
 
     fun goToShowTenants() {
         navController.navigate("showtenants")
-    }
-
-    fun goToCreateTenant() {
-        navController.navigate("createtenant")
     }
 
     fun searchAction() {
@@ -153,7 +146,7 @@ class TenantViewModel(private val navController: NavHostController): ViewModel()
                     }
 
                     is ErrorDTO -> {
-                        snackMessage.value.showSnackbar("Houve um problema ao deletar a locatário!")
+                        messageError.value = response.message
                     }
                 }
             }
@@ -181,31 +174,33 @@ class TenantViewModel(private val navController: NavHostController): ViewModel()
     }
 
     fun changeTelephoneOne(it: String) {
-        tenant.value = tenant.value.copy(telephones = Telephone(
-            it,
-            tenant.value.telephones.telephone2,
-            tenant.value.telephones.telephone3
-        ))
+        tenant.value = tenant.value.copy(
+            telephones = Telephone(
+                it,
+                tenant.value.telephones.telephone2,
+                tenant.value.telephones.telephone3
+            )
+        )
     }
 
     fun changeTelephoneTwo(it: String) {
-        tenant.value = tenant.value.copy(telephones = Telephone(
-            tenant.value.telephones.telephone1,
-            it,
-            tenant.value.telephones.telephone3
-        ))
+        tenant.value = tenant.value.copy(
+            telephones = Telephone(
+                tenant.value.telephones.telephone1,
+                it,
+                tenant.value.telephones.telephone3
+            )
+        )
     }
 
     fun changeTelephoneThree(it: String) {
-        tenant.value = tenant.value.copy(telephones = Telephone(
-            tenant.value.telephones.telephone1,
-            tenant.value.telephones.telephone2,
-            it
-        ))
-    }
-
-    fun changePassword(it: String) {
-        tenant.value = tenant.value.copy(password = it)
+        tenant.value = tenant.value.copy(
+            telephones = Telephone(
+                tenant.value.telephones.telephone1,
+                tenant.value.telephones.telephone2,
+                it
+            )
+        )
     }
 
     fun changeNationality(it: String) {

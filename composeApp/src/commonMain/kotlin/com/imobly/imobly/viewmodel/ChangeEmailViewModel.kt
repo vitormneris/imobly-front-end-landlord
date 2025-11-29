@@ -21,7 +21,7 @@ class ChangeEmailViewModel(private val navController: NavHostController) : ViewM
     val onLoadingState = mutableStateOf(false)
 
     val inputErrors = mutableStateOf(emptyMap<String, String>())
-    val snackMessage : MutableState<SnackbarHostState> = mutableStateOf( SnackbarHostState() )
+    val snackMessage: MutableState<SnackbarHostState> = mutableStateOf(SnackbarHostState())
 
     val messageError = mutableStateOf("")
 

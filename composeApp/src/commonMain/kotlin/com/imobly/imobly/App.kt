@@ -22,8 +22,10 @@ import com.imobly.imobly.ui.screens.recoverypassword.forgotpassword.ForgotPasswo
 import com.imobly.imobly.ui.screens.home.HomeScreen
 import com.imobly.imobly.ui.screens.recoverypassword.insertcode.InsertCodeScreen
 import com.imobly.imobly.ui.screens.login.LoginScreen
+import com.imobly.imobly.ui.screens.installments.InstallmentScreen
 import com.imobly.imobly.ui.screens.show.showcategory.ShowCategoriesScreen
 import com.imobly.imobly.ui.screens.show.showlease.ShowLeasesScreen
+import com.imobly.imobly.ui.screens.show.showpayments.ShowPaymentsScreen
 import com.imobly.imobly.ui.screens.show.showproperty.ShowPropertiesScreen
 import com.imobly.imobly.ui.screens.show.showreports.ShowReportsScreen
 import com.imobly.imobly.ui.screens.show.showtenant.ShowTenantScreen
@@ -43,6 +45,7 @@ fun App() {
     val resetPasswordViewModel = viewModel { ResetPasswordViewModel(navController) }
     val homeViewModel = viewModel { HomeViewModel(navController) }
     val changeEmailViewModel = viewModel { ChangeEmailViewModel(navController) }
+    val paymentViewModel = viewModel { PaymentViewModel(navController) }
 
     MaterialTheme {
         NavHost(navController = navController, startDestination = "login") {
@@ -133,6 +136,14 @@ fun App() {
 
             composable(route = "sendcode") {
                 SendCodeScreen(changeEmailViewModel)
+            }
+
+            composable(route = "showpayments") {
+                ShowPaymentsScreen(paymentViewModel)
+            }
+
+            composable(route = "installment") {
+                InstallmentScreen(paymentViewModel)
             }
         }
     }

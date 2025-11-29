@@ -4,8 +4,7 @@ import com.imobly.imobly.api.TOKEN
 import com.imobly.imobly.api.dto.ErrorDTO
 import com.imobly.imobly.api.dto.Ok
 import com.imobly.imobly.api.dto.ResponseMessage
-import com.imobly.imobly.api.dto.ResponseReportDTO
-import com.imobly.imobly.api.dto.StatusReportDTO
+import com.imobly.imobly.api.dto.UpdateReportDTO
 import com.imobly.imobly.domain.Report
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -40,20 +39,8 @@ class ReportHttpClient(val httpClient: HttpClient) {
         return response.body<ErrorDTO>()
     }
 
-    suspend fun replyToReport(id: String, response: ResponseReportDTO): ResponseMessage {
-        val response = httpClient.patch("$baseUrl/responderreportacao/$id") {
-            contentType(ContentType.Application.Json)
-            header("Authorization", "Bearer $TOKEN")
-            setBody(response)
-        }
-        if (response.status.isSuccess()) {
-            return Ok()
-        }
-        return response.body<ErrorDTO>()
-    }
-
-    suspend fun updateStatus(id: String, status: StatusReportDTO): ResponseMessage {
-        val response = httpClient.patch("$baseUrl/atualizarstatus/$id") {
+    suspend fun update(id: String, status: UpdateReportDTO): ResponseMessage {
+        val response = httpClient.patch("$baseUrl/atualizar/$id") {
             contentType(ContentType.Application.Json)
             header("Authorization", "Bearer $TOKEN")
             setBody(status)
