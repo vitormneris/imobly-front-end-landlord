@@ -38,8 +38,8 @@ class HomeViewModel(private val navController: NavHostController) : ViewModel() 
         navController.navigate("showreports")
     }
 
-    fun goToCreateCategory() {
-        navController.navigate("createcategory")
+    fun goToShowAppointment() {
+        navController.navigate("showappointments")
     }
 
     fun goToSendEmail() {

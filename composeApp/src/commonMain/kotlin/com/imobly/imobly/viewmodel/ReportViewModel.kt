@@ -71,7 +71,7 @@ class ReportViewModel(private val navController: NavController) : ViewModel() {
     fun findAllAction() {
         viewModelScope.launch {
             val httpClient = ReportHttpClient(createHttpClient())
-            reports.value = httpClient.searchAllByTitleOrMessage()
+            reports.value = httpClient.searchAllByTitleOrMessageOrName()
         }
     }
 
@@ -95,7 +95,7 @@ class ReportViewModel(private val navController: NavController) : ViewModel() {
     fun searchAction() {
         viewModelScope.launch {
             val httpClient = ReportHttpClient(createHttpClient())
-            val list = httpClient.searchAllByTitleOrMessage(searchText.value)
+            val list = httpClient.searchAllByTitleOrMessageOrName(searchText.value)
             reports.value = list
         }
     }

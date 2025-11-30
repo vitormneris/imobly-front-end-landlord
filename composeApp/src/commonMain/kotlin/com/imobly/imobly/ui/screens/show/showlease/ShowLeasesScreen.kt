@@ -165,6 +165,7 @@ fun TextInfoComp(label: String, value: String, color: Color = Color.Black) {
             fontFamily = montserratFont(),
             fontWeight = FontWeight.SemiBold
         )
+
         Text(
             value,
             color = color,

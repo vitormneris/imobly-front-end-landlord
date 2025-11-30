@@ -23,6 +23,7 @@ import com.imobly.imobly.ui.screens.home.HomeScreen
 import com.imobly.imobly.ui.screens.recoverypassword.insertcode.InsertCodeScreen
 import com.imobly.imobly.ui.screens.login.LoginScreen
 import com.imobly.imobly.ui.screens.installments.InstallmentScreen
+import com.imobly.imobly.ui.screens.show.showappointment.ShowAppointmentsScreen
 import com.imobly.imobly.ui.screens.show.showcategory.ShowCategoriesScreen
 import com.imobly.imobly.ui.screens.show.showlease.ShowLeasesScreen
 import com.imobly.imobly.ui.screens.show.showpayments.ShowPaymentsScreen
@@ -46,6 +47,7 @@ fun App() {
     val homeViewModel = viewModel { HomeViewModel(navController) }
     val changeEmailViewModel = viewModel { ChangeEmailViewModel(navController) }
     val paymentViewModel = viewModel { PaymentViewModel(navController) }
+    val appointmentViewModel = viewModel { AppointmentViewModel(navController) }
 
     MaterialTheme {
         NavHost(navController = navController, startDestination = "login") {
@@ -144,6 +146,10 @@ fun App() {
 
             composable(route = "installment") {
                 InstallmentScreen(paymentViewModel)
+            }
+
+            composable(route = "showappointments") {
+                ShowAppointmentsScreen(appointmentViewModel)
             }
         }
     }

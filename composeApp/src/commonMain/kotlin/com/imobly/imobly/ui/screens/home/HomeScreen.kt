@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Feedback
@@ -62,7 +63,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
         topBar = {
             TopBarComp()
         },
-       snackbarHost = { SnackbarHost( homeViewModel.snackMessage.value ) }
+        snackbarHost = { SnackbarHost(homeViewModel.snackMessage.value) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -205,7 +206,6 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                             action = { homeViewModel.goToShowLeases() },
                             backgroundColor = backgroundColor,
                             highlightColor = highlightColor
-
                         )
                     }
                     item {
@@ -224,44 +224,64 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                             highlightColor = highlightColor
 
 
-                            )
+                        )
                     }
 
-                        item {
-                            CardButtonComp(
-                                text = "Trocar o E-mail",
-                                icon = {
-                                    Icon(
-                                        Icons.Default.Email,
-                                        contentDescription = "Email",
-                                        modifier = Modifier.fillMaxSize().padding(20.dp),
-                                        tint = backgroundColor,
-                                    )
-                                },
-                                action = { homeViewModel.goToSendEmail() },
-                                backgroundColor = backgroundColor,
-                                highlightColor = highlightColor
+                    item {
+                        CardButtonComp(
+                            text = "Trocar o E-mail",
+                            icon = {
+                                Icon(
+                                    Icons.Default.Email,
+                                    contentDescription = "Email",
+                                    modifier = Modifier.fillMaxSize().padding(20.dp),
+                                    tint = backgroundColor,
+                                )
+                            },
+                            action = { homeViewModel.goToSendEmail() },
+                            backgroundColor = backgroundColor,
+                            highlightColor = highlightColor
 
-                            )
-                        }
+                        )
+                    }
 
-                        item {
-                            CardButtonComp(
-                                text = "Deslogar",
-                                icon = {
-                                    Icon(
-                                        Icons.AutoMirrored.Filled.ExitToApp,
-                                        contentDescription = "Perfil",
-                                        modifier = Modifier.fillMaxSize().padding(20.dp),
-                                        tint = backgroundColor,
-                                    )
-                                },
-                                action = { homeViewModel.logOut() },
-                                backgroundColor = backgroundColor,
-                                highlightColor = highlightColor
+                    item {
+                        CardButtonComp(
+                            text = "Ver agendamentos",
+                            icon = {
+                                Icon(
+                                    Icons.Default.CalendarToday,
+                                    contentDescription = "Agendamentos",
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(20.dp),
+                                    tint = backgroundColor,
+                                )
+                            },
+                            action = { homeViewModel.goToShowAppointment() },
+                            backgroundColor = backgroundColor,
+                            highlightColor = highlightColor
+                        )
 
-                            )
-                        }
+                    }
+
+                    item {
+                        CardButtonComp(
+                            text = "Deslogar",
+                            icon = {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ExitToApp,
+                                    contentDescription = "Perfil",
+                                    modifier = Modifier.fillMaxSize().padding(20.dp),
+                                    tint = backgroundColor,
+                                )
+                            },
+                            action = { homeViewModel.logOut() },
+                            backgroundColor = backgroundColor,
+                            highlightColor = highlightColor
+
+                        )
+                    }
                 }
             }
         }
@@ -273,26 +293,26 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
 fun CardButtonComp(
     text: String,
     width: Dp = 200.dp,
-    icon : @Composable ()-> Unit,
+    icon: @Composable () -> Unit,
     backgroundColor: Color = BackGroundColor,
-    highlightColor:Color = PrimaryColor,
-    action: ()-> Unit
-){
+    highlightColor: Color = PrimaryColor,
+    action: () -> Unit
+) {
     OutlinedCard(
         modifier = Modifier
             .width(width)
             .height(100.dp),
         onClick = action,
 
-        ){
-        Row(){
+        ) {
+        Row() {
             Column(
                 Modifier.background(highlightColor)
                     .weight(1f)
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
-            ){
+            ) {
                 icon()
             }
 
@@ -302,7 +322,7 @@ fun CardButtonComp(
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
-            ){
+            ) {
                 Text(
                     text = text,
                     textAlign = TextAlign.Center,
@@ -317,7 +337,7 @@ fun CardButtonComp(
 }
 
 @Composable
-fun ChartContainer(adaptiveWidth: Dp, homeViewModel: HomeViewModel){
+fun ChartContainer(adaptiveWidth: Dp, homeViewModel: HomeViewModel) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
