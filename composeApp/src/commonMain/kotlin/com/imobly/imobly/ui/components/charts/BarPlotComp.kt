@@ -49,6 +49,9 @@ fun BarPlotComp(
         }
     }
 
+    val allMonths = listOf("Jan", "Fev", "Mar", "Abr", "Maio", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez")
+    val xAxisModel = remember { CategoryAxisModel(allMonths) }
+
     XYGraph(
         modifier = modifier
             .shadow(
@@ -64,7 +67,7 @@ fun BarPlotComp(
             )
             .height(300.dp)
             .padding(20.dp),
-        xAxisModel = remember { CategoryAxisModel(cleanedXData) },
+        xAxisModel = xAxisModel,
         yAxisModel = rememberFloatLinearAxisModel(lowestValue..highestValue, minimumMajorTickSpacing = 30.dp, minorTickCount = 0),
         yAxisLabels = {value ->
             val number = value.toInt()
