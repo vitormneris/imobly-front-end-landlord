@@ -105,7 +105,8 @@ fun CreateLeaseScreen(leaseViewModel: LeaseViewModel) {
                         onValueChange = { leaseViewModel.changeStartDate(it) },
                         isError = leaseViewModel.inputContainsError("startDate"),
                         errorMessage = leaseViewModel.getInputErrorMessage("startDate"),
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f) ,
+                        readOnly = false
                     )
 
                     InputDateComp(
@@ -114,7 +115,8 @@ fun CreateLeaseScreen(leaseViewModel: LeaseViewModel) {
                         onValueChange = { leaseViewModel.changeEndDate(it) },
                         isError = leaseViewModel.inputContainsError("endDate"),
                         errorMessage = leaseViewModel.getInputErrorMessage("endDate"),
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        readOnly = false
                     )
                 }
 
