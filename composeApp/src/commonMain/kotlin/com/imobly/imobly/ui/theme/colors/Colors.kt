@@ -10,3 +10,5 @@ val CancelColor = Color(0xFFE64256)
 val IconColor = Color(0xFFFFFFFF)
 val BackGroundColor = Color(0xFFFFFFFF)
 
+// Adicione esta nova cor:
+val ReadOnlyColor = Color(0xFF9E9E9E) // Cinza médio

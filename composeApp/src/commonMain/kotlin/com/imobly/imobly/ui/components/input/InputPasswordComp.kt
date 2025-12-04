@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.imobly.imobly.ui.components.messageerror.MessageErrorComp
 import com.imobly.imobly.ui.theme.colors.BackGroundColor
 import com.imobly.imobly.ui.theme.colors.PrimaryColor
+import com.imobly.imobly.ui.theme.colors.ReadOnlyColor
 import com.imobly.imobly.ui.theme.fonts.montserratFont
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -46,6 +46,13 @@ fun InputPasswordComp(
     errorMessage: String = "",
     modifier: Modifier = Modifier.padding(16.dp).fillMaxWidth()
 ) {
+    // Cores baseadas no estado readOnly
+    val textColor = if (readOnly) ReadOnlyColor else Color.Black
+    val labelColor = if (readOnly) ReadOnlyColor else PrimaryColor
+    val indicatorColor = if (readOnly) ReadOnlyColor else PrimaryColor
+    val placeholderColor = if (readOnly) ReadOnlyColor.copy(alpha = 0.6f) else PrimaryColor
+    val backgroundColor = if (readOnly) BackGroundColor.copy(alpha = 0.5f) else BackGroundColor
+    val iconColor = if (readOnly) ReadOnlyColor else PrimaryColor
 
     Column(
         modifier = modifier,
@@ -53,43 +60,75 @@ fun InputPasswordComp(
     ) {
         OutlinedTextField(
             label = {
-                Text(label, fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
+                Text(
+                    label,
+                    fontFamily = montserratFont(),
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = labelColor
+                )
             },
-            onValueChange = { onValueChange(it) },
+            onValueChange = {
+                if (!readOnly) {
+                    onValueChange(it)
+                }
+            },
             value = value,
             shape = RoundedCornerShape(10.dp),
             singleLine = true,
             placeholder = {
-                Text(placeholder, fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
+                Text(
+                    placeholder,
+                    fontFamily = montserratFont(),
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = placeholderColor
+                )
             },
             readOnly = readOnly,
             isError = isError,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            textStyle = TextStyle(fontFamily = montserratFont(), fontSize = 15.sp, fontWeight = FontWeight.Bold),
+            textStyle = TextStyle(
+                fontFamily = montserratFont(),
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                color = textColor
+            ),
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
-                Icon(
-                    imageVector = if (passwordVisible) {
-                        Icons.Filled.Visibility
-                    } else {
-                        Icons.Filled.VisibilityOff
-                    },
-                    contentDescription = "Trocar visibildade da senha",
-                    modifier = Modifier
-                        .size(20.dp)
-                        .clickable { changePasswordVisible() },
-                )
+                if (!readOnly) {
+                    Icon(
+                        imageVector = if (passwordVisible) {
+                            Icons.Filled.Visibility
+                        } else {
+                            Icons.Filled.VisibilityOff
+                        },
+                        contentDescription = "Trocar visibildade da senha",
+                        tint = iconColor,
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clickable {
+                                if (!readOnly) {
+                                    changePasswordVisible()
+                                }
+                            },
+                    )
+                }
             },
             colors = TextFieldDefaults.colors(
-                unfocusedTextColor = Color.Black,
-                unfocusedLabelColor = PrimaryColor,
-                unfocusedIndicatorColor = PrimaryColor,
-                unfocusedContainerColor = BackGroundColor,
-                focusedContainerColor = BackGroundColor,
-                focusedTextColor = Color.Black,
-                focusedLabelColor = PrimaryColor,
-                focusedIndicatorColor = PrimaryColor,
-                cursorColor = PrimaryColor
+                unfocusedTextColor = textColor,
+                unfocusedLabelColor = labelColor,
+                unfocusedIndicatorColor = indicatorColor,
+                unfocusedContainerColor = backgroundColor,
+                focusedContainerColor = backgroundColor,
+                focusedTextColor = textColor,
+                focusedLabelColor = labelColor,
+                focusedIndicatorColor = indicatorColor,
+                cursorColor = if (readOnly) Color.Transparent else PrimaryColor,
+                disabledTextColor = ReadOnlyColor,
+                disabledLabelColor = ReadOnlyColor,
+                disabledIndicatorColor = ReadOnlyColor,
+                disabledContainerColor = BackGroundColor.copy(alpha = 0.5f)
             )
         )
         if (isError) {
