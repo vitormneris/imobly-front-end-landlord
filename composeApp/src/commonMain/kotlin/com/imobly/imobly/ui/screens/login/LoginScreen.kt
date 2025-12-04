@@ -96,7 +96,7 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
                 ) {
 
                     Spacer(Modifier.size(60.dp))
-                    TitleComp("Iniciar sessão", { loginViewModel.goToHome() }, true, 40.sp)
+                    TitleComp("Iniciar sessão", { }, false, 40.sp)
                     Spacer(Modifier.size(40.dp))
                     Column(
                         Modifier

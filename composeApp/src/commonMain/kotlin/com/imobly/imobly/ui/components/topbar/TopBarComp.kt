@@ -37,28 +37,6 @@ fun TopBarComp() {
         contentAlignment = Alignment.Center
     ) {
 
-        Column(
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-        ) {
-            repeat(3) {
-                Box(modifier = Modifier.padding(vertical = 2.dp, horizontal = 10.dp)) {
-                    Box(
-                        Modifier
-                            .width(35.dp)
-                            .height(5.dp)
-                            .background(
-                                PrimaryColor,
-                                shape = RoundedCornerShape(1.dp)
-                            )
-                    )
-                }
-            }
-        }
-
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center,

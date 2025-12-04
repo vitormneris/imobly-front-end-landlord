@@ -39,14 +39,6 @@ class PaymentViewModel(private val navController: NavHostController) : ViewModel
         searchText.value = text
     }
 
-    fun searchAction() {
-
-    }
-
-    fun findAllAction() {
-
-    }
-
     val onLoadingState = mutableStateOf(false)
 
     val messageError = mutableStateOf("")
@@ -63,19 +55,20 @@ class PaymentViewModel(private val navController: NavHostController) : ViewModel
     fun whenStartingThePage() {
         messageError.value = ""
         inputErrors.clear()
+        onLoadingState.value = false
+        inputLockState.value = true
     }
 
     fun updateAction() {
         viewModelScope.launch {
             onLoadingState.value = true
             val httpClient = PaymentHttpClient(createHttpClient())
-            if (payment.value.id != null){
+            if (payment.value.id != null && monthlyInstallment.value.id != null){
                 val response = httpClient.updateStatus(payment.value.id!!, monthlyInstallment.value.id!!, PaymentStatusDTO(monthlyInstallment.value.status))
                 onLoadingState.value = false
                 when (response) {
                     is Ok -> {
-                        inputErrors.values.clear()
-                        messageError.value = ""
+                        whenStartingThePage()
                         snackMessage.value.showSnackbar("Status atualizado!")
                     }
                     is ErrorDTO -> {
@@ -85,7 +78,6 @@ class PaymentViewModel(private val navController: NavHostController) : ViewModel
                         messageError.value = response.message
                     }
                 }
-
             }
         }
     }

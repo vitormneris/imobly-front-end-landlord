@@ -76,18 +76,6 @@ fun ShowPaymentsScreen(paymentViewModel: PaymentViewModel) {
 
             Box(
                 modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                SearchBarComp(
-                    "Buscar pagamento",
-                    paymentViewModel.searchText.value,
-                    { paymentViewModel.changeSearchText(it) },
-                    { paymentViewModel.searchAction() }
-                )
-            }
-
-            Box(
-                modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center,
             ) {
                 FilterChipComp(

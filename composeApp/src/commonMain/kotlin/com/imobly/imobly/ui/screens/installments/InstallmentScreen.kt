@@ -62,7 +62,7 @@ fun InstallmentScreen(paymentViewModel: PaymentViewModel) {
 
             Card(
                 modifier = Modifier
-                    .padding(20.dp)
+                    .padding(40.dp)
                     .widthIn(max = 700.dp)
                     .fillMaxWidth(),
                 colors = CardDefaults.cardColors(
@@ -75,7 +75,7 @@ fun InstallmentScreen(paymentViewModel: PaymentViewModel) {
                 TextInfoComp("Mês", paymentViewModel.monthlyInstallment.value.month.label)
                 TextInfoComp("Data de Vencimento", paymentViewModel.monthlyInstallment.value.dueDate)
                 TextInfoComp("Valor", paymentViewModel.monthlyInstallment.value.monthlyRent)
-                TextInfoComp("Status", remember{ paymentViewModel.monthlyInstallment.value.status.label })
+                TextInfoComp("Status", remember { paymentViewModel.monthlyInstallment.value.status.label })
             }
 
             Box(
@@ -119,24 +119,23 @@ fun InstallmentScreen(paymentViewModel: PaymentViewModel) {
                                 )
 
                                 Spacer(modifier = Modifier.height(6.dp))
-                                    ButtonComp(
-                                        "Salvar",
-                                        { Icon(Icons.Default.Check, "confirmar") },
-                                        ConfirmColor,
-                                        { paymentViewModel.updateAction() },
-                                        140.dp,
-                                        16.sp
-                                    )
+                                ButtonComp(
+                                    "Salvar",
+                                    { Icon(Icons.Default.Check, "confirmar") },
+                                    ConfirmColor,
+                                    { paymentViewModel.updateAction() },
+                                    140.dp,
+                                    16.sp
+                                )
 
-                                    ButtonComp(
-                                        "Cancelar",
-                                        { Icon(Icons.Default.Cancel, "cancelar") },
-                                        CancelColor,
-                                        { paymentViewModel.hiddenEditButton() },
-                                        155.dp,
-                                        16.sp
-                                    )
-
+                                ButtonComp(
+                                    "Cancelar",
+                                    { Icon(Icons.Default.Cancel, "cancelar") },
+                                    CancelColor,
+                                    { paymentViewModel.hiddenEditButton() },
+                                    155.dp,
+                                    16.sp
+                                )
                             }
                         }
                     }
@@ -171,8 +170,10 @@ fun TextInfoComp(label: String, value: String, color: Color = Color.Black) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatusChipComp(selectedStatus: PaymentStatusEnum,
-                   onStatusSelected: (PaymentStatusEnum) -> Unit) {
+fun StatusChipComp(
+    selectedStatus: PaymentStatusEnum,
+    onStatusSelected: (PaymentStatusEnum) -> Unit
+) {
 
     val options = PaymentStatusEnum.entries
 
