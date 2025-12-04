@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 class AppointmentViewModel(private val navController: NavController) : ViewModel() {
 
     val appointment = mutableStateOf(Appointment())
-    val appointmentPropertySelected = mutableStateOf(Property())
 
     val inputLockState = mutableStateOf(true)
     val onLoadingState = mutableStateOf(false)
@@ -104,9 +103,5 @@ class AppointmentViewModel(private val navController: NavController) : ViewModel
                 }
             }
         }
-    }
-
-    fun changeProperty(property: Property) {
-        appointmentPropertySelected.value = property
     }
 }

@@ -54,18 +54,6 @@ class HomeViewModel(private val navController: NavHostController) : ViewModel() 
         navController.navigate("editlandlord")
     }
 
-    fun goToForgotPassword() {
-        navController.navigate("forgotpassword")
-    }
-
-    fun goToInsertCode() {
-        navController.navigate("insertcode")
-    }
-
-    fun goToChangePassword() {
-        navController.navigate("changepassword")
-    }
-
     var rentByMonth = mutableStateOf(RentByMonth())
 
     var rentedProperties = mutableStateOf(RentedProperties())

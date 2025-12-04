@@ -105,7 +105,7 @@ fun EditLeaseScreen(leaseViewModel: LeaseViewModel) {
                         onValueChange = { leaseViewModel.changeStartDate(it) },
                         isError = leaseViewModel.inputContainsError("startDate"),
                         errorMessage = leaseViewModel.getInputErrorMessage("startDate"),
-                        readOnly = leaseViewModel.inputLockState.value,
+                        readOnly = true,
                         modifier = Modifier.weight(1f),
                     )
 
@@ -115,7 +115,7 @@ fun EditLeaseScreen(leaseViewModel: LeaseViewModel) {
                         onValueChange = { leaseViewModel.changeEndDate(it) },
                         isError = leaseViewModel.inputContainsError("endDate"),
                         errorMessage = leaseViewModel.getInputErrorMessage("endDate"),
-                        readOnly = leaseViewModel.inputLockState.value,
+                        readOnly = true,
                         modifier = Modifier.weight(1f)
                     )
                 }

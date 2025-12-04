@@ -17,8 +17,7 @@ import io.ktor.http.isSuccess
 
 class PasswordRecoveryHttpClient(val httpClient: HttpClient) {
 
-    private val baseUrl = "/redefinirsenha"
-
+    private val baseUrl = "/redefinirsenha/locador"
 
     suspend fun requestCode(dto : EmailDTO): ResponseMessage {
         val response = httpClient.post("$baseUrl/solicitarcodigo") {

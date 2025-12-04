@@ -86,8 +86,7 @@ fun ShowAppointmentCard(appointment: Appointment, appointmentViewModel: Appointm
         Column(
             modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            TextInfoComp("Imóvel", appointment.property.title)
-            TextInfoComp("Nome do locador", appointment.guideName)
+
             TextInfoComp("Nome do visitante", appointment.guestName)
             TextInfoComp("Telefones", appointment.telephone)
             TextInfoComp("Título da propriedade", appointment.property.title)
